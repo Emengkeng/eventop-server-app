@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
-import { HttpModule } from '@nestjs/axios';  // Import HttpModule, not HttpService
+import { HttpModule } from '@nestjs/axios';
 import { WebhookService } from './webhook.service';
-import { PrismaModule } from '../prisma/prisma.module';  // If you have a PrismaModule
+import { PrismaModule } from '../prisma/prisma.module';
+import { WebhookController } from './webhook.controller';
 
 @Module({
   imports: [HttpModule, PrismaModule],
+  controllers: [WebhookController],
   providers: [WebhookService],
   exports: [WebhookService],
 })
