@@ -137,3 +137,45 @@ model UserProfile {
 
   @@map("user_profiles")
 }
+
+model WebhookLog {
+  id                String    @id @default(uuid())
+  merchantWallet    String    @map("merchant_wallet")
+  event             String
+  payload           Json
+  webhookUrl        String    @map("webhook_url")
+  status            String    // 'success', 'failed', 'pending'
+  responseStatus    Int?      @map("response_status")
+  responseBody      String?   @map("response_body")
+  errorMessage      String?   @map("error_message")
+  retryCount        Int       @default(0) @map("retry_count")
+  deliveryTime      Int?      @map("delivery_time") // milliseconds
+  createdAt         DateTime  @default(now()) @map("created_at")
+  deliveredAt       DateTime? @map("delivered_at")
+
+  @@index([merchantWallet])
+  @@index([event])
+  @@index([status])
+  @@index([createdAt])
+  @@map("webhook_logs")
+}
+
+model WebhookEndpoint {
+  id                String   @id @default(uuid())
+  merchantWallet    String   @map("merchant_wallet")
+  url               String
+  secret            String
+  isActive          Boolean  @default(true) @map("is_active")
+  events            String[] // Array of event types to subscribe to
+  description       String?
+  lastSuccess       DateTime? @map("last_success")
+  lastFailure       DateTime? @map("last_failure")
+  totalSuccess      Int      @default(0) @map("total_success")
+  totalFailure      Int      @default(0) @map("total_failure")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@unique([merchantWallet, url])
+  @@index([merchantWallet])
+  @@map("webhook_endpoints")
+}

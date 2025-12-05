@@ -57,3 +57,13 @@ export type ScheduledPayment = Prisma.ScheduledPaymentModel
  * 
  */
 export type UserProfile = Prisma.UserProfileModel
+/**
+ * Model WebhookLog
+ * 
+ */
+export type WebhookLog = Prisma.WebhookLogModel
+/**
+ * Model WebhookEndpoint
+ * 
+ */
+export type WebhookEndpoint = Prisma.WebhookEndpointModel

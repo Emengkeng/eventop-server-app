@@ -31,7 +31,7 @@ export * from "./enums"
  * const indexerStates = await prisma.indexerState.findMany()
  * ```
  * 
- * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
+ * Read more in our [docs](https://pris.ly/d/client).
  */
 export const PrismaClient = $Class.getPrismaClientClass()
 export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts extends Prisma.PrismaClientOptions["omit"] = Prisma.PrismaClientOptions["omit"], ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = $Class.PrismaClient<LogOpts, OmitOpts, ExtArgs>
@@ -77,3 +77,13 @@ export type ScheduledPayment = Prisma.ScheduledPaymentModel
  * 
  */
 export type UserProfile = Prisma.UserProfileModel
+/**
+ * Model WebhookLog
+ * 
+ */
+export type WebhookLog = Prisma.WebhookLogModel
+/**
+ * Model WebhookEndpoint
+ * 
+ */
+export type WebhookEndpoint = Prisma.WebhookEndpointModel

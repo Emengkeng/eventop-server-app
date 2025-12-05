@@ -58,7 +58,9 @@ export const ModelName = {
   SubscriptionWallet: 'SubscriptionWallet',
   Transaction: 'Transaction',
   ScheduledPayment: 'ScheduledPayment',
-  UserProfile: 'UserProfile'
+  UserProfile: 'UserProfile',
+  WebhookLog: 'WebhookLog',
+  WebhookEndpoint: 'WebhookEndpoint'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -203,6 +205,44 @@ export const UserProfileScalarFieldEnum = {
 export type UserProfileScalarFieldEnum = (typeof UserProfileScalarFieldEnum)[keyof typeof UserProfileScalarFieldEnum]
 
 
+export const WebhookLogScalarFieldEnum = {
+  id: 'id',
+  merchantWallet: 'merchantWallet',
+  event: 'event',
+  payload: 'payload',
+  webhookUrl: 'webhookUrl',
+  status: 'status',
+  responseStatus: 'responseStatus',
+  responseBody: 'responseBody',
+  errorMessage: 'errorMessage',
+  retryCount: 'retryCount',
+  deliveryTime: 'deliveryTime',
+  createdAt: 'createdAt',
+  deliveredAt: 'deliveredAt'
+} as const
+
+export type WebhookLogScalarFieldEnum = (typeof WebhookLogScalarFieldEnum)[keyof typeof WebhookLogScalarFieldEnum]
+
+
+export const WebhookEndpointScalarFieldEnum = {
+  id: 'id',
+  merchantWallet: 'merchantWallet',
+  url: 'url',
+  secret: 'secret',
+  isActive: 'isActive',
+  events: 'events',
+  description: 'description',
+  lastSuccess: 'lastSuccess',
+  lastFailure: 'lastFailure',
+  totalSuccess: 'totalSuccess',
+  totalFailure: 'totalFailure',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WebhookEndpointScalarFieldEnum = (typeof WebhookEndpointScalarFieldEnum)[keyof typeof WebhookEndpointScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -217,6 +257,13 @@ export const NullableJsonNullValueInput = {
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: 'JsonNull'
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {
