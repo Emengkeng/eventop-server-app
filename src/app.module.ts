@@ -11,6 +11,7 @@ import { WebhookModule } from './webhook/webhook.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { AuthModule } from './auth/auth.module';
 import { RateLimitModule } from './common/rate-limit/rate-limit.module';
+import { PlansModule } from './plans/plan.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { RateLimitModule } from './common/rate-limit/rate-limit.module';
     AuthModule,
     RateLimitModule,
     HttpModule,
+    PlansModule,
   ],
 })
 export class AppModule {}
