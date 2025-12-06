@@ -60,49 +60,49 @@ export class EventParserService {
   private mapAnchorEventToTyped(event: Event): ProgramEvent | null {
     try {
       switch (event.name) {
-        case 'SubscriptionWalletCreated':
+        case 'subscriptionWalletCreated':
           return {
             name: 'SubscriptionWalletCreated',
             data: this.parseSubscriptionWalletCreated(event.data),
           };
 
-        case 'YieldEnabled':
+        case 'yieldEnabled':
           return {
             name: 'YieldEnabled',
             data: this.parseYieldEnabled(event.data),
           };
 
-        case 'WalletDeposit':
+        case 'walletDeposit':
           return {
             name: 'WalletDeposit',
             data: this.parseWalletDeposit(event.data),
           };
 
-        case 'WalletWithdrawal':
+        case 'walletWithdrawal':
           return {
             name: 'WalletWithdrawal',
             data: this.parseWalletWithdrawal(event.data),
           };
 
-        case 'SubscriptionCreated':
+        case 'subscriptionCreated':
           return {
             name: 'SubscriptionCreated',
             data: this.parseSubscriptionCreated(event.data),
           };
 
-        case 'PaymentExecuted':
+        case 'paymentExecuted':
           return {
             name: 'PaymentExecuted',
             data: this.parsePaymentExecuted(event.data),
           };
 
-        case 'SubscriptionCancelled':
+        case 'subscriptionCancelled':
           return {
             name: 'SubscriptionCancelled',
             data: this.parseSubscriptionCancelled(event.data),
           };
 
-        case 'YieldClaimed':
+        case 'yieldClaimed':
           return {
             name: 'YieldClaimed',
             data: this.parseYieldClaimed(event.data),
