@@ -296,6 +296,7 @@ export type SubscriptionWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   cancelledAt?: Prisma.DateTimeNullableFilter<"Subscription"> | Date | string | null
+  plan?: Prisma.XOR<Prisma.MerchantPlanScalarRelationFilter, Prisma.MerchantPlanWhereInput>
 }
 
 export type SubscriptionOrderByWithRelationInput = {
@@ -314,6 +315,7 @@ export type SubscriptionOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   cancelledAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  plan?: Prisma.MerchantPlanOrderByWithRelationInput
 }
 
 export type SubscriptionWhereUniqueInput = Prisma.AtLeast<{
@@ -335,6 +337,7 @@ export type SubscriptionWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   cancelledAt?: Prisma.DateTimeNullableFilter<"Subscription"> | Date | string | null
+  plan?: Prisma.XOR<Prisma.MerchantPlanScalarRelationFilter, Prisma.MerchantPlanWhereInput>
 }, "subscriptionPda">
 
 export type SubscriptionOrderByWithAggregationInput = {
@@ -386,7 +389,6 @@ export type SubscriptionCreateInput = {
   userWallet: string
   subscriptionWalletPda: string
   merchantWallet: string
-  merchantPlanPda: string
   mint: string
   feeAmount: string
   paymentInterval: string
@@ -397,6 +399,7 @@ export type SubscriptionCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   cancelledAt?: Date | string | null
+  plan: Prisma.MerchantPlanCreateNestedOneWithoutSubscriptionsInput
 }
 
 export type SubscriptionUncheckedCreateInput = {
@@ -422,7 +425,6 @@ export type SubscriptionUpdateInput = {
   userWallet?: Prisma.StringFieldUpdateOperationsInput | string
   subscriptionWalletPda?: Prisma.StringFieldUpdateOperationsInput | string
   merchantWallet?: Prisma.StringFieldUpdateOperationsInput | string
-  merchantPlanPda?: Prisma.StringFieldUpdateOperationsInput | string
   mint?: Prisma.StringFieldUpdateOperationsInput | string
   feeAmount?: Prisma.StringFieldUpdateOperationsInput | string
   paymentInterval?: Prisma.StringFieldUpdateOperationsInput | string
@@ -433,6 +435,7 @@ export type SubscriptionUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  plan?: Prisma.MerchantPlanUpdateOneRequiredWithoutSubscriptionsNestedInput
 }
 
 export type SubscriptionUncheckedUpdateInput = {
@@ -476,7 +479,6 @@ export type SubscriptionUpdateManyMutationInput = {
   userWallet?: Prisma.StringFieldUpdateOperationsInput | string
   subscriptionWalletPda?: Prisma.StringFieldUpdateOperationsInput | string
   merchantWallet?: Prisma.StringFieldUpdateOperationsInput | string
-  merchantPlanPda?: Prisma.StringFieldUpdateOperationsInput | string
   mint?: Prisma.StringFieldUpdateOperationsInput | string
   feeAmount?: Prisma.StringFieldUpdateOperationsInput | string
   paymentInterval?: Prisma.StringFieldUpdateOperationsInput | string
@@ -505,6 +507,16 @@ export type SubscriptionUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type SubscriptionListRelationFilter = {
+  every?: Prisma.SubscriptionWhereInput
+  some?: Prisma.SubscriptionWhereInput
+  none?: Prisma.SubscriptionWhereInput
+}
+
+export type SubscriptionOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type SubscriptionCountOrderByAggregateInput = {
@@ -569,6 +581,197 @@ export type SubscriptionSumOrderByAggregateInput = {
   paymentCount?: Prisma.SortOrder
 }
 
+export type SubscriptionCreateNestedManyWithoutPlanInput = {
+  create?: Prisma.XOR<Prisma.SubscriptionCreateWithoutPlanInput, Prisma.SubscriptionUncheckedCreateWithoutPlanInput> | Prisma.SubscriptionCreateWithoutPlanInput[] | Prisma.SubscriptionUncheckedCreateWithoutPlanInput[]
+  connectOrCreate?: Prisma.SubscriptionCreateOrConnectWithoutPlanInput | Prisma.SubscriptionCreateOrConnectWithoutPlanInput[]
+  createMany?: Prisma.SubscriptionCreateManyPlanInputEnvelope
+  connect?: Prisma.SubscriptionWhereUniqueInput | Prisma.SubscriptionWhereUniqueInput[]
+}
+
+export type SubscriptionUncheckedCreateNestedManyWithoutPlanInput = {
+  create?: Prisma.XOR<Prisma.SubscriptionCreateWithoutPlanInput, Prisma.SubscriptionUncheckedCreateWithoutPlanInput> | Prisma.SubscriptionCreateWithoutPlanInput[] | Prisma.SubscriptionUncheckedCreateWithoutPlanInput[]
+  connectOrCreate?: Prisma.SubscriptionCreateOrConnectWithoutPlanInput | Prisma.SubscriptionCreateOrConnectWithoutPlanInput[]
+  createMany?: Prisma.SubscriptionCreateManyPlanInputEnvelope
+  connect?: Prisma.SubscriptionWhereUniqueInput | Prisma.SubscriptionWhereUniqueInput[]
+}
+
+export type SubscriptionUpdateManyWithoutPlanNestedInput = {
+  create?: Prisma.XOR<Prisma.SubscriptionCreateWithoutPlanInput, Prisma.SubscriptionUncheckedCreateWithoutPlanInput> | Prisma.SubscriptionCreateWithoutPlanInput[] | Prisma.SubscriptionUncheckedCreateWithoutPlanInput[]
+  connectOrCreate?: Prisma.SubscriptionCreateOrConnectWithoutPlanInput | Prisma.SubscriptionCreateOrConnectWithoutPlanInput[]
+  upsert?: Prisma.SubscriptionUpsertWithWhereUniqueWithoutPlanInput | Prisma.SubscriptionUpsertWithWhereUniqueWithoutPlanInput[]
+  createMany?: Prisma.SubscriptionCreateManyPlanInputEnvelope
+  set?: Prisma.SubscriptionWhereUniqueInput | Prisma.SubscriptionWhereUniqueInput[]
+  disconnect?: Prisma.SubscriptionWhereUniqueInput | Prisma.SubscriptionWhereUniqueInput[]
+  delete?: Prisma.SubscriptionWhereUniqueInput | Prisma.SubscriptionWhereUniqueInput[]
+  connect?: Prisma.SubscriptionWhereUniqueInput | Prisma.SubscriptionWhereUniqueInput[]
+  update?: Prisma.SubscriptionUpdateWithWhereUniqueWithoutPlanInput | Prisma.SubscriptionUpdateWithWhereUniqueWithoutPlanInput[]
+  updateMany?: Prisma.SubscriptionUpdateManyWithWhereWithoutPlanInput | Prisma.SubscriptionUpdateManyWithWhereWithoutPlanInput[]
+  deleteMany?: Prisma.SubscriptionScalarWhereInput | Prisma.SubscriptionScalarWhereInput[]
+}
+
+export type SubscriptionUncheckedUpdateManyWithoutPlanNestedInput = {
+  create?: Prisma.XOR<Prisma.SubscriptionCreateWithoutPlanInput, Prisma.SubscriptionUncheckedCreateWithoutPlanInput> | Prisma.SubscriptionCreateWithoutPlanInput[] | Prisma.SubscriptionUncheckedCreateWithoutPlanInput[]
+  connectOrCreate?: Prisma.SubscriptionCreateOrConnectWithoutPlanInput | Prisma.SubscriptionCreateOrConnectWithoutPlanInput[]
+  upsert?: Prisma.SubscriptionUpsertWithWhereUniqueWithoutPlanInput | Prisma.SubscriptionUpsertWithWhereUniqueWithoutPlanInput[]
+  createMany?: Prisma.SubscriptionCreateManyPlanInputEnvelope
+  set?: Prisma.SubscriptionWhereUniqueInput | Prisma.SubscriptionWhereUniqueInput[]
+  disconnect?: Prisma.SubscriptionWhereUniqueInput | Prisma.SubscriptionWhereUniqueInput[]
+  delete?: Prisma.SubscriptionWhereUniqueInput | Prisma.SubscriptionWhereUniqueInput[]
+  connect?: Prisma.SubscriptionWhereUniqueInput | Prisma.SubscriptionWhereUniqueInput[]
+  update?: Prisma.SubscriptionUpdateWithWhereUniqueWithoutPlanInput | Prisma.SubscriptionUpdateWithWhereUniqueWithoutPlanInput[]
+  updateMany?: Prisma.SubscriptionUpdateManyWithWhereWithoutPlanInput | Prisma.SubscriptionUpdateManyWithWhereWithoutPlanInput[]
+  deleteMany?: Prisma.SubscriptionScalarWhereInput | Prisma.SubscriptionScalarWhereInput[]
+}
+
+export type SubscriptionCreateWithoutPlanInput = {
+  subscriptionPda: string
+  userWallet: string
+  subscriptionWalletPda: string
+  merchantWallet: string
+  mint: string
+  feeAmount: string
+  paymentInterval: string
+  lastPaymentTimestamp: string
+  totalPaid?: string
+  paymentCount?: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  cancelledAt?: Date | string | null
+}
+
+export type SubscriptionUncheckedCreateWithoutPlanInput = {
+  subscriptionPda: string
+  userWallet: string
+  subscriptionWalletPda: string
+  merchantWallet: string
+  mint: string
+  feeAmount: string
+  paymentInterval: string
+  lastPaymentTimestamp: string
+  totalPaid?: string
+  paymentCount?: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  cancelledAt?: Date | string | null
+}
+
+export type SubscriptionCreateOrConnectWithoutPlanInput = {
+  where: Prisma.SubscriptionWhereUniqueInput
+  create: Prisma.XOR<Prisma.SubscriptionCreateWithoutPlanInput, Prisma.SubscriptionUncheckedCreateWithoutPlanInput>
+}
+
+export type SubscriptionCreateManyPlanInputEnvelope = {
+  data: Prisma.SubscriptionCreateManyPlanInput | Prisma.SubscriptionCreateManyPlanInput[]
+  skipDuplicates?: boolean
+}
+
+export type SubscriptionUpsertWithWhereUniqueWithoutPlanInput = {
+  where: Prisma.SubscriptionWhereUniqueInput
+  update: Prisma.XOR<Prisma.SubscriptionUpdateWithoutPlanInput, Prisma.SubscriptionUncheckedUpdateWithoutPlanInput>
+  create: Prisma.XOR<Prisma.SubscriptionCreateWithoutPlanInput, Prisma.SubscriptionUncheckedCreateWithoutPlanInput>
+}
+
+export type SubscriptionUpdateWithWhereUniqueWithoutPlanInput = {
+  where: Prisma.SubscriptionWhereUniqueInput
+  data: Prisma.XOR<Prisma.SubscriptionUpdateWithoutPlanInput, Prisma.SubscriptionUncheckedUpdateWithoutPlanInput>
+}
+
+export type SubscriptionUpdateManyWithWhereWithoutPlanInput = {
+  where: Prisma.SubscriptionScalarWhereInput
+  data: Prisma.XOR<Prisma.SubscriptionUpdateManyMutationInput, Prisma.SubscriptionUncheckedUpdateManyWithoutPlanInput>
+}
+
+export type SubscriptionScalarWhereInput = {
+  AND?: Prisma.SubscriptionScalarWhereInput | Prisma.SubscriptionScalarWhereInput[]
+  OR?: Prisma.SubscriptionScalarWhereInput[]
+  NOT?: Prisma.SubscriptionScalarWhereInput | Prisma.SubscriptionScalarWhereInput[]
+  subscriptionPda?: Prisma.StringFilter<"Subscription"> | string
+  userWallet?: Prisma.StringFilter<"Subscription"> | string
+  subscriptionWalletPda?: Prisma.StringFilter<"Subscription"> | string
+  merchantWallet?: Prisma.StringFilter<"Subscription"> | string
+  merchantPlanPda?: Prisma.StringFilter<"Subscription"> | string
+  mint?: Prisma.StringFilter<"Subscription"> | string
+  feeAmount?: Prisma.StringFilter<"Subscription"> | string
+  paymentInterval?: Prisma.StringFilter<"Subscription"> | string
+  lastPaymentTimestamp?: Prisma.StringFilter<"Subscription"> | string
+  totalPaid?: Prisma.StringFilter<"Subscription"> | string
+  paymentCount?: Prisma.IntFilter<"Subscription"> | number
+  isActive?: Prisma.BoolFilter<"Subscription"> | boolean
+  createdAt?: Prisma.DateTimeFilter<"Subscription"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Subscription"> | Date | string
+  cancelledAt?: Prisma.DateTimeNullableFilter<"Subscription"> | Date | string | null
+}
+
+export type SubscriptionCreateManyPlanInput = {
+  subscriptionPda: string
+  userWallet: string
+  subscriptionWalletPda: string
+  merchantWallet: string
+  mint: string
+  feeAmount: string
+  paymentInterval: string
+  lastPaymentTimestamp: string
+  totalPaid?: string
+  paymentCount?: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  cancelledAt?: Date | string | null
+}
+
+export type SubscriptionUpdateWithoutPlanInput = {
+  subscriptionPda?: Prisma.StringFieldUpdateOperationsInput | string
+  userWallet?: Prisma.StringFieldUpdateOperationsInput | string
+  subscriptionWalletPda?: Prisma.StringFieldUpdateOperationsInput | string
+  merchantWallet?: Prisma.StringFieldUpdateOperationsInput | string
+  mint?: Prisma.StringFieldUpdateOperationsInput | string
+  feeAmount?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentInterval?: Prisma.StringFieldUpdateOperationsInput | string
+  lastPaymentTimestamp?: Prisma.StringFieldUpdateOperationsInput | string
+  totalPaid?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type SubscriptionUncheckedUpdateWithoutPlanInput = {
+  subscriptionPda?: Prisma.StringFieldUpdateOperationsInput | string
+  userWallet?: Prisma.StringFieldUpdateOperationsInput | string
+  subscriptionWalletPda?: Prisma.StringFieldUpdateOperationsInput | string
+  merchantWallet?: Prisma.StringFieldUpdateOperationsInput | string
+  mint?: Prisma.StringFieldUpdateOperationsInput | string
+  feeAmount?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentInterval?: Prisma.StringFieldUpdateOperationsInput | string
+  lastPaymentTimestamp?: Prisma.StringFieldUpdateOperationsInput | string
+  totalPaid?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type SubscriptionUncheckedUpdateManyWithoutPlanInput = {
+  subscriptionPda?: Prisma.StringFieldUpdateOperationsInput | string
+  userWallet?: Prisma.StringFieldUpdateOperationsInput | string
+  subscriptionWalletPda?: Prisma.StringFieldUpdateOperationsInput | string
+  merchantWallet?: Prisma.StringFieldUpdateOperationsInput | string
+  mint?: Prisma.StringFieldUpdateOperationsInput | string
+  feeAmount?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentInterval?: Prisma.StringFieldUpdateOperationsInput | string
+  lastPaymentTimestamp?: Prisma.StringFieldUpdateOperationsInput | string
+  totalPaid?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
 
 
 export type SubscriptionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -587,6 +790,7 @@ export type SubscriptionSelect<ExtArgs extends runtime.Types.Extensions.Internal
   createdAt?: boolean
   updatedAt?: boolean
   cancelledAt?: boolean
+  plan?: boolean | Prisma.MerchantPlanDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["subscription"]>
 
 export type SubscriptionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -605,6 +809,7 @@ export type SubscriptionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   createdAt?: boolean
   updatedAt?: boolean
   cancelledAt?: boolean
+  plan?: boolean | Prisma.MerchantPlanDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["subscription"]>
 
 export type SubscriptionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -623,6 +828,7 @@ export type SubscriptionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   createdAt?: boolean
   updatedAt?: boolean
   cancelledAt?: boolean
+  plan?: boolean | Prisma.MerchantPlanDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["subscription"]>
 
 export type SubscriptionSelectScalar = {
@@ -644,10 +850,21 @@ export type SubscriptionSelectScalar = {
 }
 
 export type SubscriptionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"subscriptionPda" | "userWallet" | "subscriptionWalletPda" | "merchantWallet" | "merchantPlanPda" | "mint" | "feeAmount" | "paymentInterval" | "lastPaymentTimestamp" | "totalPaid" | "paymentCount" | "isActive" | "createdAt" | "updatedAt" | "cancelledAt", ExtArgs["result"]["subscription"]>
+export type SubscriptionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  plan?: boolean | Prisma.MerchantPlanDefaultArgs<ExtArgs>
+}
+export type SubscriptionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  plan?: boolean | Prisma.MerchantPlanDefaultArgs<ExtArgs>
+}
+export type SubscriptionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  plan?: boolean | Prisma.MerchantPlanDefaultArgs<ExtArgs>
+}
 
 export type $SubscriptionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Subscription"
-  objects: {}
+  objects: {
+    plan: Prisma.$MerchantPlanPayload<ExtArgs>
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     subscriptionPda: string
     userWallet: string
@@ -1058,6 +1275,7 @@ readonly fields: SubscriptionFieldRefs;
  */
 export interface Prisma__SubscriptionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  plan<T extends Prisma.MerchantPlanDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MerchantPlanDefaultArgs<ExtArgs>>): Prisma.Prisma__MerchantPlanClient<runtime.Types.Result.GetResult<Prisma.$MerchantPlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1119,6 +1337,10 @@ export type SubscriptionFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.
    */
   omit?: Prisma.SubscriptionOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubscriptionInclude<ExtArgs> | null
+  /**
    * Filter, which Subscription to fetch.
    */
   where: Prisma.SubscriptionWhereUniqueInput
@@ -1137,6 +1359,10 @@ export type SubscriptionFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Exte
    */
   omit?: Prisma.SubscriptionOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubscriptionInclude<ExtArgs> | null
+  /**
    * Filter, which Subscription to fetch.
    */
   where: Prisma.SubscriptionWhereUniqueInput
@@ -1154,6 +1380,10 @@ export type SubscriptionFindFirstArgs<ExtArgs extends runtime.Types.Extensions.I
    * Omit specific fields from the Subscription
    */
   omit?: Prisma.SubscriptionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubscriptionInclude<ExtArgs> | null
   /**
    * Filter, which Subscription to fetch.
    */
@@ -1203,6 +1433,10 @@ export type SubscriptionFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Exten
    */
   omit?: Prisma.SubscriptionOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubscriptionInclude<ExtArgs> | null
+  /**
    * Filter, which Subscription to fetch.
    */
   where?: Prisma.SubscriptionWhereInput
@@ -1251,6 +1485,10 @@ export type SubscriptionFindManyArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   omit?: Prisma.SubscriptionOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubscriptionInclude<ExtArgs> | null
+  /**
    * Filter, which Subscriptions to fetch.
    */
   where?: Prisma.SubscriptionWhereInput
@@ -1294,6 +1532,10 @@ export type SubscriptionCreateArgs<ExtArgs extends runtime.Types.Extensions.Inte
    */
   omit?: Prisma.SubscriptionOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubscriptionInclude<ExtArgs> | null
+  /**
    * The data needed to create a Subscription.
    */
   data: Prisma.XOR<Prisma.SubscriptionCreateInput, Prisma.SubscriptionUncheckedCreateInput>
@@ -1327,6 +1569,10 @@ export type SubscriptionCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Ex
    */
   data: Prisma.SubscriptionCreateManyInput | Prisma.SubscriptionCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubscriptionIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1341,6 +1587,10 @@ export type SubscriptionUpdateArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Omit specific fields from the Subscription
    */
   omit?: Prisma.SubscriptionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubscriptionInclude<ExtArgs> | null
   /**
    * The data needed to update a Subscription.
    */
@@ -1393,6 +1643,10 @@ export type SubscriptionUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Ex
    * Limit how many Subscriptions to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubscriptionIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1407,6 +1661,10 @@ export type SubscriptionUpsertArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Omit specific fields from the Subscription
    */
   omit?: Prisma.SubscriptionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubscriptionInclude<ExtArgs> | null
   /**
    * The filter to search for the Subscription to update in case it exists.
    */
@@ -1433,6 +1691,10 @@ export type SubscriptionDeleteArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Omit specific fields from the Subscription
    */
   omit?: Prisma.SubscriptionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubscriptionInclude<ExtArgs> | null
   /**
    * Filter which Subscription to delete.
    */
@@ -1465,4 +1727,8 @@ export type SubscriptionDefaultArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Omit specific fields from the Subscription
    */
   omit?: Prisma.SubscriptionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubscriptionInclude<ExtArgs> | null
 }
