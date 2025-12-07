@@ -47,6 +47,7 @@ model MerchantPlan {
   createdAt        DateTime @default(now()) @map("created_at")
 
   merchant Merchant @relation(fields: [merchantWallet], references: [walletAddress])
+  subscriptions Subscription[] @relation("PlanSubscriptions")
 
   @@index([merchantWallet])
   @@map("merchant_plans")
@@ -69,9 +70,12 @@ model Subscription {
   updatedAt             DateTime  @updatedAt @map("updated_at")
   cancelledAt           DateTime? @map("cancelled_at")
 
+  plan MerchantPlan @relation("PlanSubscriptions", fields: [merchantPlanPda], references: [planPda])
+
   @@index([userWallet])
   @@index([merchantWallet])
   @@index([subscriptionWalletPda])
+  @@index([merchantPlanPda])
   @@map("subscriptions")
 }
 
