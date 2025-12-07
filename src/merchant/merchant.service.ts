@@ -155,29 +155,22 @@ export class MerchantService {
     const subscriptions = await this.prisma.subscription.findMany({
       where: { merchantWallet },
       orderBy: { createdAt: 'desc' },
+      include: {
+        plan: true,
+      },
     });
 
-    const customerMap = new Map();
-
-    for (const sub of subscriptions) {
-      if (!customerMap.has(sub.userWallet)) {
-        customerMap.set(sub.userWallet, {
-          userWallet: sub.userWallet,
-          subscriptions: [],
-          totalSpent: BigInt(0),
-          activeSubscriptions: 0,
-        });
-      }
-
-      const customer = customerMap.get(sub.userWallet);
-      customer.subscriptions.push(sub);
-      customer.totalSpent += BigInt(sub.totalPaid);
-      if (sub.isActive) customer.activeSubscriptions++;
-    }
-
-    return Array.from(customerMap.values()).map((c) => ({
-      ...c,
-      totalSpent: c.totalSpent.toString(),
+    return subscriptions.map((sub) => ({
+      subscriptionPda: sub.subscriptionPda,
+      userWallet: sub.userWallet,
+      planName: sub.plan.planName,
+      feeAmount: sub.feeAmount,
+      paymentCount: sub.paymentCount,
+      lastPaymentTimestamp: sub.lastPaymentTimestamp,
+      totalPaid: sub.totalPaid,
+      isActive: sub.isActive,
+      createdAt: sub.createdAt.toISOString(),
+      cancelledAt: sub.cancelledAt?.toISOString() || null,
     }));
   }
 
