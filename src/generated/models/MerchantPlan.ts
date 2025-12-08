@@ -286,6 +286,7 @@ export type MerchantPlanWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"MerchantPlan"> | Date | string
   merchant?: Prisma.XOR<Prisma.MerchantScalarRelationFilter, Prisma.MerchantWhereInput>
   subscriptions?: Prisma.SubscriptionListRelationFilter
+  checkoutSessions?: Prisma.CheckoutSessionListRelationFilter
 }
 
 export type MerchantPlanOrderByWithRelationInput = {
@@ -305,6 +306,7 @@ export type MerchantPlanOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   merchant?: Prisma.MerchantOrderByWithRelationInput
   subscriptions?: Prisma.SubscriptionOrderByRelationAggregateInput
+  checkoutSessions?: Prisma.CheckoutSessionOrderByRelationAggregateInput
 }
 
 export type MerchantPlanWhereUniqueInput = Prisma.AtLeast<{
@@ -327,6 +329,7 @@ export type MerchantPlanWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"MerchantPlan"> | Date | string
   merchant?: Prisma.XOR<Prisma.MerchantScalarRelationFilter, Prisma.MerchantWhereInput>
   subscriptions?: Prisma.SubscriptionListRelationFilter
+  checkoutSessions?: Prisma.CheckoutSessionListRelationFilter
 }, "planPda">
 
 export type MerchantPlanOrderByWithAggregationInput = {
@@ -387,6 +390,7 @@ export type MerchantPlanCreateInput = {
   createdAt?: Date | string
   merchant: Prisma.MerchantCreateNestedOneWithoutPlansInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutPlanInput
+  checkoutSessions?: Prisma.CheckoutSessionCreateNestedManyWithoutPlanInput
 }
 
 export type MerchantPlanUncheckedCreateInput = {
@@ -405,6 +409,7 @@ export type MerchantPlanUncheckedCreateInput = {
   category?: string | null
   createdAt?: Date | string
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutPlanInput
+  checkoutSessions?: Prisma.CheckoutSessionUncheckedCreateNestedManyWithoutPlanInput
 }
 
 export type MerchantPlanUpdateInput = {
@@ -423,6 +428,7 @@ export type MerchantPlanUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   merchant?: Prisma.MerchantUpdateOneRequiredWithoutPlansNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutPlanNestedInput
+  checkoutSessions?: Prisma.CheckoutSessionUpdateManyWithoutPlanNestedInput
 }
 
 export type MerchantPlanUncheckedUpdateInput = {
@@ -441,6 +447,7 @@ export type MerchantPlanUncheckedUpdateInput = {
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutPlanNestedInput
+  checkoutSessions?: Prisma.CheckoutSessionUncheckedUpdateManyWithoutPlanNestedInput
 }
 
 export type MerchantPlanCreateManyInput = {
@@ -633,6 +640,20 @@ export type MerchantPlanUpdateOneRequiredWithoutSubscriptionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.MerchantPlanUpdateToOneWithWhereWithoutSubscriptionsInput, Prisma.MerchantPlanUpdateWithoutSubscriptionsInput>, Prisma.MerchantPlanUncheckedUpdateWithoutSubscriptionsInput>
 }
 
+export type MerchantPlanCreateNestedOneWithoutCheckoutSessionsInput = {
+  create?: Prisma.XOR<Prisma.MerchantPlanCreateWithoutCheckoutSessionsInput, Prisma.MerchantPlanUncheckedCreateWithoutCheckoutSessionsInput>
+  connectOrCreate?: Prisma.MerchantPlanCreateOrConnectWithoutCheckoutSessionsInput
+  connect?: Prisma.MerchantPlanWhereUniqueInput
+}
+
+export type MerchantPlanUpdateOneRequiredWithoutCheckoutSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.MerchantPlanCreateWithoutCheckoutSessionsInput, Prisma.MerchantPlanUncheckedCreateWithoutCheckoutSessionsInput>
+  connectOrCreate?: Prisma.MerchantPlanCreateOrConnectWithoutCheckoutSessionsInput
+  upsert?: Prisma.MerchantPlanUpsertWithoutCheckoutSessionsInput
+  connect?: Prisma.MerchantPlanWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MerchantPlanUpdateToOneWithWhereWithoutCheckoutSessionsInput, Prisma.MerchantPlanUpdateWithoutCheckoutSessionsInput>, Prisma.MerchantPlanUncheckedUpdateWithoutCheckoutSessionsInput>
+}
+
 export type MerchantPlanCreateWithoutMerchantInput = {
   planPda: string
   planId: string
@@ -648,6 +669,7 @@ export type MerchantPlanCreateWithoutMerchantInput = {
   category?: string | null
   createdAt?: Date | string
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutPlanInput
+  checkoutSessions?: Prisma.CheckoutSessionCreateNestedManyWithoutPlanInput
 }
 
 export type MerchantPlanUncheckedCreateWithoutMerchantInput = {
@@ -665,6 +687,7 @@ export type MerchantPlanUncheckedCreateWithoutMerchantInput = {
   category?: string | null
   createdAt?: Date | string
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutPlanInput
+  checkoutSessions?: Prisma.CheckoutSessionUncheckedCreateNestedManyWithoutPlanInput
 }
 
 export type MerchantPlanCreateOrConnectWithoutMerchantInput = {
@@ -728,6 +751,7 @@ export type MerchantPlanCreateWithoutSubscriptionsInput = {
   category?: string | null
   createdAt?: Date | string
   merchant: Prisma.MerchantCreateNestedOneWithoutPlansInput
+  checkoutSessions?: Prisma.CheckoutSessionCreateNestedManyWithoutPlanInput
 }
 
 export type MerchantPlanUncheckedCreateWithoutSubscriptionsInput = {
@@ -745,6 +769,7 @@ export type MerchantPlanUncheckedCreateWithoutSubscriptionsInput = {
   features?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   category?: string | null
   createdAt?: Date | string
+  checkoutSessions?: Prisma.CheckoutSessionUncheckedCreateNestedManyWithoutPlanInput
 }
 
 export type MerchantPlanCreateOrConnectWithoutSubscriptionsInput = {
@@ -778,6 +803,7 @@ export type MerchantPlanUpdateWithoutSubscriptionsInput = {
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   merchant?: Prisma.MerchantUpdateOneRequiredWithoutPlansNestedInput
+  checkoutSessions?: Prisma.CheckoutSessionUpdateManyWithoutPlanNestedInput
 }
 
 export type MerchantPlanUncheckedUpdateWithoutSubscriptionsInput = {
@@ -795,6 +821,95 @@ export type MerchantPlanUncheckedUpdateWithoutSubscriptionsInput = {
   features?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  checkoutSessions?: Prisma.CheckoutSessionUncheckedUpdateManyWithoutPlanNestedInput
+}
+
+export type MerchantPlanCreateWithoutCheckoutSessionsInput = {
+  planPda: string
+  planId: string
+  planName: string
+  mint: string
+  feeAmount: string
+  paymentInterval: string
+  isActive?: boolean
+  totalSubscribers?: number
+  totalRevenue?: string
+  description?: string | null
+  features?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  category?: string | null
+  createdAt?: Date | string
+  merchant: Prisma.MerchantCreateNestedOneWithoutPlansInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutPlanInput
+}
+
+export type MerchantPlanUncheckedCreateWithoutCheckoutSessionsInput = {
+  planPda: string
+  merchantWallet: string
+  planId: string
+  planName: string
+  mint: string
+  feeAmount: string
+  paymentInterval: string
+  isActive?: boolean
+  totalSubscribers?: number
+  totalRevenue?: string
+  description?: string | null
+  features?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  category?: string | null
+  createdAt?: Date | string
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutPlanInput
+}
+
+export type MerchantPlanCreateOrConnectWithoutCheckoutSessionsInput = {
+  where: Prisma.MerchantPlanWhereUniqueInput
+  create: Prisma.XOR<Prisma.MerchantPlanCreateWithoutCheckoutSessionsInput, Prisma.MerchantPlanUncheckedCreateWithoutCheckoutSessionsInput>
+}
+
+export type MerchantPlanUpsertWithoutCheckoutSessionsInput = {
+  update: Prisma.XOR<Prisma.MerchantPlanUpdateWithoutCheckoutSessionsInput, Prisma.MerchantPlanUncheckedUpdateWithoutCheckoutSessionsInput>
+  create: Prisma.XOR<Prisma.MerchantPlanCreateWithoutCheckoutSessionsInput, Prisma.MerchantPlanUncheckedCreateWithoutCheckoutSessionsInput>
+  where?: Prisma.MerchantPlanWhereInput
+}
+
+export type MerchantPlanUpdateToOneWithWhereWithoutCheckoutSessionsInput = {
+  where?: Prisma.MerchantPlanWhereInput
+  data: Prisma.XOR<Prisma.MerchantPlanUpdateWithoutCheckoutSessionsInput, Prisma.MerchantPlanUncheckedUpdateWithoutCheckoutSessionsInput>
+}
+
+export type MerchantPlanUpdateWithoutCheckoutSessionsInput = {
+  planPda?: Prisma.StringFieldUpdateOperationsInput | string
+  planId?: Prisma.StringFieldUpdateOperationsInput | string
+  planName?: Prisma.StringFieldUpdateOperationsInput | string
+  mint?: Prisma.StringFieldUpdateOperationsInput | string
+  feeAmount?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentInterval?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  totalSubscribers?: Prisma.IntFieldUpdateOperationsInput | number
+  totalRevenue?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  features?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  merchant?: Prisma.MerchantUpdateOneRequiredWithoutPlansNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutPlanNestedInput
+}
+
+export type MerchantPlanUncheckedUpdateWithoutCheckoutSessionsInput = {
+  planPda?: Prisma.StringFieldUpdateOperationsInput | string
+  merchantWallet?: Prisma.StringFieldUpdateOperationsInput | string
+  planId?: Prisma.StringFieldUpdateOperationsInput | string
+  planName?: Prisma.StringFieldUpdateOperationsInput | string
+  mint?: Prisma.StringFieldUpdateOperationsInput | string
+  feeAmount?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentInterval?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  totalSubscribers?: Prisma.IntFieldUpdateOperationsInput | number
+  totalRevenue?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  features?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutPlanNestedInput
 }
 
 export type MerchantPlanCreateManyMerchantInput = {
@@ -828,6 +943,7 @@ export type MerchantPlanUpdateWithoutMerchantInput = {
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutPlanNestedInput
+  checkoutSessions?: Prisma.CheckoutSessionUpdateManyWithoutPlanNestedInput
 }
 
 export type MerchantPlanUncheckedUpdateWithoutMerchantInput = {
@@ -845,6 +961,7 @@ export type MerchantPlanUncheckedUpdateWithoutMerchantInput = {
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutPlanNestedInput
+  checkoutSessions?: Prisma.CheckoutSessionUncheckedUpdateManyWithoutPlanNestedInput
 }
 
 export type MerchantPlanUncheckedUpdateManyWithoutMerchantInput = {
@@ -870,10 +987,12 @@ export type MerchantPlanUncheckedUpdateManyWithoutMerchantInput = {
 
 export type MerchantPlanCountOutputType = {
   subscriptions: number
+  checkoutSessions: number
 }
 
 export type MerchantPlanCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   subscriptions?: boolean | MerchantPlanCountOutputTypeCountSubscriptionsArgs
+  checkoutSessions?: boolean | MerchantPlanCountOutputTypeCountCheckoutSessionsArgs
 }
 
 /**
@@ -891,6 +1010,13 @@ export type MerchantPlanCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types
  */
 export type MerchantPlanCountOutputTypeCountSubscriptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.SubscriptionWhereInput
+}
+
+/**
+ * MerchantPlanCountOutputType without action
+ */
+export type MerchantPlanCountOutputTypeCountCheckoutSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CheckoutSessionWhereInput
 }
 
 
@@ -911,6 +1037,7 @@ export type MerchantPlanSelect<ExtArgs extends runtime.Types.Extensions.Internal
   createdAt?: boolean
   merchant?: boolean | Prisma.MerchantDefaultArgs<ExtArgs>
   subscriptions?: boolean | Prisma.MerchantPlan$subscriptionsArgs<ExtArgs>
+  checkoutSessions?: boolean | Prisma.MerchantPlan$checkoutSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.MerchantPlanCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["merchantPlan"]>
 
@@ -971,6 +1098,7 @@ export type MerchantPlanOmit<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type MerchantPlanInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   merchant?: boolean | Prisma.MerchantDefaultArgs<ExtArgs>
   subscriptions?: boolean | Prisma.MerchantPlan$subscriptionsArgs<ExtArgs>
+  checkoutSessions?: boolean | Prisma.MerchantPlan$checkoutSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.MerchantPlanCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MerchantPlanIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -985,6 +1113,7 @@ export type $MerchantPlanPayload<ExtArgs extends runtime.Types.Extensions.Intern
   objects: {
     merchant: Prisma.$MerchantPayload<ExtArgs>
     subscriptions: Prisma.$SubscriptionPayload<ExtArgs>[]
+    checkoutSessions: Prisma.$CheckoutSessionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     planPda: string
@@ -1397,6 +1526,7 @@ export interface Prisma__MerchantPlanClient<T, Null = never, ExtArgs extends run
   readonly [Symbol.toStringTag]: "PrismaPromise"
   merchant<T extends Prisma.MerchantDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MerchantDefaultArgs<ExtArgs>>): Prisma.Prisma__MerchantClient<runtime.Types.Result.GetResult<Prisma.$MerchantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   subscriptions<T extends Prisma.MerchantPlan$subscriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MerchantPlan$subscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  checkoutSessions<T extends Prisma.MerchantPlan$checkoutSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MerchantPlan$checkoutSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CheckoutSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1857,6 +1987,30 @@ export type MerchantPlan$subscriptionsArgs<ExtArgs extends runtime.Types.Extensi
   take?: number
   skip?: number
   distinct?: Prisma.SubscriptionScalarFieldEnum | Prisma.SubscriptionScalarFieldEnum[]
+}
+
+/**
+ * MerchantPlan.checkoutSessions
+ */
+export type MerchantPlan$checkoutSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CheckoutSession
+   */
+  select?: Prisma.CheckoutSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CheckoutSession
+   */
+  omit?: Prisma.CheckoutSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CheckoutSessionInclude<ExtArgs> | null
+  where?: Prisma.CheckoutSessionWhereInput
+  orderBy?: Prisma.CheckoutSessionOrderByWithRelationInput | Prisma.CheckoutSessionOrderByWithRelationInput[]
+  cursor?: Prisma.CheckoutSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CheckoutSessionScalarFieldEnum | Prisma.CheckoutSessionScalarFieldEnum[]
 }
 
 /**

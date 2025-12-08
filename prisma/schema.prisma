@@ -26,6 +26,7 @@ model Merchant {
   webhookSecret String?        @map("webhook_secret")
   createdAt     DateTime       @default(now()) @map("created_at")
   plans         MerchantPlan[]
+  checkoutSessions CheckoutSession[]
 
   @@map("merchants")
 }
@@ -48,6 +49,7 @@ model MerchantPlan {
 
   merchant Merchant @relation(fields: [merchantWallet], references: [walletAddress])
   subscriptions Subscription[] @relation("PlanSubscriptions")
+  checkoutSessions CheckoutSession[] @relation("CheckoutSessions")
 
   @@index([merchantWallet])
   @@map("merchant_plans")
@@ -224,9 +226,13 @@ model CheckoutSession {
   createdAt       DateTime @default(now()) @map("created_at")
   expiresAt       DateTime @map("expires_at")
   completedAt     DateTime? @map("completed_at")
+
+  merchant        Merchant @relation(fields: [merchantWallet], references: [walletAddress])
+  plan            MerchantPlan @relation("CheckoutSessions", fields: [planPda], references: [planPda])
   
   @@index([sessionId])
   @@index([merchantWallet])
+  @@index([planPda])
   @@index([status])
   @@map("checkout_sessions")
 }

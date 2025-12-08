@@ -274,6 +274,8 @@ export type CheckoutSessionWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"CheckoutSession"> | Date | string
   expiresAt?: Prisma.DateTimeFilter<"CheckoutSession"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"CheckoutSession"> | Date | string | null
+  merchant?: Prisma.XOR<Prisma.MerchantScalarRelationFilter, Prisma.MerchantWhereInput>
+  plan?: Prisma.XOR<Prisma.MerchantPlanScalarRelationFilter, Prisma.MerchantPlanWhereInput>
 }
 
 export type CheckoutSessionOrderByWithRelationInput = {
@@ -294,6 +296,8 @@ export type CheckoutSessionOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  merchant?: Prisma.MerchantOrderByWithRelationInput
+  plan?: Prisma.MerchantPlanOrderByWithRelationInput
 }
 
 export type CheckoutSessionWhereUniqueInput = Prisma.AtLeast<{
@@ -317,6 +321,8 @@ export type CheckoutSessionWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"CheckoutSession"> | Date | string
   expiresAt?: Prisma.DateTimeFilter<"CheckoutSession"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"CheckoutSession"> | Date | string | null
+  merchant?: Prisma.XOR<Prisma.MerchantScalarRelationFilter, Prisma.MerchantWhereInput>
+  plan?: Prisma.XOR<Prisma.MerchantPlanScalarRelationFilter, Prisma.MerchantPlanWhereInput>
 }, "id" | "sessionId">
 
 export type CheckoutSessionOrderByWithAggregationInput = {
@@ -368,8 +374,6 @@ export type CheckoutSessionScalarWhereWithAggregatesInput = {
 export type CheckoutSessionCreateInput = {
   id?: string
   sessionId: string
-  merchantWallet: string
-  planPda: string
   planId: string
   customerEmail: string
   customerId?: string | null
@@ -383,6 +387,8 @@ export type CheckoutSessionCreateInput = {
   createdAt?: Date | string
   expiresAt: Date | string
   completedAt?: Date | string | null
+  merchant: Prisma.MerchantCreateNestedOneWithoutCheckoutSessionsInput
+  plan: Prisma.MerchantPlanCreateNestedOneWithoutCheckoutSessionsInput
 }
 
 export type CheckoutSessionUncheckedCreateInput = {
@@ -408,8 +414,6 @@ export type CheckoutSessionUncheckedCreateInput = {
 export type CheckoutSessionUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   sessionId?: Prisma.StringFieldUpdateOperationsInput | string
-  merchantWallet?: Prisma.StringFieldUpdateOperationsInput | string
-  planPda?: Prisma.StringFieldUpdateOperationsInput | string
   planId?: Prisma.StringFieldUpdateOperationsInput | string
   customerEmail?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -423,6 +427,8 @@ export type CheckoutSessionUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  merchant?: Prisma.MerchantUpdateOneRequiredWithoutCheckoutSessionsNestedInput
+  plan?: Prisma.MerchantPlanUpdateOneRequiredWithoutCheckoutSessionsNestedInput
 }
 
 export type CheckoutSessionUncheckedUpdateInput = {
@@ -468,8 +474,6 @@ export type CheckoutSessionCreateManyInput = {
 export type CheckoutSessionUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   sessionId?: Prisma.StringFieldUpdateOperationsInput | string
-  merchantWallet?: Prisma.StringFieldUpdateOperationsInput | string
-  planPda?: Prisma.StringFieldUpdateOperationsInput | string
   planId?: Prisma.StringFieldUpdateOperationsInput | string
   customerEmail?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -503,6 +507,16 @@ export type CheckoutSessionUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type CheckoutSessionListRelationFilter = {
+  every?: Prisma.CheckoutSessionWhereInput
+  some?: Prisma.CheckoutSessionWhereInput
+  none?: Prisma.CheckoutSessionWhereInput
+}
+
+export type CheckoutSessionOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type CheckoutSessionCountOrderByAggregateInput = {
@@ -563,6 +577,393 @@ export type CheckoutSessionMinOrderByAggregateInput = {
   completedAt?: Prisma.SortOrder
 }
 
+export type CheckoutSessionCreateNestedManyWithoutMerchantInput = {
+  create?: Prisma.XOR<Prisma.CheckoutSessionCreateWithoutMerchantInput, Prisma.CheckoutSessionUncheckedCreateWithoutMerchantInput> | Prisma.CheckoutSessionCreateWithoutMerchantInput[] | Prisma.CheckoutSessionUncheckedCreateWithoutMerchantInput[]
+  connectOrCreate?: Prisma.CheckoutSessionCreateOrConnectWithoutMerchantInput | Prisma.CheckoutSessionCreateOrConnectWithoutMerchantInput[]
+  createMany?: Prisma.CheckoutSessionCreateManyMerchantInputEnvelope
+  connect?: Prisma.CheckoutSessionWhereUniqueInput | Prisma.CheckoutSessionWhereUniqueInput[]
+}
+
+export type CheckoutSessionUncheckedCreateNestedManyWithoutMerchantInput = {
+  create?: Prisma.XOR<Prisma.CheckoutSessionCreateWithoutMerchantInput, Prisma.CheckoutSessionUncheckedCreateWithoutMerchantInput> | Prisma.CheckoutSessionCreateWithoutMerchantInput[] | Prisma.CheckoutSessionUncheckedCreateWithoutMerchantInput[]
+  connectOrCreate?: Prisma.CheckoutSessionCreateOrConnectWithoutMerchantInput | Prisma.CheckoutSessionCreateOrConnectWithoutMerchantInput[]
+  createMany?: Prisma.CheckoutSessionCreateManyMerchantInputEnvelope
+  connect?: Prisma.CheckoutSessionWhereUniqueInput | Prisma.CheckoutSessionWhereUniqueInput[]
+}
+
+export type CheckoutSessionUpdateManyWithoutMerchantNestedInput = {
+  create?: Prisma.XOR<Prisma.CheckoutSessionCreateWithoutMerchantInput, Prisma.CheckoutSessionUncheckedCreateWithoutMerchantInput> | Prisma.CheckoutSessionCreateWithoutMerchantInput[] | Prisma.CheckoutSessionUncheckedCreateWithoutMerchantInput[]
+  connectOrCreate?: Prisma.CheckoutSessionCreateOrConnectWithoutMerchantInput | Prisma.CheckoutSessionCreateOrConnectWithoutMerchantInput[]
+  upsert?: Prisma.CheckoutSessionUpsertWithWhereUniqueWithoutMerchantInput | Prisma.CheckoutSessionUpsertWithWhereUniqueWithoutMerchantInput[]
+  createMany?: Prisma.CheckoutSessionCreateManyMerchantInputEnvelope
+  set?: Prisma.CheckoutSessionWhereUniqueInput | Prisma.CheckoutSessionWhereUniqueInput[]
+  disconnect?: Prisma.CheckoutSessionWhereUniqueInput | Prisma.CheckoutSessionWhereUniqueInput[]
+  delete?: Prisma.CheckoutSessionWhereUniqueInput | Prisma.CheckoutSessionWhereUniqueInput[]
+  connect?: Prisma.CheckoutSessionWhereUniqueInput | Prisma.CheckoutSessionWhereUniqueInput[]
+  update?: Prisma.CheckoutSessionUpdateWithWhereUniqueWithoutMerchantInput | Prisma.CheckoutSessionUpdateWithWhereUniqueWithoutMerchantInput[]
+  updateMany?: Prisma.CheckoutSessionUpdateManyWithWhereWithoutMerchantInput | Prisma.CheckoutSessionUpdateManyWithWhereWithoutMerchantInput[]
+  deleteMany?: Prisma.CheckoutSessionScalarWhereInput | Prisma.CheckoutSessionScalarWhereInput[]
+}
+
+export type CheckoutSessionUncheckedUpdateManyWithoutMerchantNestedInput = {
+  create?: Prisma.XOR<Prisma.CheckoutSessionCreateWithoutMerchantInput, Prisma.CheckoutSessionUncheckedCreateWithoutMerchantInput> | Prisma.CheckoutSessionCreateWithoutMerchantInput[] | Prisma.CheckoutSessionUncheckedCreateWithoutMerchantInput[]
+  connectOrCreate?: Prisma.CheckoutSessionCreateOrConnectWithoutMerchantInput | Prisma.CheckoutSessionCreateOrConnectWithoutMerchantInput[]
+  upsert?: Prisma.CheckoutSessionUpsertWithWhereUniqueWithoutMerchantInput | Prisma.CheckoutSessionUpsertWithWhereUniqueWithoutMerchantInput[]
+  createMany?: Prisma.CheckoutSessionCreateManyMerchantInputEnvelope
+  set?: Prisma.CheckoutSessionWhereUniqueInput | Prisma.CheckoutSessionWhereUniqueInput[]
+  disconnect?: Prisma.CheckoutSessionWhereUniqueInput | Prisma.CheckoutSessionWhereUniqueInput[]
+  delete?: Prisma.CheckoutSessionWhereUniqueInput | Prisma.CheckoutSessionWhereUniqueInput[]
+  connect?: Prisma.CheckoutSessionWhereUniqueInput | Prisma.CheckoutSessionWhereUniqueInput[]
+  update?: Prisma.CheckoutSessionUpdateWithWhereUniqueWithoutMerchantInput | Prisma.CheckoutSessionUpdateWithWhereUniqueWithoutMerchantInput[]
+  updateMany?: Prisma.CheckoutSessionUpdateManyWithWhereWithoutMerchantInput | Prisma.CheckoutSessionUpdateManyWithWhereWithoutMerchantInput[]
+  deleteMany?: Prisma.CheckoutSessionScalarWhereInput | Prisma.CheckoutSessionScalarWhereInput[]
+}
+
+export type CheckoutSessionCreateNestedManyWithoutPlanInput = {
+  create?: Prisma.XOR<Prisma.CheckoutSessionCreateWithoutPlanInput, Prisma.CheckoutSessionUncheckedCreateWithoutPlanInput> | Prisma.CheckoutSessionCreateWithoutPlanInput[] | Prisma.CheckoutSessionUncheckedCreateWithoutPlanInput[]
+  connectOrCreate?: Prisma.CheckoutSessionCreateOrConnectWithoutPlanInput | Prisma.CheckoutSessionCreateOrConnectWithoutPlanInput[]
+  createMany?: Prisma.CheckoutSessionCreateManyPlanInputEnvelope
+  connect?: Prisma.CheckoutSessionWhereUniqueInput | Prisma.CheckoutSessionWhereUniqueInput[]
+}
+
+export type CheckoutSessionUncheckedCreateNestedManyWithoutPlanInput = {
+  create?: Prisma.XOR<Prisma.CheckoutSessionCreateWithoutPlanInput, Prisma.CheckoutSessionUncheckedCreateWithoutPlanInput> | Prisma.CheckoutSessionCreateWithoutPlanInput[] | Prisma.CheckoutSessionUncheckedCreateWithoutPlanInput[]
+  connectOrCreate?: Prisma.CheckoutSessionCreateOrConnectWithoutPlanInput | Prisma.CheckoutSessionCreateOrConnectWithoutPlanInput[]
+  createMany?: Prisma.CheckoutSessionCreateManyPlanInputEnvelope
+  connect?: Prisma.CheckoutSessionWhereUniqueInput | Prisma.CheckoutSessionWhereUniqueInput[]
+}
+
+export type CheckoutSessionUpdateManyWithoutPlanNestedInput = {
+  create?: Prisma.XOR<Prisma.CheckoutSessionCreateWithoutPlanInput, Prisma.CheckoutSessionUncheckedCreateWithoutPlanInput> | Prisma.CheckoutSessionCreateWithoutPlanInput[] | Prisma.CheckoutSessionUncheckedCreateWithoutPlanInput[]
+  connectOrCreate?: Prisma.CheckoutSessionCreateOrConnectWithoutPlanInput | Prisma.CheckoutSessionCreateOrConnectWithoutPlanInput[]
+  upsert?: Prisma.CheckoutSessionUpsertWithWhereUniqueWithoutPlanInput | Prisma.CheckoutSessionUpsertWithWhereUniqueWithoutPlanInput[]
+  createMany?: Prisma.CheckoutSessionCreateManyPlanInputEnvelope
+  set?: Prisma.CheckoutSessionWhereUniqueInput | Prisma.CheckoutSessionWhereUniqueInput[]
+  disconnect?: Prisma.CheckoutSessionWhereUniqueInput | Prisma.CheckoutSessionWhereUniqueInput[]
+  delete?: Prisma.CheckoutSessionWhereUniqueInput | Prisma.CheckoutSessionWhereUniqueInput[]
+  connect?: Prisma.CheckoutSessionWhereUniqueInput | Prisma.CheckoutSessionWhereUniqueInput[]
+  update?: Prisma.CheckoutSessionUpdateWithWhereUniqueWithoutPlanInput | Prisma.CheckoutSessionUpdateWithWhereUniqueWithoutPlanInput[]
+  updateMany?: Prisma.CheckoutSessionUpdateManyWithWhereWithoutPlanInput | Prisma.CheckoutSessionUpdateManyWithWhereWithoutPlanInput[]
+  deleteMany?: Prisma.CheckoutSessionScalarWhereInput | Prisma.CheckoutSessionScalarWhereInput[]
+}
+
+export type CheckoutSessionUncheckedUpdateManyWithoutPlanNestedInput = {
+  create?: Prisma.XOR<Prisma.CheckoutSessionCreateWithoutPlanInput, Prisma.CheckoutSessionUncheckedCreateWithoutPlanInput> | Prisma.CheckoutSessionCreateWithoutPlanInput[] | Prisma.CheckoutSessionUncheckedCreateWithoutPlanInput[]
+  connectOrCreate?: Prisma.CheckoutSessionCreateOrConnectWithoutPlanInput | Prisma.CheckoutSessionCreateOrConnectWithoutPlanInput[]
+  upsert?: Prisma.CheckoutSessionUpsertWithWhereUniqueWithoutPlanInput | Prisma.CheckoutSessionUpsertWithWhereUniqueWithoutPlanInput[]
+  createMany?: Prisma.CheckoutSessionCreateManyPlanInputEnvelope
+  set?: Prisma.CheckoutSessionWhereUniqueInput | Prisma.CheckoutSessionWhereUniqueInput[]
+  disconnect?: Prisma.CheckoutSessionWhereUniqueInput | Prisma.CheckoutSessionWhereUniqueInput[]
+  delete?: Prisma.CheckoutSessionWhereUniqueInput | Prisma.CheckoutSessionWhereUniqueInput[]
+  connect?: Prisma.CheckoutSessionWhereUniqueInput | Prisma.CheckoutSessionWhereUniqueInput[]
+  update?: Prisma.CheckoutSessionUpdateWithWhereUniqueWithoutPlanInput | Prisma.CheckoutSessionUpdateWithWhereUniqueWithoutPlanInput[]
+  updateMany?: Prisma.CheckoutSessionUpdateManyWithWhereWithoutPlanInput | Prisma.CheckoutSessionUpdateManyWithWhereWithoutPlanInput[]
+  deleteMany?: Prisma.CheckoutSessionScalarWhereInput | Prisma.CheckoutSessionScalarWhereInput[]
+}
+
+export type CheckoutSessionCreateWithoutMerchantInput = {
+  id?: string
+  sessionId: string
+  planId: string
+  customerEmail: string
+  customerId?: string | null
+  successUrl: string
+  cancelUrl?: string | null
+  status?: string
+  subscriptionPda?: string | null
+  userWallet?: string | null
+  signature?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  expiresAt: Date | string
+  completedAt?: Date | string | null
+  plan: Prisma.MerchantPlanCreateNestedOneWithoutCheckoutSessionsInput
+}
+
+export type CheckoutSessionUncheckedCreateWithoutMerchantInput = {
+  id?: string
+  sessionId: string
+  planPda: string
+  planId: string
+  customerEmail: string
+  customerId?: string | null
+  successUrl: string
+  cancelUrl?: string | null
+  status?: string
+  subscriptionPda?: string | null
+  userWallet?: string | null
+  signature?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  expiresAt: Date | string
+  completedAt?: Date | string | null
+}
+
+export type CheckoutSessionCreateOrConnectWithoutMerchantInput = {
+  where: Prisma.CheckoutSessionWhereUniqueInput
+  create: Prisma.XOR<Prisma.CheckoutSessionCreateWithoutMerchantInput, Prisma.CheckoutSessionUncheckedCreateWithoutMerchantInput>
+}
+
+export type CheckoutSessionCreateManyMerchantInputEnvelope = {
+  data: Prisma.CheckoutSessionCreateManyMerchantInput | Prisma.CheckoutSessionCreateManyMerchantInput[]
+  skipDuplicates?: boolean
+}
+
+export type CheckoutSessionUpsertWithWhereUniqueWithoutMerchantInput = {
+  where: Prisma.CheckoutSessionWhereUniqueInput
+  update: Prisma.XOR<Prisma.CheckoutSessionUpdateWithoutMerchantInput, Prisma.CheckoutSessionUncheckedUpdateWithoutMerchantInput>
+  create: Prisma.XOR<Prisma.CheckoutSessionCreateWithoutMerchantInput, Prisma.CheckoutSessionUncheckedCreateWithoutMerchantInput>
+}
+
+export type CheckoutSessionUpdateWithWhereUniqueWithoutMerchantInput = {
+  where: Prisma.CheckoutSessionWhereUniqueInput
+  data: Prisma.XOR<Prisma.CheckoutSessionUpdateWithoutMerchantInput, Prisma.CheckoutSessionUncheckedUpdateWithoutMerchantInput>
+}
+
+export type CheckoutSessionUpdateManyWithWhereWithoutMerchantInput = {
+  where: Prisma.CheckoutSessionScalarWhereInput
+  data: Prisma.XOR<Prisma.CheckoutSessionUpdateManyMutationInput, Prisma.CheckoutSessionUncheckedUpdateManyWithoutMerchantInput>
+}
+
+export type CheckoutSessionScalarWhereInput = {
+  AND?: Prisma.CheckoutSessionScalarWhereInput | Prisma.CheckoutSessionScalarWhereInput[]
+  OR?: Prisma.CheckoutSessionScalarWhereInput[]
+  NOT?: Prisma.CheckoutSessionScalarWhereInput | Prisma.CheckoutSessionScalarWhereInput[]
+  id?: Prisma.StringFilter<"CheckoutSession"> | string
+  sessionId?: Prisma.StringFilter<"CheckoutSession"> | string
+  merchantWallet?: Prisma.StringFilter<"CheckoutSession"> | string
+  planPda?: Prisma.StringFilter<"CheckoutSession"> | string
+  planId?: Prisma.StringFilter<"CheckoutSession"> | string
+  customerEmail?: Prisma.StringFilter<"CheckoutSession"> | string
+  customerId?: Prisma.StringNullableFilter<"CheckoutSession"> | string | null
+  successUrl?: Prisma.StringFilter<"CheckoutSession"> | string
+  cancelUrl?: Prisma.StringNullableFilter<"CheckoutSession"> | string | null
+  status?: Prisma.StringFilter<"CheckoutSession"> | string
+  subscriptionPda?: Prisma.StringNullableFilter<"CheckoutSession"> | string | null
+  userWallet?: Prisma.StringNullableFilter<"CheckoutSession"> | string | null
+  signature?: Prisma.StringNullableFilter<"CheckoutSession"> | string | null
+  metadata?: Prisma.JsonNullableFilter<"CheckoutSession">
+  createdAt?: Prisma.DateTimeFilter<"CheckoutSession"> | Date | string
+  expiresAt?: Prisma.DateTimeFilter<"CheckoutSession"> | Date | string
+  completedAt?: Prisma.DateTimeNullableFilter<"CheckoutSession"> | Date | string | null
+}
+
+export type CheckoutSessionCreateWithoutPlanInput = {
+  id?: string
+  sessionId: string
+  planId: string
+  customerEmail: string
+  customerId?: string | null
+  successUrl: string
+  cancelUrl?: string | null
+  status?: string
+  subscriptionPda?: string | null
+  userWallet?: string | null
+  signature?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  expiresAt: Date | string
+  completedAt?: Date | string | null
+  merchant: Prisma.MerchantCreateNestedOneWithoutCheckoutSessionsInput
+}
+
+export type CheckoutSessionUncheckedCreateWithoutPlanInput = {
+  id?: string
+  sessionId: string
+  merchantWallet: string
+  planId: string
+  customerEmail: string
+  customerId?: string | null
+  successUrl: string
+  cancelUrl?: string | null
+  status?: string
+  subscriptionPda?: string | null
+  userWallet?: string | null
+  signature?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  expiresAt: Date | string
+  completedAt?: Date | string | null
+}
+
+export type CheckoutSessionCreateOrConnectWithoutPlanInput = {
+  where: Prisma.CheckoutSessionWhereUniqueInput
+  create: Prisma.XOR<Prisma.CheckoutSessionCreateWithoutPlanInput, Prisma.CheckoutSessionUncheckedCreateWithoutPlanInput>
+}
+
+export type CheckoutSessionCreateManyPlanInputEnvelope = {
+  data: Prisma.CheckoutSessionCreateManyPlanInput | Prisma.CheckoutSessionCreateManyPlanInput[]
+  skipDuplicates?: boolean
+}
+
+export type CheckoutSessionUpsertWithWhereUniqueWithoutPlanInput = {
+  where: Prisma.CheckoutSessionWhereUniqueInput
+  update: Prisma.XOR<Prisma.CheckoutSessionUpdateWithoutPlanInput, Prisma.CheckoutSessionUncheckedUpdateWithoutPlanInput>
+  create: Prisma.XOR<Prisma.CheckoutSessionCreateWithoutPlanInput, Prisma.CheckoutSessionUncheckedCreateWithoutPlanInput>
+}
+
+export type CheckoutSessionUpdateWithWhereUniqueWithoutPlanInput = {
+  where: Prisma.CheckoutSessionWhereUniqueInput
+  data: Prisma.XOR<Prisma.CheckoutSessionUpdateWithoutPlanInput, Prisma.CheckoutSessionUncheckedUpdateWithoutPlanInput>
+}
+
+export type CheckoutSessionUpdateManyWithWhereWithoutPlanInput = {
+  where: Prisma.CheckoutSessionScalarWhereInput
+  data: Prisma.XOR<Prisma.CheckoutSessionUpdateManyMutationInput, Prisma.CheckoutSessionUncheckedUpdateManyWithoutPlanInput>
+}
+
+export type CheckoutSessionCreateManyMerchantInput = {
+  id?: string
+  sessionId: string
+  planPda: string
+  planId: string
+  customerEmail: string
+  customerId?: string | null
+  successUrl: string
+  cancelUrl?: string | null
+  status?: string
+  subscriptionPda?: string | null
+  userWallet?: string | null
+  signature?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  expiresAt: Date | string
+  completedAt?: Date | string | null
+}
+
+export type CheckoutSessionUpdateWithoutMerchantInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sessionId?: Prisma.StringFieldUpdateOperationsInput | string
+  planId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  successUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  cancelUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  subscriptionPda?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userWallet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  plan?: Prisma.MerchantPlanUpdateOneRequiredWithoutCheckoutSessionsNestedInput
+}
+
+export type CheckoutSessionUncheckedUpdateWithoutMerchantInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sessionId?: Prisma.StringFieldUpdateOperationsInput | string
+  planPda?: Prisma.StringFieldUpdateOperationsInput | string
+  planId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  successUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  cancelUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  subscriptionPda?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userWallet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type CheckoutSessionUncheckedUpdateManyWithoutMerchantInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sessionId?: Prisma.StringFieldUpdateOperationsInput | string
+  planPda?: Prisma.StringFieldUpdateOperationsInput | string
+  planId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  successUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  cancelUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  subscriptionPda?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userWallet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type CheckoutSessionCreateManyPlanInput = {
+  id?: string
+  sessionId: string
+  merchantWallet: string
+  planId: string
+  customerEmail: string
+  customerId?: string | null
+  successUrl: string
+  cancelUrl?: string | null
+  status?: string
+  subscriptionPda?: string | null
+  userWallet?: string | null
+  signature?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  expiresAt: Date | string
+  completedAt?: Date | string | null
+}
+
+export type CheckoutSessionUpdateWithoutPlanInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sessionId?: Prisma.StringFieldUpdateOperationsInput | string
+  planId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  successUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  cancelUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  subscriptionPda?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userWallet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  merchant?: Prisma.MerchantUpdateOneRequiredWithoutCheckoutSessionsNestedInput
+}
+
+export type CheckoutSessionUncheckedUpdateWithoutPlanInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sessionId?: Prisma.StringFieldUpdateOperationsInput | string
+  merchantWallet?: Prisma.StringFieldUpdateOperationsInput | string
+  planId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  successUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  cancelUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  subscriptionPda?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userWallet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type CheckoutSessionUncheckedUpdateManyWithoutPlanInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sessionId?: Prisma.StringFieldUpdateOperationsInput | string
+  merchantWallet?: Prisma.StringFieldUpdateOperationsInput | string
+  planId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  successUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  cancelUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  subscriptionPda?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userWallet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
 
 
 export type CheckoutSessionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -583,6 +984,8 @@ export type CheckoutSessionSelect<ExtArgs extends runtime.Types.Extensions.Inter
   createdAt?: boolean
   expiresAt?: boolean
   completedAt?: boolean
+  merchant?: boolean | Prisma.MerchantDefaultArgs<ExtArgs>
+  plan?: boolean | Prisma.MerchantPlanDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["checkoutSession"]>
 
 export type CheckoutSessionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -603,6 +1006,8 @@ export type CheckoutSessionSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   createdAt?: boolean
   expiresAt?: boolean
   completedAt?: boolean
+  merchant?: boolean | Prisma.MerchantDefaultArgs<ExtArgs>
+  plan?: boolean | Prisma.MerchantPlanDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["checkoutSession"]>
 
 export type CheckoutSessionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -623,6 +1028,8 @@ export type CheckoutSessionSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   createdAt?: boolean
   expiresAt?: boolean
   completedAt?: boolean
+  merchant?: boolean | Prisma.MerchantDefaultArgs<ExtArgs>
+  plan?: boolean | Prisma.MerchantPlanDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["checkoutSession"]>
 
 export type CheckoutSessionSelectScalar = {
@@ -646,10 +1053,25 @@ export type CheckoutSessionSelectScalar = {
 }
 
 export type CheckoutSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "sessionId" | "merchantWallet" | "planPda" | "planId" | "customerEmail" | "customerId" | "successUrl" | "cancelUrl" | "status" | "subscriptionPda" | "userWallet" | "signature" | "metadata" | "createdAt" | "expiresAt" | "completedAt", ExtArgs["result"]["checkoutSession"]>
+export type CheckoutSessionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  merchant?: boolean | Prisma.MerchantDefaultArgs<ExtArgs>
+  plan?: boolean | Prisma.MerchantPlanDefaultArgs<ExtArgs>
+}
+export type CheckoutSessionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  merchant?: boolean | Prisma.MerchantDefaultArgs<ExtArgs>
+  plan?: boolean | Prisma.MerchantPlanDefaultArgs<ExtArgs>
+}
+export type CheckoutSessionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  merchant?: boolean | Prisma.MerchantDefaultArgs<ExtArgs>
+  plan?: boolean | Prisma.MerchantPlanDefaultArgs<ExtArgs>
+}
 
 export type $CheckoutSessionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "CheckoutSession"
-  objects: {}
+  objects: {
+    merchant: Prisma.$MerchantPayload<ExtArgs>
+    plan: Prisma.$MerchantPlanPayload<ExtArgs>
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     sessionId: string
@@ -1062,6 +1484,8 @@ readonly fields: CheckoutSessionFieldRefs;
  */
 export interface Prisma__CheckoutSessionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  merchant<T extends Prisma.MerchantDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MerchantDefaultArgs<ExtArgs>>): Prisma.Prisma__MerchantClient<runtime.Types.Result.GetResult<Prisma.$MerchantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  plan<T extends Prisma.MerchantPlanDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MerchantPlanDefaultArgs<ExtArgs>>): Prisma.Prisma__MerchantPlanClient<runtime.Types.Result.GetResult<Prisma.$MerchantPlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1125,6 +1549,10 @@ export type CheckoutSessionFindUniqueArgs<ExtArgs extends runtime.Types.Extensio
    */
   omit?: Prisma.CheckoutSessionOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CheckoutSessionInclude<ExtArgs> | null
+  /**
    * Filter, which CheckoutSession to fetch.
    */
   where: Prisma.CheckoutSessionWhereUniqueInput
@@ -1143,6 +1571,10 @@ export type CheckoutSessionFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.E
    */
   omit?: Prisma.CheckoutSessionOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CheckoutSessionInclude<ExtArgs> | null
+  /**
    * Filter, which CheckoutSession to fetch.
    */
   where: Prisma.CheckoutSessionWhereUniqueInput
@@ -1160,6 +1592,10 @@ export type CheckoutSessionFindFirstArgs<ExtArgs extends runtime.Types.Extension
    * Omit specific fields from the CheckoutSession
    */
   omit?: Prisma.CheckoutSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CheckoutSessionInclude<ExtArgs> | null
   /**
    * Filter, which CheckoutSession to fetch.
    */
@@ -1209,6 +1645,10 @@ export type CheckoutSessionFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Ex
    */
   omit?: Prisma.CheckoutSessionOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CheckoutSessionInclude<ExtArgs> | null
+  /**
    * Filter, which CheckoutSession to fetch.
    */
   where?: Prisma.CheckoutSessionWhereInput
@@ -1257,6 +1697,10 @@ export type CheckoutSessionFindManyArgs<ExtArgs extends runtime.Types.Extensions
    */
   omit?: Prisma.CheckoutSessionOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CheckoutSessionInclude<ExtArgs> | null
+  /**
    * Filter, which CheckoutSessions to fetch.
    */
   where?: Prisma.CheckoutSessionWhereInput
@@ -1300,6 +1744,10 @@ export type CheckoutSessionCreateArgs<ExtArgs extends runtime.Types.Extensions.I
    */
   omit?: Prisma.CheckoutSessionOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CheckoutSessionInclude<ExtArgs> | null
+  /**
    * The data needed to create a CheckoutSession.
    */
   data: Prisma.XOR<Prisma.CheckoutSessionCreateInput, Prisma.CheckoutSessionUncheckedCreateInput>
@@ -1333,6 +1781,10 @@ export type CheckoutSessionCreateManyAndReturnArgs<ExtArgs extends runtime.Types
    */
   data: Prisma.CheckoutSessionCreateManyInput | Prisma.CheckoutSessionCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CheckoutSessionIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1347,6 +1799,10 @@ export type CheckoutSessionUpdateArgs<ExtArgs extends runtime.Types.Extensions.I
    * Omit specific fields from the CheckoutSession
    */
   omit?: Prisma.CheckoutSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CheckoutSessionInclude<ExtArgs> | null
   /**
    * The data needed to update a CheckoutSession.
    */
@@ -1399,6 +1855,10 @@ export type CheckoutSessionUpdateManyAndReturnArgs<ExtArgs extends runtime.Types
    * Limit how many CheckoutSessions to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CheckoutSessionIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1413,6 +1873,10 @@ export type CheckoutSessionUpsertArgs<ExtArgs extends runtime.Types.Extensions.I
    * Omit specific fields from the CheckoutSession
    */
   omit?: Prisma.CheckoutSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CheckoutSessionInclude<ExtArgs> | null
   /**
    * The filter to search for the CheckoutSession to update in case it exists.
    */
@@ -1439,6 +1903,10 @@ export type CheckoutSessionDeleteArgs<ExtArgs extends runtime.Types.Extensions.I
    * Omit specific fields from the CheckoutSession
    */
   omit?: Prisma.CheckoutSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CheckoutSessionInclude<ExtArgs> | null
   /**
    * Filter which CheckoutSession to delete.
    */
@@ -1471,4 +1939,8 @@ export type CheckoutSessionDefaultArgs<ExtArgs extends runtime.Types.Extensions.
    * Omit specific fields from the CheckoutSession
    */
   omit?: Prisma.CheckoutSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CheckoutSessionInclude<ExtArgs> | null
 }

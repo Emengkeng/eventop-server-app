@@ -18,7 +18,7 @@ export class ApiKeysController {
   constructor(private apiKeysService: ApiKeysService) {}
 
   @Post()
-  async createApiKey(@Request() req) {
+  async createApiKey(@Request() req, @Body() body: { name: string }) {
     const environments = APIKEY_ENVIRONMENTS || 'devnet';
     return this.apiKeysService.createApiKey(
       req.merchant.walletAddress,
