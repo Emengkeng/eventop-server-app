@@ -15,17 +15,7 @@ config({ path: '.env.local' });
 config({ path: '.env' });
 
 // Validate required environment variables
-ensureEnv([
-  'PORT',
-  'DB_PORT',
-  'DB_USER',
-  'DB_PASSWORD',
-  'DB_HOST',
-  'DB_NAME',
-  'PAYER_SECRET_KEY',
-  'PROGRAM_ID',
-  'USDC_MINT',
-]);
+ensureEnv(['PORT', 'PAYER_SECRET_KEY', 'PROGRAM_ID', 'USDC_MINT']);
 
 export const CREDENTIALS = process.env.CREDENTIALS === 'true';
 export const APIKEY_ENVIRONMENTS =
