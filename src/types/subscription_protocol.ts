@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 /**
  * Program IDL in camelCase format in order to be used in JS/TS.
  *
@@ -521,6 +520,33 @@ export type SubscriptionProtocol = {
           "name": "merchantPlan"
         },
         {
+          "name": "protocolConfig",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
           "name": "walletTokenAccount",
           "writable": true
         },
@@ -529,11 +555,79 @@ export type SubscriptionProtocol = {
           "writable": true
         },
         {
+          "name": "protocolTreasury",
+          "writable": true
+        },
+        {
           "name": "tokenProgram",
           "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
         }
       ],
       "args": []
+    },
+    {
+      "name": "initializeProtocol",
+      "docs": [
+        "Initialize protocol configuration (one-time, by deployer)"
+      ],
+      "discriminator": [
+        188,
+        233,
+        252,
+        106,
+        134,
+        146,
+        202,
+        91
+      ],
+      "accounts": [
+        {
+          "name": "protocolConfig",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "treasury"
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "protocolFeeBps",
+          "type": "u16"
+        }
+      ]
     },
     {
       "name": "registerMerchant",
@@ -741,6 +835,65 @@ export type SubscriptionProtocol = {
       "args": []
     },
     {
+      "name": "updateProtocolFee",
+      "docs": [
+        "Update protocol fee (admin only)"
+      ],
+      "discriminator": [
+        170,
+        136,
+        6,
+        60,
+        43,
+        130,
+        81,
+        96
+      ],
+      "accounts": [
+        {
+          "name": "protocolConfig",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "signer": true,
+          "relations": [
+            "protocolConfig"
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "newFeeBps",
+          "type": "u16"
+        }
+      ]
+    },
+    {
       "name": "withdrawFromWallet",
       "docs": [
         "Withdraw idle funds from Subscription Wallet"
@@ -844,6 +997,19 @@ export type SubscriptionProtocol = {
       ]
     },
     {
+      "name": "protocolConfig",
+      "discriminator": [
+        207,
+        91,
+        250,
+        28,
+        152,
+        179,
+        215,
+        209
+      ]
+    },
+    {
       "name": "subscriptionState",
       "discriminator": [
         35,
@@ -882,6 +1048,32 @@ export type SubscriptionProtocol = {
         20,
         204,
         227
+      ]
+    },
+    {
+      "name": "protocolFeeUpdated",
+      "discriminator": [
+        172,
+        56,
+        83,
+        113,
+        219,
+        69,
+        69,
+        105
+      ]
+    },
+    {
+      "name": "protocolInitialized",
+      "discriminator": [
+        173,
+        122,
+        168,
+        254,
+        9,
+        118,
+        76,
+        132
       ]
     },
     {
@@ -1096,6 +1288,21 @@ export type SubscriptionProtocol = {
       "code": 6023,
       "name": "merchantMismatch",
       "msg": "Merchant mismatch: subscription merchant does not match merchant plan"
+    },
+    {
+      "code": 6024,
+      "name": "feeTooHigh",
+      "msg": "Protocol fee exceeds maximum allowed (10%)"
+    },
+    {
+      "code": 6025,
+      "name": "unauthorizedProtocolUpdate",
+      "msg": "Unauthorized protocol configuration update"
+    },
+    {
+      "code": 6026,
+      "name": "invalidTreasuryAccount",
+      "msg": "Invalid treasury account"
     }
   ],
   "types": [
@@ -1169,8 +1376,76 @@ export type SubscriptionProtocol = {
             "type": "u64"
           },
           {
+            "name": "protocolFee",
+            "type": "u64"
+          },
+          {
+            "name": "merchantReceived",
+            "type": "u64"
+          },
+          {
             "name": "paymentNumber",
             "type": "u32"
+          }
+        ]
+      }
+    },
+    {
+      "name": "protocolConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "treasury",
+            "type": "pubkey"
+          },
+          {
+            "name": "protocolFeeBps",
+            "type": "u16"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "protocolFeeUpdated",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "oldFeeBps",
+            "type": "u16"
+          },
+          {
+            "name": "newFeeBps",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "protocolInitialized",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "feeBps",
+            "type": "u16"
+          },
+          {
+            "name": "treasury",
+            "type": "pubkey"
           }
         ]
       }

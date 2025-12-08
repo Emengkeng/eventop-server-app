@@ -514,6 +514,33 @@
           "name": "merchant_plan"
         },
         {
+          "name": "protocol_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
           "name": "wallet_token_account",
           "writable": true
         },
@@ -522,11 +549,79 @@
           "writable": true
         },
         {
+          "name": "protocol_treasury",
+          "writable": true
+        },
+        {
           "name": "token_program",
           "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
         }
       ],
       "args": []
+    },
+    {
+      "name": "initialize_protocol",
+      "docs": [
+        "Initialize protocol configuration (one-time, by deployer)"
+      ],
+      "discriminator": [
+        188,
+        233,
+        252,
+        106,
+        134,
+        146,
+        202,
+        91
+      ],
+      "accounts": [
+        {
+          "name": "protocol_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "treasury"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "protocol_fee_bps",
+          "type": "u16"
+        }
+      ]
     },
     {
       "name": "register_merchant",
@@ -734,6 +829,65 @@
       "args": []
     },
     {
+      "name": "update_protocol_fee",
+      "docs": [
+        "Update protocol fee (admin only)"
+      ],
+      "discriminator": [
+        170,
+        136,
+        6,
+        60,
+        43,
+        130,
+        81,
+        96
+      ],
+      "accounts": [
+        {
+          "name": "protocol_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "signer": true,
+          "relations": [
+            "protocol_config"
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "new_fee_bps",
+          "type": "u16"
+        }
+      ]
+    },
+    {
       "name": "withdraw_from_wallet",
       "docs": [
         "Withdraw idle funds from Subscription Wallet"
@@ -837,6 +991,19 @@
       ]
     },
     {
+      "name": "ProtocolConfig",
+      "discriminator": [
+        207,
+        91,
+        250,
+        28,
+        152,
+        179,
+        215,
+        209
+      ]
+    },
+    {
       "name": "SubscriptionState",
       "discriminator": [
         35,
@@ -875,6 +1042,32 @@
         20,
         204,
         227
+      ]
+    },
+    {
+      "name": "ProtocolFeeUpdated",
+      "discriminator": [
+        172,
+        56,
+        83,
+        113,
+        219,
+        69,
+        69,
+        105
+      ]
+    },
+    {
+      "name": "ProtocolInitialized",
+      "discriminator": [
+        173,
+        122,
+        168,
+        254,
+        9,
+        118,
+        76,
+        132
       ]
     },
     {
@@ -1089,6 +1282,21 @@
       "code": 6023,
       "name": "MerchantMismatch",
       "msg": "Merchant mismatch: subscription merchant does not match merchant plan"
+    },
+    {
+      "code": 6024,
+      "name": "FeeTooHigh",
+      "msg": "Protocol fee exceeds maximum allowed (10%)"
+    },
+    {
+      "code": 6025,
+      "name": "UnauthorizedProtocolUpdate",
+      "msg": "Unauthorized protocol configuration update"
+    },
+    {
+      "code": 6026,
+      "name": "InvalidTreasuryAccount",
+      "msg": "Invalid treasury account"
     }
   ],
   "types": [
@@ -1162,8 +1370,76 @@
             "type": "u64"
           },
           {
+            "name": "protocol_fee",
+            "type": "u64"
+          },
+          {
+            "name": "merchant_received",
+            "type": "u64"
+          },
+          {
             "name": "payment_number",
             "type": "u32"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ProtocolConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "treasury",
+            "type": "pubkey"
+          },
+          {
+            "name": "protocol_fee_bps",
+            "type": "u16"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ProtocolFeeUpdated",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "old_fee_bps",
+            "type": "u16"
+          },
+          {
+            "name": "new_fee_bps",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ProtocolInitialized",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "fee_bps",
+            "type": "u16"
+          },
+          {
+            "name": "treasury",
+            "type": "pubkey"
           }
         ]
       }
