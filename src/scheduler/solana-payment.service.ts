@@ -100,11 +100,11 @@ export class SolanaPaymentService {
       const walletPubkey = new PublicKey(subscriptionWalletPda);
       const merchantPubkey = new PublicKey(merchantWallet);
 
-      // ✅ CORRECT: Use program.account to fetch account data
+      // Fetch subscription account data
       const subscriptionAccount =
         await this.program.account.subscriptionState.fetch(subscriptionPubkey);
 
-      // 🚨 SECURITY CHECK: Verify merchant matches
+      // Security check: Verify merchant matches
       if (subscriptionAccount.merchant.toString() !== merchantWallet) {
         throw new Error(
           `Merchant mismatch: subscription merchant ${subscriptionAccount.merchant.toString()} != ${merchantWallet}`,
@@ -127,16 +127,34 @@ export class SolanaPaymentService {
       // Get merchant plan PDA from subscription account
       const merchantPlanPda = subscriptionAccount.merchantPlan;
 
-      // ✅ CORRECT: Use program.methods to build and execute instructions
+      // Derive protocol config PDA
+      const [protocolConfigPda] = PublicKey.findProgramAddressSync(
+        [Buffer.from('protocol_config')],
+        this.PROGRAM_ID,
+      );
+
+      // Fetch protocol config to get treasury address
+      const protocolConfig =
+        await this.program.account.protocolConfig.fetch(protocolConfigPda);
+
+      // Get protocol treasury token account
+      const protocolTreasuryTokenAccount = await getAssociatedTokenAddress(
+        this.USDC_MINT,
+        protocolConfig.treasury,
+      );
+
+      // Build transaction
       const tx = await this.program.methods
         .executePaymentFromWallet()
         .accounts({
-          // subscriptionState: subscriptionPubkey,
-          // subscriptionWallet: walletPubkey,
+          //subscriptionState: subscriptionPubkey,
+          //subscriptionWallet: walletPubkey,
           merchantPlan: merchantPlanPda,
+          //protocolConfig: protocolConfigPda,
           walletTokenAccount: walletTokenAccount,
           merchantTokenAccount: merchantTokenAccount,
-          // tokenProgram: TOKEN_PROGRAM_ID,
+          protocolTreasury: protocolTreasuryTokenAccount,
+          // tokenProgram is auto-resolved by Anchor
         })
         .transaction();
 
