@@ -60,7 +60,10 @@ export const ModelName = {
   ScheduledPayment: 'ScheduledPayment',
   UserProfile: 'UserProfile',
   WebhookLog: 'WebhookLog',
-  WebhookEndpoint: 'WebhookEndpoint'
+  WebhookEndpoint: 'WebhookEndpoint',
+  ApiKey: 'ApiKey',
+  CheckoutSession: 'CheckoutSession',
+  UserIdentity: 'UserIdentity'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -241,6 +244,57 @@ export const WebhookEndpointScalarFieldEnum = {
 } as const
 
 export type WebhookEndpointScalarFieldEnum = (typeof WebhookEndpointScalarFieldEnum)[keyof typeof WebhookEndpointScalarFieldEnum]
+
+
+export const ApiKeyScalarFieldEnum = {
+  id: 'id',
+  merchantWallet: 'merchantWallet',
+  key: 'key',
+  name: 'name',
+  environment: 'environment',
+  isActive: 'isActive',
+  lastUsedAt: 'lastUsedAt',
+  createdAt: 'createdAt',
+  expiresAt: 'expiresAt'
+} as const
+
+export type ApiKeyScalarFieldEnum = (typeof ApiKeyScalarFieldEnum)[keyof typeof ApiKeyScalarFieldEnum]
+
+
+export const CheckoutSessionScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  merchantWallet: 'merchantWallet',
+  planPda: 'planPda',
+  planId: 'planId',
+  customerEmail: 'customerEmail',
+  customerId: 'customerId',
+  successUrl: 'successUrl',
+  cancelUrl: 'cancelUrl',
+  status: 'status',
+  subscriptionPda: 'subscriptionPda',
+  userWallet: 'userWallet',
+  signature: 'signature',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  expiresAt: 'expiresAt',
+  completedAt: 'completedAt'
+} as const
+
+export type CheckoutSessionScalarFieldEnum = (typeof CheckoutSessionScalarFieldEnum)[keyof typeof CheckoutSessionScalarFieldEnum]
+
+
+export const UserIdentityScalarFieldEnum = {
+  walletAddress: 'walletAddress',
+  email: 'email',
+  emailVerified: 'emailVerified',
+  name: 'name',
+  source: 'source',
+  privyUserId: 'privyUserId',
+  createdAt: 'createdAt'
+} as const
+
+export type UserIdentityScalarFieldEnum = (typeof UserIdentityScalarFieldEnum)[keyof typeof UserIdentityScalarFieldEnum]
 
 
 export const SortOrder = {

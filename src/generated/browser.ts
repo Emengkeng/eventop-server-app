@@ -67,3 +67,18 @@ export type WebhookLog = Prisma.WebhookLogModel
  * 
  */
 export type WebhookEndpoint = Prisma.WebhookEndpointModel
+/**
+ * Model ApiKey
+ * 
+ */
+export type ApiKey = Prisma.ApiKeyModel
+/**
+ * Model CheckoutSession
+ * 
+ */
+export type CheckoutSession = Prisma.CheckoutSessionModel
+/**
+ * Model UserIdentity
+ * 
+ */
+export type UserIdentity = Prisma.UserIdentityModel
