@@ -9,11 +9,15 @@ import {
   Request,
 } from '@nestjs/common';
 import { ApiKeysService } from './api-keys.service';
-import { ApiKeyGuard } from '../auth/api-key.guard';
 import { APIKEY_ENVIRONMENTS } from '../config';
+import { PrivyAuthGuard } from '../auth/privy-auth.guard';
+import { RateLimitType } from '../common/rate-limit/rate-limit.config';
+import { RateLimit } from '../common/rate-limit/rate-limit.decorator';
+import { RateLimitGuard } from '../common/rate-limit/rate-limit.guard';
 
 @Controller('api-keys')
-@UseGuards(ApiKeyGuard)
+@UseGuards(PrivyAuthGuard, RateLimitGuard)
+@RateLimit(RateLimitType.GENERAL)
 export class ApiKeysController {
   constructor(private apiKeysService: ApiKeysService) {}
 

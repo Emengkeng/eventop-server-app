@@ -7,11 +7,18 @@ import {
   Body,
   Param,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import * as crypto from 'crypto';
+import { PrivyAuthGuard } from '../auth/privy-auth.guard';
+import { RateLimitType } from '../common/rate-limit/rate-limit.config';
+import { RateLimit } from '../common/rate-limit/rate-limit.decorator';
+import { RateLimitGuard } from '../common/rate-limit/rate-limit.guard';
 
 @Controller('webhooks')
+@UseGuards(PrivyAuthGuard, RateLimitGuard)
+@RateLimit(RateLimitType.GENERAL)
 export class WebhookController {
   constructor(private prisma: PrismaService) {}
 

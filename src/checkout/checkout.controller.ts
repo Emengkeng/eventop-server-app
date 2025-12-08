@@ -9,8 +9,11 @@ import {
 } from '@nestjs/common';
 import { CheckoutService } from './checkout.service';
 import { ApiKeyGuard } from '../auth/api-key.guard';
+import { RateLimitType } from '../common/rate-limit/rate-limit.config';
+import { RateLimit } from '../common/rate-limit/rate-limit.decorator';
 
 @Controller('checkout')
+@RateLimit(RateLimitType.GENERAL)
 export class CheckoutController {
   constructor(private checkoutService: CheckoutService) {}
 
