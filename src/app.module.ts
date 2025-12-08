@@ -12,6 +12,8 @@ import { AnalyticsModule } from './analytics/analytics.module';
 import { AuthModule } from './auth/auth.module';
 import { RateLimitModule } from './common/rate-limit/rate-limit.module';
 import { PlansModule } from './plans/plan.module';
+import { CheckoutModule } from './checkout/checkout.module';
+import { ApiKeyModule } from './api-keys/api-key.module';
 
 @Module({
   imports: [
@@ -27,6 +29,8 @@ import { PlansModule } from './plans/plan.module';
     RateLimitModule,
     HttpModule,
     PlansModule,
+    CheckoutModule,
+    ApiKeyModule,
   ],
 })
 export class AppModule {}

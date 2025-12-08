@@ -28,6 +28,8 @@ ensureEnv([
 ]);
 
 export const CREDENTIALS = process.env.CREDENTIALS === 'true';
+export const APIKEY_ENVIRONMENTS =
+  process.env.NODE_ENV === 'production' ? 'mainnet' : 'devnet';
 
 export const {
   NODE_ENV,
