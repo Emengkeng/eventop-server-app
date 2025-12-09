@@ -43,9 +43,15 @@ export class MerchantService {
       throw new NotFoundException('Merchant not found');
     }
 
+    const newData = {
+      companyName: data.companyName,
+      email: data.email,
+      logoUrl: data.logoUrl,
+    };
+
     return this.prisma.merchant.update({
       where: { walletAddress },
-      data,
+      data: newData,
     });
   }
 
