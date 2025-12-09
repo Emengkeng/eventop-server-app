@@ -1474,6 +1474,8 @@ export const SubscriptionScalarFieldEnum = {
   totalPaid: 'totalPaid',
   paymentCount: 'paymentCount',
   isActive: 'isActive',
+  customerEmail: 'customerEmail',
+  customerId: 'customerId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   cancelledAt: 'cancelledAt'

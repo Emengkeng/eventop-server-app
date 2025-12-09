@@ -68,6 +68,10 @@ model Subscription {
   totalPaid             String    @default("0") @map("total_paid")
   paymentCount          Int       @default(0) @map("payment_count")
   isActive              Boolean   @default(true) @map("is_active")
+
+  customerEmail         String?   @map("customer_email")
+  customerId            String?   @map("customer_id")
+
   createdAt             DateTime  @default(now()) @map("created_at")
   updatedAt             DateTime  @updatedAt @map("updated_at")
   cancelledAt           DateTime? @map("cancelled_at")
@@ -78,6 +82,7 @@ model Subscription {
   @@index([merchantWallet])
   @@index([subscriptionWalletPda])
   @@index([merchantPlanPda])
+  @@index([customerEmail])
   @@map("subscriptions")
 }
 

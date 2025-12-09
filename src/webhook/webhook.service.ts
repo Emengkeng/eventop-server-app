@@ -193,64 +193,107 @@ export class WebhookService {
   }
 
   async notifySubscriptionCreated(data: {
-    subscriptionPda: string;
-    userWallet: string;
     merchantWallet: string;
-    planId: string;
-    amountPrepaid: string;
+    sessionId: string;
+    subscriptionId: string;
+    customer: {
+      email: string;
+      customerId?: string;
+      walletAddress: string;
+    };
+    plan: {
+      planId: string;
+      planName: string;
+      amount: number;
+      interval: number;
+    };
+    metadata: {
+      userId?: string;
+      source: string;
+    };
   }) {
     await this.sendWebhook(data.merchantWallet, {
       event: 'subscription.created',
       timestamp: Date.now(),
       data: {
-        subscription_id: data.subscriptionPda,
-        user_wallet: data.userWallet,
-        plan_id: data.planId,
-        amount_prepaid: data.amountPrepaid,
+        sessionId: data.sessionId,
+        subscriptionId: data.subscriptionId,
+        customer: {
+          email: data.customer.email,
+          customerId: data.customer.customerId,
+          walletAddress: data.customer.walletAddress,
+        },
+        plan: {
+          planId: data.plan.planId,
+          planName: data.plan.planName,
+          amount: data.plan.amount,
+          interval: data.plan.interval,
+        },
+        metadata: {
+          userId: data.metadata.userId,
+          source: data.metadata.source,
+        },
       },
     });
   }
 
   async notifyPaymentExecuted(data: {
     subscriptionPda: string;
+    customer: {
+      email: string;
+      walletAddress: string;
+    };
     userWallet: string;
     merchantWallet: string;
     amount: string;
     paymentNumber: number;
+    nextPaymentDate: Date;
   }) {
     await this.sendWebhook(data.merchantWallet, {
       event: 'subscription.payment_succeeded',
       timestamp: Date.now(),
       data: {
         subscription_id: data.subscriptionPda,
-        user_wallet: data.userWallet,
+        customer: {
+          email: data.customer.email,
+          walletAddress: data.customer.walletAddress,
+        },
+        userWallet: data.userWallet,
         amount: data.amount,
-        payment_number: data.paymentNumber,
+        paymentNumber: data.paymentNumber,
+        nextPaymentDate: data.nextPaymentDate,
       },
     });
   }
 
   async notifySubscriptionCancelled(data: {
-    subscriptionPda: string;
-    userWallet: string;
     merchantWallet: string;
-    refundAmount: string;
-    paymentsMade: number;
+    sessionId: string;
+    subscriptionId: string;
+    user_wallet: string;
+    refund_amount: string;
+    payments_made: number;
+    user_email: string;
   }) {
     await this.sendWebhook(data.merchantWallet, {
       event: 'subscription.cancelled',
       timestamp: Date.now(),
       data: {
-        subscription_id: data.subscriptionPda,
-        user_wallet: data.userWallet,
-        refund_amount: data.refundAmount,
-        payments_made: data.paymentsMade,
+        subscription_id: data.subscriptionId,
+        user_wallet: data.user_wallet,
+        refund_amount: data.refund_amount,
+        payments_made: data.payments_made,
+        user_email: data.user_email,
       },
     });
   }
 
   async notifyPaymentFailed(data: {
     subscriptionPda: string;
+    customer: {
+      email: string;
+      walletAddress: string;
+    };
     userWallet: string;
     merchantWallet: string;
     amountRequired: string;
@@ -262,6 +305,10 @@ export class WebhookService {
       timestamp: Date.now(),
       data: {
         subscription_id: data.subscriptionPda,
+        customer: {
+          email: data.customer.email,
+          walletAddress: data.customer.walletAddress,
+        },
         user_wallet: data.userWallet,
         amount_required: data.amountRequired,
         balance_available: data.balanceAvailable,

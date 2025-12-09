@@ -188,13 +188,26 @@ export class PaymentSchedulerService {
 
         await this.scheduleNextPayment(subscription);
 
+        const nextPaymentTime =
+          Math.floor(Date.now() / 1000) +
+          parseInt(subscription.paymentInterval);
+
+        // ============================================
+        // SEND WEBHOOK WITH CUSTOMER DATA FROM SUBSCRIPTION
+        // ============================================
         await this.webhookService
           .notifyPaymentExecuted({
             subscriptionPda: subscription.subscriptionPda,
+            customer: {
+              email: subscription.customerEmail!,
+              walletAddress: subscription.userWallet,
+              //customerId: subscription.customerId,
+            },
             userWallet: subscription.userWallet,
             merchantWallet: subscription.merchantWallet,
             amount: subscription.feeAmount,
             paymentNumber: subscription.paymentCount + 1,
+            nextPaymentDate: new Date(nextPaymentTime * 1000),
           })
           .catch((error: Error) => {
             this.logger.error('Webhook notification failed:', error);
@@ -247,6 +260,11 @@ export class PaymentSchedulerService {
           await this.webhookService
             .notifyPaymentFailed({
               subscriptionPda: subscription.subscriptionPda,
+              customer: {
+                email: subscription.customerEmail!,
+                walletAddress: subscription.userWallet,
+                //customerId: subscription.customerId,
+              },
               userWallet: subscription.userWallet,
               merchantWallet: subscription.merchantWallet,
               amountRequired: subscription.feeAmount,

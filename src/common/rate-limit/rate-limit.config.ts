@@ -1,5 +1,6 @@
 export enum RateLimitType {
   GENERAL = 'general',
+  STRICT = 'strict',
   ACTION = 'action',
   AUTHENTICATION = 'authentication',
   SETUP = 'setup',
@@ -20,6 +21,10 @@ export const RATE_LIMIT_CONFIGS: Record<RateLimitType, RateLimitConfig> = {
     ttl: 15 * 60 * 1000, // 15 minutes
     limit: 100,
     message: 'Too many requests from this IP, please try again later.',
+  },
+  [RateLimitType.STRICT]: {
+    ttl: 60,
+    limit: 10, // Only 10 requests per minute for sensitive endpoints
   },
   [RateLimitType.ACTION]: {
     ttl: 15 * 60 * 1000,
