@@ -21,23 +21,29 @@ import { RateLimitGuard } from '../common/rate-limit/rate-limit.guard';
 export class ApiKeysController {
   constructor(private apiKeysService: ApiKeysService) {}
 
-  @Post()
-  async createApiKey(@Request() req, @Body() body: { name: string }) {
+  @Post(':merchantWallet/create')
+  async createApiKey(
+    @Param('merchantWallet') merchantWallet: string,
+    @Body() body: { name: string },
+  ) {
     const environments = APIKEY_ENVIRONMENTS || 'devnet';
     return this.apiKeysService.createApiKey(
-      req.merchant.walletAddress,
+      merchantWallet,
       environments,
       body.name,
     );
   }
 
-  @Get()
-  async listApiKeys(@Request() req) {
-    return this.apiKeysService.listApiKeys(req.merchant.walletAddress);
+  @Get(':merchantWallet/list')
+  async listApiKeys(@Param('merchantWallet') merchantWallet: string) {
+    return this.apiKeysService.listApiKeys(merchantWallet);
   }
 
   @Delete(':id')
-  async revokeApiKey(@Request() req, @Param('id') id: string) {
-    return this.apiKeysService.revokeApiKey(id, req.merchant.walletAddress);
+  async revokeApiKey(
+    @Param('id') id: string,
+    @Body() body: { merchantWallet: string },
+  ) {
+    return this.apiKeysService.revokeApiKey(id, body.merchantWallet);
   }
 }
