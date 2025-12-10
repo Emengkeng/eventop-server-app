@@ -272,50 +272,90 @@ export class IndexerService implements OnModuleInit {
   ): Promise<void> {
     if (data.name !== 'SubscriptionCreated') return;
 
-    const merchantPlan = await this.prisma.merchantPlan.findUnique({
-      where: { planPda: data.data.planId },
+    // Ensure the merchant plan exists
+    let merchantPlan = await this.prisma.merchantPlan.findFirst({
+      where: { planId: data.data.planId },
     });
 
-    const subscription = await this.prisma.subscription.create({
-      data: {
+    if (!merchantPlan) {
+      // Plan doesn't exist in DB yet - sync all merchant plans
+      this.logger.warn(
+        `Merchant plan ${data.data.planId} not found in DB. Syncing merchant plans...`,
+      );
+
+      await this.syncMerchantPlans();
+
+      // Try to fetch again after sync
+      merchantPlan = await this.prisma.merchantPlan.findUnique({
+        where: { planPda: data.data.planId },
+      });
+
+      if (!merchantPlan) {
+        this.logger.error(
+          `Merchant plan ${data.data.planId} still not found after sync. Cannot create subscription.`,
+        );
+        return;
+      }
+    }
+
+    // Create or update the subscription
+    const subscription = await this.prisma.subscription.upsert({
+      where: { subscriptionPda: data.data.subscriptionPda.toString() },
+      create: {
         subscriptionPda: data.data.subscriptionPda.toString(),
         userWallet: data.data.user.toString(),
         subscriptionWalletPda: data.data.wallet.toString(),
         merchantWallet: data.data.merchant.toString(),
         merchantPlanPda: data.data.planId,
-        mint: merchantPlan?.mint || 'USDC',
-        feeAmount: merchantPlan?.feeAmount || '0',
-        paymentInterval: merchantPlan?.paymentInterval || '0',
+        mint: merchantPlan.mint,
+        feeAmount: merchantPlan.feeAmount,
+        paymentInterval: merchantPlan.paymentInterval,
         lastPaymentTimestamp: Date.now().toString(),
         totalPaid: '0',
         paymentCount: 0,
         isActive: true,
       },
+      update: {
+        // If it already exists, we don't need to update anything
+        // The subscription was already created, so this is a duplicate event
+      },
     });
 
-    if (merchantPlan) {
+    // Only increment counters if this was a new subscription (not a duplicate)
+    const wasCreated = subscription.createdAt.getTime() > Date.now() - 5000; // Created in last 5 seconds
+
+    if (wasCreated) {
+      // Update merchant plan subscriber count
       await this.prisma.merchantPlan.update({
         where: { planPda: merchantPlan.planPda },
         data: { totalSubscribers: { increment: 1 } },
       });
+
+      // Update subscription wallet
+      await this.prisma.subscriptionWallet.update({
+        where: { walletPda: data.data.wallet.toString() },
+        data: { totalSubscriptions: { increment: 1 } },
+      });
+
+      // Record transaction
+      await this.recordTransaction({
+        signature,
+        subscriptionPda: subscription.subscriptionPda,
+        type: TransactionType.SubscriptionCreated,
+        amount: '0',
+        fromWallet: subscription.userWallet,
+        toWallet: subscription.merchantWallet,
+        slot,
+      });
+
+      this.logger.log(
+        `✅ Subscription created: ${subscription.subscriptionPda}`,
+      );
+    } else {
+      this.logger.log(
+        `⏩ Subscription already exists, skipping: ${subscription.subscriptionPda}`,
+      );
     }
-
-    await this.prisma.subscriptionWallet.update({
-      where: { walletPda: data.data.wallet.toString() },
-      data: { totalSubscriptions: { increment: 1 } },
-    });
-
-    await this.recordTransaction({
-      signature,
-      subscriptionPda: subscription.subscriptionPda,
-      type: TransactionType.SubscriptionCreated,
-      amount: '0',
-      fromWallet: subscription.userWallet,
-      toWallet: subscription.merchantWallet,
-      slot,
-    });
-
-    this.logger.log(`✅ Subscription created: ${subscription.subscriptionPda}`);
   }
 
   private async handlePaymentExecuted(
@@ -507,6 +547,7 @@ export class IndexerService implements OnModuleInit {
     this.logger.log('Syncing merchant plans...');
 
     const plans = await this.solanaService.getAllMerchantPlans();
+    // console.log('Fetched plans:', plans);
 
     for (const { pubkey, account } of plans) {
       // First, ensure the merchant exists
