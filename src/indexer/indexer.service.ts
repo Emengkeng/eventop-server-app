@@ -527,7 +527,7 @@ export class IndexerService implements OnModuleInit {
     }
 
     this.isIndexing = true;
-    this.logger.log('🔄 Starting account sync...');
+    this.logger.log('🔄 Starting account sync....');
 
     try {
       await this.syncMerchantPlans();
