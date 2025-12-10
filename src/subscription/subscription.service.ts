@@ -7,7 +7,7 @@ export class SubscriptionService {
 
   async getSubscriptionsByUser(userWallet: string) {
     return this.prisma.subscription.findMany({
-      where: { userWallet },
+      where: { userWallet: userWallet },
       orderBy: { createdAt: 'desc' },
     });
   }
