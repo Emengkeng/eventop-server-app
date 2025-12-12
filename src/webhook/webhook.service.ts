@@ -241,6 +241,7 @@ export class WebhookService {
     subscriptionPda: string;
     customer: {
       email: string;
+      customerId?: string;
       walletAddress: string;
     };
     userWallet: string;
@@ -256,6 +257,7 @@ export class WebhookService {
         subscription_id: data.subscriptionPda,
         customer: {
           email: data.customer.email,
+          customerId: data.customer.customerId,
           walletAddress: data.customer.walletAddress,
         },
         userWallet: data.userWallet,
@@ -268,22 +270,22 @@ export class WebhookService {
 
   async notifySubscriptionCancelled(data: {
     merchantWallet: string;
-    sessionId: string;
     subscriptionId: string;
-    user_wallet: string;
-    refund_amount: string;
-    payments_made: number;
-    user_email: string;
+    customer: {
+      email?: string;
+      customerId?: string;
+      walletAddress: string;
+    };
+    paymentsMade: number;
   }) {
     await this.sendWebhook(data.merchantWallet, {
       event: 'subscription.cancelled',
       timestamp: Date.now(),
       data: {
-        subscription_id: data.subscriptionId,
-        user_wallet: data.user_wallet,
-        refund_amount: data.refund_amount,
-        payments_made: data.payments_made,
-        user_email: data.user_email,
+        id: data.subscriptionId,
+        customer: data.customer,
+        paymentsMade: data.paymentsMade,
+        cancelledAt: new Date().toISOString(),
       },
     });
   }
