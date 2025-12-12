@@ -37,8 +37,8 @@ model MerchantPlan {
   planId           String   @map("plan_id")
   planName         String   @map("plan_name")
   mint             String
-  feeAmount        String   @map("fee_amount") // stored as string for BigInt
-  paymentInterval  String   @map("payment_interval") // stored as string for BigInt
+  feeAmount        String   @map("fee_amount")
+  paymentInterval  String   @map("payment_interval")
   isActive         Boolean  @default(true) @map("is_active")
   totalSubscribers Int      @default(0) @map("total_subscribers")
   totalRevenue     String   @default("0") @map("total_revenue")
@@ -69,6 +69,7 @@ model Subscription {
   paymentCount          Int       @default(0) @map("payment_count")
   isActive              Boolean   @default(true) @map("is_active")
 
+  // Checkout session metadata (enriched by indexer)
   customerEmail         String?   @map("customer_email")
   customerId            String?   @map("customer_id")
 
@@ -160,7 +161,7 @@ model WebhookLog {
   responseBody      String?   @map("response_body")
   errorMessage      String?   @map("error_message")
   retryCount        Int       @default(0) @map("retry_count")
-  deliveryTime      Int?      @map("delivery_time") // milliseconds
+  deliveryTime      Int?      @map("delivery_time")
   createdAt         DateTime  @default(now()) @map("created_at")
   deliveredAt       DateTime? @map("delivered_at")
 
@@ -194,8 +195,8 @@ model WebhookEndpoint {
 model ApiKey {
   id             String   @id @default(uuid())
   merchantWallet String   @map("merchant_wallet")
-  key            String   @unique // Starts with "sk_test_" or "sk_live_"
-  name           String   // e.g., "Production API Key"
+  key            String   @unique
+  name           String
   environment    String   // "devnet" or "mainnet"
   isActive       Boolean  @default(true) @map("is_active")
   lastUsedAt     DateTime? @map("last_used_at")
@@ -209,19 +210,19 @@ model ApiKey {
 
 model CheckoutSession {
   id              String   @id @default(uuid())
-  sessionId       String   @unique @map("session_id") // "session_abc123"
+  sessionId       String   @unique @map("session_id")
   
   merchantWallet  String   @map("merchant_wallet")
   planPda         String   @map("plan_pda")
   planId          String   @map("plan_id")
   
   customerEmail   String   @map("customer_email")
-  customerId      String?  @map("customer_id") // Merchant's internal ID
+  customerId      String?  @map("customer_id")
   
   successUrl      String   @map("success_url")
   cancelUrl       String?  @map("cancel_url")
   
-  status          String   @default("pending") // 'pending', 'completed', 'expired', 'cancelled'
+  status          String   @default("pending") // 'pending', 'pending_verification', 'completed', 'expired', 'cancelled'
   subscriptionPda String?  @map("subscription_pda")
   userWallet      String?  @map("user_wallet")
   signature       String?
@@ -239,6 +240,7 @@ model CheckoutSession {
   @@index([merchantWallet])
   @@index([planPda])
   @@index([status])
+  @@index([userWallet])
   @@map("checkout_sessions")
 }
 
