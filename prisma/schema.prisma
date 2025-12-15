@@ -72,6 +72,7 @@ model Subscription {
   // Checkout session metadata (enriched by indexer)
   customerEmail         String?   @map("customer_email")
   customerId            String?   @map("customer_id")
+  sessionToken          String    @map("session_token")
 
   createdAt             DateTime  @default(now()) @map("created_at")
   updatedAt             DateTime  @updatedAt @map("updated_at")
@@ -84,6 +85,7 @@ model Subscription {
   @@index([subscriptionWalletPda])
   @@index([merchantPlanPda])
   @@index([customerEmail])
+  @@index([sessionToken])
   @@map("subscriptions")
 }
 
@@ -104,7 +106,7 @@ model SubscriptionWallet {
 
 model Transaction {
   id              String   @id @default(uuid())
-  signature       String
+  signature       String   @unique
   subscriptionPda String   @map("subscription_pda")
   type            String
   amount          String
@@ -222,16 +224,28 @@ model CheckoutSession {
   successUrl      String   @map("success_url")
   cancelUrl       String?  @map("cancel_url")
   
-  status          String   @default("pending") // 'pending', 'pending_verification', 'completed', 'expired', 'cancelled'
+  // 'pending' - Session created, waiting for user
+  // 'user_submitted' - User completed checkout, waiting for indexer verification
+  // 'completed' - Indexer verified on-chain subscription exists and is valid
+  // 'failed' - Indexer found issues (subscription doesn't exist, wrong data, etc)
+  // 'expired' - Session expired before completion
+  // 'cancelled' - User cancelled
+  status          String   @default("pending")
+
+
   subscriptionPda String?  @map("subscription_pda")
   userWallet      String?  @map("user_wallet")
   signature       String?
   
+  // For tracking failed verifications
+  failureReason   String?  @map("failure_reason")
+
   metadata        Json?
   
   createdAt       DateTime @default(now()) @map("created_at")
   expiresAt       DateTime @map("expires_at")
   completedAt     DateTime? @map("completed_at")
+  verifiedAt      DateTime? @map("verified_at")
 
   merchant        Merchant @relation(fields: [merchantWallet], references: [walletAddress])
   plan            MerchantPlan @relation("CheckoutSessions", fields: [planPda], references: [planPda])

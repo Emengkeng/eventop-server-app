@@ -43,41 +43,10 @@ export class CheckoutController {
     return this.checkoutService.getCheckoutSession(sessionId);
   }
 
-  /**
-   * SECURE ENDPOINT: Complete checkout session
-   *
-   * This endpoint requires proof that:
-   * 1. The user owns the wallet (walletSignature)
-   * 2. The transaction actually happened (signature verification)
-   * 3. The subscription is real and correct (on-chain verification)
-   */
   @Post(':sessionId/complete')
-  @RateLimit(RateLimitType.STRICT) // Stricter rate limiting
-  async completeCheckoutSession(
-    @Param('sessionId') sessionId: string,
-    @Body()
-    body: {
-      subscriptionPda: string;
-      userWallet: string;
-      signature: string;
-      message: string;
-      walletSignature: string;
-    },
-  ) {
-    // Validate all required fields
-    if (
-      !body.subscriptionPda ||
-      !body.userWallet ||
-      !body.signature ||
-      !body.message ||
-      !body.walletSignature
-    ) {
-      throw new BadRequestException(
-        'Missing required fields: subscriptionPda, userWallet, signature, message, walletSignature',
-      );
-    }
-
-    return this.checkoutService.completeCheckoutSession(sessionId, body);
+  @RateLimit(RateLimitType.STRICT)
+  async completeCheckoutSession(@Param('sessionId') sessionId: string) {
+    return this.checkoutService.completeCheckoutSession(sessionId);
   }
 
   @Post(':sessionId/cancel')

@@ -123,14 +123,7 @@ export class CheckoutService {
    * - Works as a "hint" for the indexer
    * - If indexer already processed, just returns existing data
    */
-  async completeCheckoutSession(
-    sessionId: string,
-    data: {
-      subscriptionPda: string;
-      userWallet: string;
-      signature: string;
-    },
-  ) {
+  async completeCheckoutSession(sessionId: string) {
     // ============================================
     // BASIC VALIDATION ONLY
     // ============================================
@@ -162,31 +155,11 @@ export class CheckoutService {
       };
     }
 
-    // ============================================
-    // LIGHTWEIGHT LINKING - NO VERIFICATION
-    // ============================================
-    // Just store the hint. Indexer will verify everything.
-    const updatedSession = await this.prisma.checkoutSession.update({
-      where: { sessionId },
-      data: {
-        status: 'pending_verification',
-        subscriptionPda: data.subscriptionPda,
-        userWallet: data.userWallet,
-        signature: data.signature,
-        completedAt: new Date(),
-      },
-    });
-
-    this.logger.log(
-      `✅ Session ${sessionId} linked to subscription ${data.subscriptionPda} (pending indexer verification)`,
-    );
-
-    // Return immediately - indexer will handle the rest
     return {
-      sessionId: updatedSession.sessionId,
+      sessionId: session.sessionId,
       status: 'pending_verification',
-      subscriptionPda: updatedSession.subscriptionPda,
-      successUrl: updatedSession.successUrl,
+      subscriptionPda: session.subscriptionPda,
+      successUrl: session.successUrl,
       message: 'Subscription submitted. Verification in progress.',
     };
   }

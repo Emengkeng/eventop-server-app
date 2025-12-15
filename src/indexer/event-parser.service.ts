@@ -164,6 +164,7 @@ export class EventParserService {
       wallet: new PublicKey(data.wallet),
       merchant: new PublicKey(data.merchant),
       planId: data.planId,
+      sessionToken: data.sessionToken,
     };
   }
 
