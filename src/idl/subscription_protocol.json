@@ -765,6 +765,36 @@
           }
         },
         {
+          "name": "session_token_tracker",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  101,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110,
+                  95,
+                  116,
+                  111,
+                  107,
+                  101,
+                  110
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "session_token"
+              }
+            ]
+          }
+        },
+        {
           "name": "subscription_wallet",
           "writable": true,
           "pda": {
@@ -826,7 +856,12 @@
           "address": "11111111111111111111111111111111"
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "session_token",
+          "type": "string"
+        }
+      ]
     },
     {
       "name": "update_protocol_fee",
@@ -1004,6 +1039,19 @@
       ]
     },
     {
+      "name": "SessionTokenTracker",
+      "discriminator": [
+        24,
+        255,
+        212,
+        49,
+        240,
+        180,
+        89,
+        97
+      ]
+    },
+    {
       "name": "SubscriptionState",
       "discriminator": [
         35,
@@ -1031,6 +1079,19 @@
     }
   ],
   "events": [
+    {
+      "name": "MerchantPlanRegistered",
+      "discriminator": [
+        82,
+        211,
+        85,
+        158,
+        114,
+        80,
+        148,
+        147
+      ]
+    },
     {
       "name": "PaymentExecuted",
       "discriminator": [
@@ -1297,6 +1358,21 @@
       "code": 6026,
       "name": "InvalidTreasuryAccount",
       "msg": "Invalid treasury account"
+    },
+    {
+      "code": 6027,
+      "name": "SessionTokenTooLong",
+      "msg": "Session token exceeds maximum length (64 characters)"
+    },
+    {
+      "code": 6028,
+      "name": "SessionTokenRequired",
+      "msg": "Session token is required"
+    },
+    {
+      "code": 6029,
+      "name": "SessionTokenAlreadyUsed",
+      "msg": "Session token already used"
     }
   ],
   "types": [
@@ -1340,6 +1416,18 @@
           {
             "name": "bump",
             "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MerchantPlanRegistered",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "plan_pda",
+            "type": "pubkey"
           }
         ]
       }
@@ -1445,6 +1533,38 @@
       }
     },
     {
+      "name": "SessionTokenTracker",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "session_token",
+            "type": "string"
+          },
+          {
+            "name": "user",
+            "type": "pubkey"
+          },
+          {
+            "name": "subscription",
+            "type": "pubkey"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          },
+          {
+            "name": "is_used",
+            "type": "bool"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
       "name": "SubscriptionCancelled",
       "type": {
         "kind": "struct",
@@ -1495,6 +1615,10 @@
           },
           {
             "name": "plan_id",
+            "type": "string"
+          },
+          {
+            "name": "session_token",
             "type": "string"
           }
         ]
@@ -1548,6 +1672,10 @@
           {
             "name": "is_active",
             "type": "bool"
+          },
+          {
+            "name": "session_token",
+            "type": "string"
           },
           {
             "name": "bump",
