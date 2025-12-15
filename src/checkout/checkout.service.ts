@@ -37,7 +37,7 @@ export class CheckoutService {
       throw new BadRequestException('Plan not found or inactive');
     }
 
-    const sessionId = `session_${crypto.randomBytes(16).toString('hex')}`;
+    const sessionId = `s_${crypto.randomBytes(15).toString('hex')}`;
 
     const session = await this.prisma.checkoutSession.create({
       data: {
