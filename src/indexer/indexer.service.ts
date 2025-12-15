@@ -192,8 +192,10 @@ export class IndexerService implements OnModuleInit {
   ): Promise<void> {
     if (data.name !== 'SubscriptionWalletCreated') return;
 
-    await this.prisma.subscriptionWallet.create({
-      data: {
+    // Use upsert to prevent duplicate key errors
+    await this.prisma.subscriptionWallet.upsert({
+      where: { walletPda: data.data.walletPda.toString() },
+      create: {
         walletPda: data.data.walletPda.toString(),
         ownerWallet: data.data.owner.toString(),
         mint: data.data.mint.toString(),
@@ -201,6 +203,7 @@ export class IndexerService implements OnModuleInit {
         totalSubscriptions: 0,
         totalSpent: '0',
       },
+      update: {}, // No updates needed if it exists
     });
 
     this.logger.log(
@@ -269,40 +272,12 @@ export class IndexerService implements OnModuleInit {
     );
   }
 
-  /**
-   * ============================================
-   * SUBSCRIPTION CREATED - WITH AUTO-LINKING
-   * ============================================
-   */
   private async handleSubscriptionCreated(
     data: ProgramEvent,
     signature: string,
     slot: number,
   ): Promise<void> {
     if (data.name !== 'SubscriptionCreated') return;
-
-    // Ensure the merchant plan exists
-    let merchantPlan = await this.prisma.merchantPlan.findFirst({
-      where: { planId: data.data.planId },
-    });
-
-    if (!merchantPlan) {
-      this.logger.warn(
-        `Merchant plan ${data.data.planId} not found in DB. Syncing merchant plans...`,
-      );
-      await this.syncMerchantPlans();
-
-      merchantPlan = await this.prisma.merchantPlan.findUnique({
-        where: { planPda: data.data.planId },
-      });
-
-      if (!merchantPlan) {
-        this.logger.error(
-          `Merchant plan ${data.data.planId} still not found after sync. Cannot create subscription.`,
-        );
-        return;
-      }
-    }
 
     // Check if subscription already exists
     const existingSubscription = await this.prisma.subscription.findUnique({
@@ -316,34 +291,86 @@ export class IndexerService implements OnModuleInit {
       return;
     }
 
-    // ============================================
-    // AUTO-LINK TO CHECKOUT SESSION
-    // ============================================
-    const linkResult = await this.checkoutService.tryLinkSubscriptionToSession({
-      subscriptionPda: data.data.subscriptionPda.toString(),
-      userWallet: data.data.user.toString(),
-      merchantWallet: data.data.merchant.toString(),
-      planPda: merchantPlan.planPda,
+    // Get merchant plan (ensure it exists)
+    let merchantPlan = await this.prisma.merchantPlan.findFirst({
+      where: { planId: data.data.planId },
     });
+
+    if (!merchantPlan) {
+      this.logger.warn(
+        `Merchant plan ${data.data.planId} not found. Syncing...`,
+      );
+      await this.syncMerchantPlans();
+
+      merchantPlan = await this.prisma.merchantPlan.findFirst({
+        where: { planId: data.data.planId },
+      });
+
+      if (!merchantPlan) {
+        this.logger.error(
+          `❌ Merchant plan ${data.data.planId} still not found after sync`,
+        );
+        return;
+      }
+    }
+
+    // Verify and link session
+    const sessionId = data.data.sessionToken;
+    this.logger.log(`🔗 Linking subscription with session: ${sessionId}`);
 
     let customerEmail: string | null = null;
     let customerId: string | null = null;
 
-    // If we found a session, get the customer data
-    if (linkResult.linked && linkResult.sessionId) {
+    try {
       const session = await this.prisma.checkoutSession.findUnique({
-        where: { sessionId: linkResult.sessionId },
+        where: { sessionId: sessionId },
       });
 
-      if (session) {
-        customerEmail = session.customerEmail;
-        customerId = session.customerId;
+      if (!session) {
+        this.logger.error(
+          `❌ Session ${sessionId} not found. Cannot create subscription.`,
+        );
+        return;
       }
+
+      // Validate session context
+      if (
+        session.merchantWallet !== data.data.merchant.toString() ||
+        session.planPda !== merchantPlan.planPda
+      ) {
+        this.logger.error(`❌ Session ${sessionId} context mismatch`);
+        return;
+      }
+
+      if (session.status === 'completed') {
+        this.logger.warn(
+          `⚠️ Session ${sessionId} already completed. Possible duplicate.`,
+        );
+        return;
+      }
+
+      // Update session to completed
+      await this.prisma.checkoutSession.update({
+        where: { sessionId: session.sessionId },
+        data: {
+          status: 'completed',
+          subscriptionPda: data.data.subscriptionPda.toString(),
+          userWallet: data.data.user.toString(),
+          completedAt: new Date(),
+          signature: signature,
+        },
+      });
+
+      customerEmail = session.customerEmail;
+      customerId = session.customerId;
+
+      this.logger.log(`✅ Session ${sessionId} linked successfully`);
+    } catch (error) {
+      this.logger.error('❌ Error linking session:', error);
+      return;
     }
 
-    // ============================================
-    // CREATE SUBSCRIPTION IN DB
-    // ============================================
+    // Create subscription with verified session data
     const subscription = await this.prisma.subscription.create({
       data: {
         subscriptionPda: data.data.subscriptionPda.toString(),
@@ -358,8 +385,9 @@ export class IndexerService implements OnModuleInit {
         totalPaid: '0',
         paymentCount: 0,
         isActive: true,
-        customerEmail: customerEmail,
+        customerEmail: customerEmail!,
         customerId: customerId,
+        sessionToken: sessionId,
       },
     });
 
@@ -387,13 +415,11 @@ export class IndexerService implements OnModuleInit {
 
     this.logger.log(`✅ Subscription created: ${subscription.subscriptionPda}`);
 
-    // ============================================
-    // TRIGGER WEBHOOK (WITH VERIFIED DATA)
-    // ============================================
+    // Trigger webhook
     try {
       await this.webhookService.notifySubscriptionCreated({
         merchantWallet: subscription.merchantWallet,
-        sessionId: linkResult.sessionId!,
+        sessionId: sessionId,
         subscriptionId: subscription.subscriptionPda,
         customer: {
           email: customerEmail!,
@@ -407,19 +433,11 @@ export class IndexerService implements OnModuleInit {
           interval: parseFloat(merchantPlan.paymentInterval),
         },
         metadata: {
-          source: linkResult.linked ? 'checkout' : 'direct',
+          source: 'checkout',
         },
       });
-
-      this.logger.log(
-        `✅ Webhook triggered for subscription ${subscription.subscriptionPda}`,
-      );
     } catch (error) {
-      this.logger.error(
-        `Failed to trigger webhook for subscription ${subscription.subscriptionPda}:`,
-        error,
-      );
-      // Don't throw - subscription creation succeeded
+      this.logger.error('Failed to trigger webhook:', error);
     }
   }
 
@@ -434,95 +452,116 @@ export class IndexerService implements OnModuleInit {
       where: { subscriptionPda: data.data.subscriptionPda.toString() },
     });
 
-    if (subscription) {
-      const amount = data.data.amount.toString();
-      const newTotalPaid = (
-        BigInt(subscription.totalPaid) + BigInt(amount)
+    if (!subscription) {
+      this.logger.warn(
+        `Subscription ${data.data.subscriptionPda.toString()} not found`,
+      );
+      return;
+    }
+
+    const amount = parseFloat(data.data.amount.toString());
+    const newTotalPaid = (
+      BigInt(subscription.totalPaid) + BigInt(amount)
+    ).toString();
+
+    await this.prisma.subscription.update({
+      where: { subscriptionPda: subscription.subscriptionPda },
+      data: {
+        totalPaid: newTotalPaid,
+        paymentCount: data.data.paymentNumber,
+        lastPaymentTimestamp: Date.now().toString(),
+      },
+    });
+
+    const merchantPlan = await this.prisma.merchantPlan.findUnique({
+      where: { planPda: subscription.merchantPlanPda },
+    });
+
+    if (merchantPlan) {
+      const newTotalRevenue = (
+        BigInt(merchantPlan.totalRevenue) + BigInt(amount)
       ).toString();
 
-      await this.prisma.subscription.update({
-        where: { subscriptionPda: subscription.subscriptionPda },
+      await this.prisma.merchantPlan.update({
+        where: { planPda: subscription.merchantPlanPda },
         data: {
-          totalPaid: newTotalPaid,
-          paymentCount: data.data.paymentNumber,
-          lastPaymentTimestamp: Date.now().toString(),
+          totalRevenue: newTotalRevenue,
         },
       });
+    }
 
-      // Update merchant plan revenue
-      const merchantPlanRecord = await this.prisma.merchantPlan.findUnique({
-        where: { planPda: subscription.merchantPlanPda },
+    const wallet = await this.prisma.subscriptionWallet.findUnique({
+      where: { walletPda: subscription.subscriptionWalletPda },
+    });
+
+    if (wallet) {
+      const newTotalSpent = (
+        BigInt(wallet.totalSpent) + BigInt(amount)
+      ).toString();
+
+      await this.prisma.subscriptionWallet.update({
+        where: { walletPda: subscription.subscriptionWalletPda },
+        data: {
+          totalSpent: newTotalSpent,
+        },
       });
+    }
 
-      if (merchantPlanRecord) {
-        const currentRevenue = merchantPlanRecord.totalRevenue ?? '0';
-        const updatedTotalRevenue = (
-          BigInt(currentRevenue) + BigInt(amount)
-        ).toString();
+    await this.recordTransaction({
+      signature,
+      subscriptionPda: subscription.subscriptionPda,
+      type: TransactionType.Payment,
+      amount: amount.toString(),
+      fromWallet: subscription.userWallet,
+      toWallet: subscription.merchantWallet,
+      slot,
+    });
 
-        await this.prisma.merchantPlan.update({
-          where: { planPda: merchantPlanRecord.planPda },
-          data: {
-            totalRevenue: updatedTotalRevenue,
-          },
-        });
-      }
+    this.logger.log(
+      `✅ Payment #${data.data.paymentNumber} executed: ${amount}`,
+    );
 
-      // Update wallet spent
-      const subscriptionWalletRecord =
-        await this.prisma.subscriptionWallet.findUnique({
-          where: { walletPda: subscription.subscriptionWalletPda },
-        });
-
-      if (subscriptionWalletRecord) {
-        const currentTotalSpent = subscriptionWalletRecord.totalSpent ?? '0';
-        const updatedTotalSpent = (
-          BigInt(currentTotalSpent) + BigInt(amount)
-        ).toString();
-
-        await this.prisma.subscriptionWallet.update({
-          where: { walletPda: subscriptionWalletRecord.walletPda },
-          data: {
-            totalSpent: updatedTotalSpent,
-          },
-        });
-      }
-
-      await this.recordTransaction({
-        signature,
-        subscriptionPda: subscription.subscriptionPda,
-        type: TransactionType.Payment,
-        amount,
-        fromWallet: subscription.userWallet,
-        toWallet: subscription.merchantWallet,
-        slot,
-      });
-
-      this.logger.log(
-        `✅ Payment #${data.data.paymentNumber} executed: ${amount} for ${subscription.subscriptionPda}`,
+    try {
+      const nextPaymentDate = new Date(
+        Date.now() + parseInt(subscription.paymentInterval) * 1000,
       );
 
-      // ============================================
-      // TRIGGER PAYMENT WEBHOOK
-      // ============================================
-      try {
-        await this.webhookService.notifyPaymentExecuted({
-          subscriptionPda: subscription.subscriptionPda,
-          customer: {
-            email: subscription.customerEmail!,
-            customerId: subscription.customerId || undefined,
-            walletAddress: subscription.userWallet,
-          },
-          userWallet: subscription.userWallet,
-          merchantWallet: subscription.merchantWallet,
-          amount: amount, //TODO: Convert to USDC
-          paymentNumber: data.data.paymentNumber,
-          nextPaymentDate: new Date(1000), // TODO: Calculate properly
-        });
-      } catch (error) {
-        this.logger.error('Failed to trigger payment webhook:', error);
-      }
+      await this.webhookService.notifyPaymentExecuted({
+        subscriptionPda: subscription.subscriptionPda,
+        customer: {
+          email: subscription.customerEmail!,
+          customerId: subscription.customerId || undefined,
+          walletAddress: subscription.userWallet,
+        },
+        userWallet: subscription.userWallet,
+        merchantWallet: subscription.merchantWallet,
+        amount: amount.toString(),
+        paymentNumber: data.data.paymentNumber,
+        nextPaymentDate: nextPaymentDate,
+      });
+    } catch (error) {
+      this.logger.error('Failed to trigger payment webhook:', error);
     }
+  }
+
+  private async recordTransaction(data: TransactionRecordData): Promise<void> {
+    const existing = await this.prisma.transaction.findFirst({
+      where: { signature: data.signature },
+    });
+
+    if (existing) {
+      this.logger.log(`Transaction ${data.signature} already recorded`);
+      return;
+    }
+
+    // Create new transaction
+    await this.prisma.transaction.create({
+      data: {
+        ...data,
+        blockTime: Date.now().toString(),
+        status: 'success',
+      },
+    });
   }
 
   private async handleSubscriptionCancelled(
@@ -536,56 +575,59 @@ export class IndexerService implements OnModuleInit {
       where: { subscriptionPda: data.data.subscriptionPda.toString() },
     });
 
-    if (subscription) {
-      await this.prisma.subscription.update({
-        where: { subscriptionPda: subscription.subscriptionPda },
-        data: {
-          isActive: false,
-          cancelledAt: new Date(),
-        },
-      });
-
-      await this.prisma.merchantPlan.update({
-        where: { planPda: subscription.merchantPlanPda },
-        data: { totalSubscribers: { decrement: 1 } },
-      });
-
-      await this.prisma.subscriptionWallet.update({
-        where: { walletPda: subscription.subscriptionWalletPda },
-        data: { totalSubscriptions: { decrement: 1 } },
-      });
-
-      await this.recordTransaction({
-        signature,
-        subscriptionPda: subscription.subscriptionPda,
-        type: TransactionType.Cancel,
-        amount: '0',
-        fromWallet: subscription.merchantWallet,
-        toWallet: subscription.userWallet,
-        slot,
-      });
-
-      this.logger.log(
-        `✅ Subscription cancelled: ${subscription.subscriptionPda}`,
+    if (!subscription) {
+      this.logger.warn(
+        `Subscription ${data.data.subscriptionPda.toString()} not found`,
       );
+      return;
+    }
 
-      // ============================================
-      // TRIGGER CANCELLATION WEBHOOK
-      // ============================================
-      try {
-        await this.webhookService.notifySubscriptionCancelled({
-          merchantWallet: subscription.merchantWallet,
-          subscriptionId: subscription.subscriptionPda,
-          customer: {
-            email: subscription.customerEmail || undefined,
-            customerId: subscription.customerId || undefined,
-            walletAddress: subscription.userWallet,
-          },
-          paymentsMade: subscription.paymentCount,
-        });
-      } catch (error) {
-        this.logger.error('Failed to trigger cancellation webhook:', error);
-      }
+    await this.prisma.subscription.update({
+      where: { subscriptionPda: subscription.subscriptionPda },
+      data: {
+        isActive: false,
+        cancelledAt: new Date(),
+      },
+    });
+
+    await this.prisma.merchantPlan.update({
+      where: { planPda: subscription.merchantPlanPda },
+      data: { totalSubscribers: { decrement: 1 } },
+    });
+
+    await this.prisma.subscriptionWallet.update({
+      where: { walletPda: subscription.subscriptionWalletPda },
+      data: { totalSubscriptions: { decrement: 1 } },
+    });
+
+    await this.recordTransaction({
+      signature,
+      subscriptionPda: subscription.subscriptionPda,
+      type: TransactionType.Cancel,
+      amount: '0',
+      fromWallet: subscription.merchantWallet,
+      toWallet: subscription.userWallet,
+      slot,
+    });
+
+    this.logger.log(
+      `✅ Subscription cancelled: ${subscription.subscriptionPda}`,
+    );
+
+    // Trigger webhook
+    try {
+      await this.webhookService.notifySubscriptionCancelled({
+        merchantWallet: subscription.merchantWallet,
+        subscriptionId: subscription.subscriptionPda,
+        customer: {
+          email: subscription.customerEmail || undefined,
+          customerId: subscription.customerId || undefined,
+          walletAddress: subscription.userWallet,
+        },
+        paymentsMade: subscription.paymentCount,
+      });
+    } catch (error) {
+      this.logger.error('Failed to trigger cancellation webhook:', error);
     }
   }
 
@@ -597,7 +639,7 @@ export class IndexerService implements OnModuleInit {
     if (data.name !== 'YieldClaimed') return;
 
     this.logger.log(
-      `✅ Yield claimed: ${data.data.amount.toString()} from wallet ${data.data.walletPda.toString()}`,
+      `✅ Yield claimed: ${data.data.amount.toString()} from ${data.data.walletPda.toString()}`,
     );
 
     await this.recordTransaction({
@@ -611,16 +653,6 @@ export class IndexerService implements OnModuleInit {
     });
   }
 
-  private async recordTransaction(data: TransactionRecordData): Promise<void> {
-    await this.prisma.transaction.create({
-      data: {
-        ...data,
-        blockTime: Date.now().toString(),
-        status: 'success',
-      },
-    });
-  }
-
   @Cron(CronExpression.EVERY_HOUR)
   async syncAllAccounts(): Promise<void> {
     if (this.isIndexing) {
@@ -629,7 +661,7 @@ export class IndexerService implements OnModuleInit {
     }
 
     this.isIndexing = true;
-    this.logger.log('🔄 Starting account sync....');
+    this.logger.log('🔄 Starting account sync...');
 
     try {
       await this.syncMerchantPlans();
@@ -674,10 +706,7 @@ export class IndexerService implements OnModuleInit {
           totalRevenue: '0',
         },
         update: {
-          merchantWallet: account.merchant.toString(),
-          planId: account.planId,
           planName: account.planName,
-          mint: account.mint.toString(),
           feeAmount: account.feeAmount.toString(),
           paymentInterval: account.paymentInterval.toString(),
           isActive: account.isActive,
@@ -708,8 +737,6 @@ export class IndexerService implements OnModuleInit {
           totalSpent: account.totalSpent.toString(),
         },
         update: {
-          ownerWallet: account.owner.toString(),
-          mint: account.mint.toString(),
           isYieldEnabled: account.isYieldEnabled,
           yieldStrategy: account.yieldStrategy,
           yieldVault: account.yieldVault.toString(),
@@ -726,41 +753,87 @@ export class IndexerService implements OnModuleInit {
     this.logger.log('Syncing subscriptions...');
 
     const subscriptions = await this.solanaService.getAllSubscriptions();
+    let syncedCount = 0;
+    let skippedCount = 0;
 
     for (const { pubkey, account } of subscriptions) {
-      await this.prisma.subscription.upsert({
-        where: { subscriptionPda: pubkey.toString() },
-        create: {
-          subscriptionPda: pubkey.toString(),
-          userWallet: account.user.toString(),
-          subscriptionWalletPda: account.subscriptionWallet.toString(),
-          merchantWallet: account.merchant.toString(),
-          merchantPlanPda: account.merchantPlan.toString(),
-          mint: account.mint.toString(),
-          feeAmount: account.feeAmount.toString(),
-          paymentInterval: account.paymentInterval.toString(),
-          lastPaymentTimestamp: account.lastPaymentTimestamp.toString(),
-          totalPaid: account.totalPaid.toString(),
-          paymentCount: account.paymentCount,
-          isActive: account.isActive,
-        },
-        update: {
-          userWallet: account.user.toString(),
-          subscriptionWalletPda: account.subscriptionWallet.toString(),
-          merchantWallet: account.merchant.toString(),
-          merchantPlanPda: account.merchantPlan.toString(),
-          mint: account.mint.toString(),
-          feeAmount: account.feeAmount.toString(),
-          paymentInterval: account.paymentInterval.toString(),
-          lastPaymentTimestamp: account.lastPaymentTimestamp.toString(),
-          totalPaid: account.totalPaid.toString(),
-          paymentCount: account.paymentCount,
-          isActive: account.isActive,
-        },
-      });
+      // CRITICAL FIX: Skip subscriptions without session tokens (legacy)
+      if (!account.sessionToken || account.sessionToken.trim() === '') {
+        this.logger.log(
+          `⏩ Skipping legacy subscription (no session): ${pubkey.toString()}`,
+        );
+        skippedCount++;
+        continue;
+      }
+
+      try {
+        // Verify session exists
+        const session = await this.prisma.checkoutSession.findUnique({
+          where: { sessionId: account.sessionToken },
+        });
+
+        if (!session) {
+          this.logger.warn(
+            `⚠️ Session ${account.sessionToken} not found for subscription ${pubkey.toString()}, skipping`,
+          );
+          skippedCount++;
+          continue;
+        }
+
+        // Verify merchant plan exists
+        const merchantPlan = await this.prisma.merchantPlan.findUnique({
+          where: { planPda: account.merchantPlan.toString() },
+        });
+
+        if (!merchantPlan) {
+          this.logger.warn(
+            `⚠️ Merchant plan ${account.merchantPlan.toString()} not found, skipping`,
+          );
+          skippedCount++;
+          continue;
+        }
+
+        // Upsert subscription with session data
+        await this.prisma.subscription.upsert({
+          where: { subscriptionPda: pubkey.toString() },
+          create: {
+            subscriptionPda: pubkey.toString(),
+            userWallet: account.user.toString(),
+            subscriptionWalletPda: account.subscriptionWallet.toString(),
+            merchantWallet: account.merchant.toString(),
+            merchantPlanPda: account.merchantPlan.toString(),
+            mint: account.mint.toString(),
+            feeAmount: account.feeAmount.toString(),
+            paymentInterval: account.paymentInterval.toString(),
+            lastPaymentTimestamp: account.lastPaymentTimestamp.toString(),
+            totalPaid: account.totalPaid.toString(),
+            paymentCount: account.paymentCount,
+            isActive: account.isActive,
+            sessionToken: account.sessionToken,
+            customerEmail: session.customerEmail,
+            customerId: session.customerId,
+          },
+          update: {
+            lastPaymentTimestamp: account.lastPaymentTimestamp.toString(),
+            totalPaid: account.totalPaid.toString(),
+            paymentCount: account.paymentCount,
+            isActive: account.isActive,
+          },
+        });
+
+        syncedCount++;
+      } catch (error) {
+        this.logger.error(
+          `Error syncing subscription ${pubkey.toString()}:`,
+          error,
+        );
+        skippedCount++;
+      }
     }
 
-    this.logger.log(`✅ Synced ${subscriptions.length} subscriptions`);
+    this.logger.log(
+      `✅ Synced ${syncedCount} subscriptions (skipped ${skippedCount} legacy/invalid)`,
+    );
   }
 
   private async loadLastProcessedSlot(): Promise<void> {
@@ -777,7 +850,7 @@ export class IndexerService implements OnModuleInit {
     if (state) {
       this.lastProcessedSlot = Number(state.lastProcessedSlot);
       this.logger.log(
-        `📍 Loaded last processed slot from DB: ${this.lastProcessedSlot}`,
+        `📍 Loaded last processed slot: ${this.lastProcessedSlot}`,
       );
     } else {
       this.lastProcessedSlot = await connection.getSlot('confirmed');

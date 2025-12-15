@@ -72,6 +72,7 @@ model Subscription {
   // Checkout session metadata (enriched by indexer)
   customerEmail         String?   @map("customer_email")
   customerId            String?   @map("customer_id")
+  sessionToken          String    @map("session_token")
 
   createdAt             DateTime  @default(now()) @map("created_at")
   updatedAt             DateTime  @updatedAt @map("updated_at")
@@ -84,6 +85,7 @@ model Subscription {
   @@index([subscriptionWalletPda])
   @@index([merchantPlanPda])
   @@index([customerEmail])
+  @@index([sessionToken])
   @@map("subscriptions")
 }
 
@@ -104,7 +106,7 @@ model SubscriptionWallet {
 
 model Transaction {
   id              String   @id @default(uuid())
-  signature       String
+  signature       String   @unique
   subscriptionPda String   @map("subscription_pda")
   type            String
   amount          String

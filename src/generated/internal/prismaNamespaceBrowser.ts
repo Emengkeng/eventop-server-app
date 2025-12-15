@@ -141,6 +141,7 @@ export const SubscriptionScalarFieldEnum = {
   isActive: 'isActive',
   customerEmail: 'customerEmail',
   customerId: 'customerId',
+  sessionToken: 'sessionToken',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   cancelledAt: 'cancelledAt'

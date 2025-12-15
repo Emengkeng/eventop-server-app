@@ -61,6 +61,7 @@ export interface SubscriptionState {
   totalPaid: BN;
   paymentCount: number;
   isActive: boolean;
+  sessionToken: string;
   bump: number;
 }
 
@@ -99,6 +100,7 @@ export interface SubscriptionCreatedEvent {
   wallet: PublicKey;
   merchant: PublicKey;
   planId: string;
+  sessionToken: string;
 }
 
 export interface PaymentExecutedEvent {

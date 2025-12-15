@@ -320,57 +320,124 @@ export class SolanaService implements OnModuleInit {
   }
 
   private decodeSubscriptionState(data: Buffer): SubscriptionState {
-    let offset = 8;
+    const totalLength = data.length;
+    let offset = 8; // Skip discriminator
 
-    const user = new PublicKey(data.slice(offset, offset + 32));
-    offset += 32;
+    try {
+      // User (32 bytes)
+      const user = new PublicKey(data.slice(offset, offset + 32));
+      offset += 32;
 
-    const subscriptionWallet = new PublicKey(data.slice(offset, offset + 32));
-    offset += 32;
+      // Subscription Wallet (32 bytes)
+      const subscriptionWallet = new PublicKey(data.slice(offset, offset + 32));
+      offset += 32;
 
-    const merchant = new PublicKey(data.slice(offset, offset + 32));
-    offset += 32;
+      // Merchant (32 bytes)
+      const merchant = new PublicKey(data.slice(offset, offset + 32));
+      offset += 32;
 
-    const mint = new PublicKey(data.slice(offset, offset + 32));
-    offset += 32;
+      // Mint (32 bytes)
+      const mint = new PublicKey(data.slice(offset, offset + 32));
+      offset += 32;
 
-    const merchantPlan = new PublicKey(data.slice(offset, offset + 32));
-    offset += 32;
+      // Merchant Plan (32 bytes)
+      const merchantPlan = new PublicKey(data.slice(offset, offset + 32));
+      offset += 32;
 
-    const feeAmount = new BN(data.slice(offset, offset + 8), 'le');
-    offset += 8;
+      // Fee Amount (8 bytes - u64)
+      const feeAmount = new BN(data.slice(offset, offset + 8), 'le');
+      offset += 8;
 
-    const paymentInterval = new BN(data.slice(offset, offset + 8), 'le');
-    offset += 8;
+      // Payment Interval (8 bytes - i64)
+      const paymentInterval = new BN(data.slice(offset, offset + 8), 'le');
+      offset += 8;
 
-    const lastPaymentTimestamp = new BN(data.slice(offset, offset + 8), 'le');
-    offset += 8;
+      // Last Payment Timestamp (8 bytes - i64)
+      const lastPaymentTimestamp = new BN(data.slice(offset, offset + 8), 'le');
+      offset += 8;
 
-    const totalPaid = new BN(data.slice(offset, offset + 8), 'le');
-    offset += 8;
+      // Total Paid (8 bytes - u64)
+      const totalPaid = new BN(data.slice(offset, offset + 8), 'le');
+      offset += 8;
 
-    const paymentCount = data.readUInt32LE(offset);
-    offset += 4;
+      // Payment Count (4 bytes - u32)
+      const paymentCount = data.readUInt32LE(offset);
+      offset += 4;
 
-    const isActive = data.readUInt8(offset) === 1;
-    offset += 1;
+      // Is Active (1 byte - bool)
+      const isActive = data.readUInt8(offset) === 1;
+      offset += 1;
 
-    const bump = data.readUInt8(offset);
+      // Session Token (String with length prefix)
+      let sessionToken = '';
+      let bump = 0;
 
-    return {
-      user,
-      subscriptionWallet,
-      merchant,
-      mint,
-      merchantPlan,
-      feeAmount,
-      paymentInterval,
-      lastPaymentTimestamp,
-      totalPaid,
-      paymentCount,
-      isActive,
-      bump,
-    };
+      // Check if there's enough space for string length prefix
+      if (offset + 4 <= totalLength) {
+        const tokenLength = data.readUInt32LE(offset);
+        offset += 4;
+
+        // Validate token length (should be reasonable, max 64 per your error code)
+        if (
+          tokenLength > 0 &&
+          tokenLength <= 64 &&
+          offset + tokenLength <= totalLength
+        ) {
+          sessionToken = data
+            .slice(offset, offset + tokenLength)
+            .toString('utf8');
+          offset += tokenLength;
+
+          // Bump (1 byte) - only present if we have session token
+          if (offset < totalLength) {
+            bump = data.readUInt8(offset);
+          }
+        } else if (tokenLength === 0) {
+          // Empty session token, bump should follow
+          if (offset < totalLength) {
+            bump = data.readUInt8(offset);
+          }
+        } else {
+          // Invalid token length or insufficient data
+          this.logger.warn(
+            `Invalid session token length ${tokenLength} at offset ${offset - 4}, treating as legacy subscription`,
+          );
+          // For legacy subscriptions, the bump might be where we tried to read the length
+          // We'll leave sessionToken empty and bump as 0
+        }
+      } else {
+        // Legacy subscription without session token
+        this.logger.debug(
+          `Legacy subscription detected (no session token field)`,
+        );
+      }
+
+      return {
+        user,
+        subscriptionWallet,
+        merchant,
+        mint,
+        merchantPlan,
+        feeAmount,
+        paymentInterval,
+        lastPaymentTimestamp,
+        totalPaid,
+        paymentCount,
+        isActive,
+        sessionToken,
+        bump,
+      };
+    } catch (error) {
+      this.logger.error(
+        `Error decoding SubscriptionState at offset ${offset}:`,
+        error,
+      );
+      this.logger.error(
+        `Buffer length: ${totalLength}, Current offset: ${offset}`,
+      );
+      this.logger.error(`Buffer hex: ${data.toString('hex')}`);
+      throw error;
+    }
   }
 
   private decodeYieldStrategy(byte: number): YieldStrategy {

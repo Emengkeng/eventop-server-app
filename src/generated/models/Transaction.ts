@@ -282,10 +282,10 @@ export type TransactionOrderByWithRelationInput = {
 
 export type TransactionWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  signature?: string
   AND?: Prisma.TransactionWhereInput | Prisma.TransactionWhereInput[]
   OR?: Prisma.TransactionWhereInput[]
   NOT?: Prisma.TransactionWhereInput | Prisma.TransactionWhereInput[]
-  signature?: Prisma.StringFilter<"Transaction"> | string
   subscriptionPda?: Prisma.StringFilter<"Transaction"> | string
   type?: Prisma.StringFilter<"Transaction"> | string
   amount?: Prisma.StringFilter<"Transaction"> | string
@@ -295,7 +295,7 @@ export type TransactionWhereUniqueInput = Prisma.AtLeast<{
   slot?: Prisma.IntFilter<"Transaction"> | number
   status?: Prisma.StringFilter<"Transaction"> | string
   indexedAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
-}, "id">
+}, "id" | "signature">
 
 export type TransactionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
