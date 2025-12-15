@@ -278,10 +278,12 @@ export const CheckoutSessionScalarFieldEnum = {
   subscriptionPda: 'subscriptionPda',
   userWallet: 'userWallet',
   signature: 'signature',
+  failureReason: 'failureReason',
   metadata: 'metadata',
   createdAt: 'createdAt',
   expiresAt: 'expiresAt',
-  completedAt: 'completedAt'
+  completedAt: 'completedAt',
+  verifiedAt: 'verifiedAt'
 } as const
 
 export type CheckoutSessionScalarFieldEnum = (typeof CheckoutSessionScalarFieldEnum)[keyof typeof CheckoutSessionScalarFieldEnum]

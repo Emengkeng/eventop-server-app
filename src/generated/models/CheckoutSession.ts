@@ -38,9 +38,11 @@ export type CheckoutSessionMinAggregateOutputType = {
   subscriptionPda: string | null
   userWallet: string | null
   signature: string | null
+  failureReason: string | null
   createdAt: Date | null
   expiresAt: Date | null
   completedAt: Date | null
+  verifiedAt: Date | null
 }
 
 export type CheckoutSessionMaxAggregateOutputType = {
@@ -57,9 +59,11 @@ export type CheckoutSessionMaxAggregateOutputType = {
   subscriptionPda: string | null
   userWallet: string | null
   signature: string | null
+  failureReason: string | null
   createdAt: Date | null
   expiresAt: Date | null
   completedAt: Date | null
+  verifiedAt: Date | null
 }
 
 export type CheckoutSessionCountAggregateOutputType = {
@@ -76,10 +80,12 @@ export type CheckoutSessionCountAggregateOutputType = {
   subscriptionPda: number
   userWallet: number
   signature: number
+  failureReason: number
   metadata: number
   createdAt: number
   expiresAt: number
   completedAt: number
+  verifiedAt: number
   _all: number
 }
 
@@ -98,9 +104,11 @@ export type CheckoutSessionMinAggregateInputType = {
   subscriptionPda?: true
   userWallet?: true
   signature?: true
+  failureReason?: true
   createdAt?: true
   expiresAt?: true
   completedAt?: true
+  verifiedAt?: true
 }
 
 export type CheckoutSessionMaxAggregateInputType = {
@@ -117,9 +125,11 @@ export type CheckoutSessionMaxAggregateInputType = {
   subscriptionPda?: true
   userWallet?: true
   signature?: true
+  failureReason?: true
   createdAt?: true
   expiresAt?: true
   completedAt?: true
+  verifiedAt?: true
 }
 
 export type CheckoutSessionCountAggregateInputType = {
@@ -136,10 +146,12 @@ export type CheckoutSessionCountAggregateInputType = {
   subscriptionPda?: true
   userWallet?: true
   signature?: true
+  failureReason?: true
   metadata?: true
   createdAt?: true
   expiresAt?: true
   completedAt?: true
+  verifiedAt?: true
   _all?: true
 }
 
@@ -229,10 +241,12 @@ export type CheckoutSessionGroupByOutputType = {
   subscriptionPda: string | null
   userWallet: string | null
   signature: string | null
+  failureReason: string | null
   metadata: runtime.JsonValue | null
   createdAt: Date
   expiresAt: Date
   completedAt: Date | null
+  verifiedAt: Date | null
   _count: CheckoutSessionCountAggregateOutputType | null
   _min: CheckoutSessionMinAggregateOutputType | null
   _max: CheckoutSessionMaxAggregateOutputType | null
@@ -270,10 +284,12 @@ export type CheckoutSessionWhereInput = {
   subscriptionPda?: Prisma.StringNullableFilter<"CheckoutSession"> | string | null
   userWallet?: Prisma.StringNullableFilter<"CheckoutSession"> | string | null
   signature?: Prisma.StringNullableFilter<"CheckoutSession"> | string | null
+  failureReason?: Prisma.StringNullableFilter<"CheckoutSession"> | string | null
   metadata?: Prisma.JsonNullableFilter<"CheckoutSession">
   createdAt?: Prisma.DateTimeFilter<"CheckoutSession"> | Date | string
   expiresAt?: Prisma.DateTimeFilter<"CheckoutSession"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"CheckoutSession"> | Date | string | null
+  verifiedAt?: Prisma.DateTimeNullableFilter<"CheckoutSession"> | Date | string | null
   merchant?: Prisma.XOR<Prisma.MerchantScalarRelationFilter, Prisma.MerchantWhereInput>
   plan?: Prisma.XOR<Prisma.MerchantPlanScalarRelationFilter, Prisma.MerchantPlanWhereInput>
 }
@@ -292,10 +308,12 @@ export type CheckoutSessionOrderByWithRelationInput = {
   subscriptionPda?: Prisma.SortOrderInput | Prisma.SortOrder
   userWallet?: Prisma.SortOrderInput | Prisma.SortOrder
   signature?: Prisma.SortOrderInput | Prisma.SortOrder
+  failureReason?: Prisma.SortOrderInput | Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   merchant?: Prisma.MerchantOrderByWithRelationInput
   plan?: Prisma.MerchantPlanOrderByWithRelationInput
 }
@@ -317,10 +335,12 @@ export type CheckoutSessionWhereUniqueInput = Prisma.AtLeast<{
   subscriptionPda?: Prisma.StringNullableFilter<"CheckoutSession"> | string | null
   userWallet?: Prisma.StringNullableFilter<"CheckoutSession"> | string | null
   signature?: Prisma.StringNullableFilter<"CheckoutSession"> | string | null
+  failureReason?: Prisma.StringNullableFilter<"CheckoutSession"> | string | null
   metadata?: Prisma.JsonNullableFilter<"CheckoutSession">
   createdAt?: Prisma.DateTimeFilter<"CheckoutSession"> | Date | string
   expiresAt?: Prisma.DateTimeFilter<"CheckoutSession"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"CheckoutSession"> | Date | string | null
+  verifiedAt?: Prisma.DateTimeNullableFilter<"CheckoutSession"> | Date | string | null
   merchant?: Prisma.XOR<Prisma.MerchantScalarRelationFilter, Prisma.MerchantWhereInput>
   plan?: Prisma.XOR<Prisma.MerchantPlanScalarRelationFilter, Prisma.MerchantPlanWhereInput>
 }, "id" | "sessionId">
@@ -339,10 +359,12 @@ export type CheckoutSessionOrderByWithAggregationInput = {
   subscriptionPda?: Prisma.SortOrderInput | Prisma.SortOrder
   userWallet?: Prisma.SortOrderInput | Prisma.SortOrder
   signature?: Prisma.SortOrderInput | Prisma.SortOrder
+  failureReason?: Prisma.SortOrderInput | Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.CheckoutSessionCountOrderByAggregateInput
   _max?: Prisma.CheckoutSessionMaxOrderByAggregateInput
   _min?: Prisma.CheckoutSessionMinOrderByAggregateInput
@@ -365,10 +387,12 @@ export type CheckoutSessionScalarWhereWithAggregatesInput = {
   subscriptionPda?: Prisma.StringNullableWithAggregatesFilter<"CheckoutSession"> | string | null
   userWallet?: Prisma.StringNullableWithAggregatesFilter<"CheckoutSession"> | string | null
   signature?: Prisma.StringNullableWithAggregatesFilter<"CheckoutSession"> | string | null
+  failureReason?: Prisma.StringNullableWithAggregatesFilter<"CheckoutSession"> | string | null
   metadata?: Prisma.JsonNullableWithAggregatesFilter<"CheckoutSession">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CheckoutSession"> | Date | string
   expiresAt?: Prisma.DateTimeWithAggregatesFilter<"CheckoutSession"> | Date | string
   completedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CheckoutSession"> | Date | string | null
+  verifiedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CheckoutSession"> | Date | string | null
 }
 
 export type CheckoutSessionCreateInput = {
@@ -383,10 +407,12 @@ export type CheckoutSessionCreateInput = {
   subscriptionPda?: string | null
   userWallet?: string | null
   signature?: string | null
+  failureReason?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   expiresAt: Date | string
   completedAt?: Date | string | null
+  verifiedAt?: Date | string | null
   merchant: Prisma.MerchantCreateNestedOneWithoutCheckoutSessionsInput
   plan: Prisma.MerchantPlanCreateNestedOneWithoutCheckoutSessionsInput
 }
@@ -405,10 +431,12 @@ export type CheckoutSessionUncheckedCreateInput = {
   subscriptionPda?: string | null
   userWallet?: string | null
   signature?: string | null
+  failureReason?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   expiresAt: Date | string
   completedAt?: Date | string | null
+  verifiedAt?: Date | string | null
 }
 
 export type CheckoutSessionUpdateInput = {
@@ -423,10 +451,12 @@ export type CheckoutSessionUpdateInput = {
   subscriptionPda?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userWallet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   merchant?: Prisma.MerchantUpdateOneRequiredWithoutCheckoutSessionsNestedInput
   plan?: Prisma.MerchantPlanUpdateOneRequiredWithoutCheckoutSessionsNestedInput
 }
@@ -445,10 +475,12 @@ export type CheckoutSessionUncheckedUpdateInput = {
   subscriptionPda?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userWallet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type CheckoutSessionCreateManyInput = {
@@ -465,10 +497,12 @@ export type CheckoutSessionCreateManyInput = {
   subscriptionPda?: string | null
   userWallet?: string | null
   signature?: string | null
+  failureReason?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   expiresAt: Date | string
   completedAt?: Date | string | null
+  verifiedAt?: Date | string | null
 }
 
 export type CheckoutSessionUpdateManyMutationInput = {
@@ -483,10 +517,12 @@ export type CheckoutSessionUpdateManyMutationInput = {
   subscriptionPda?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userWallet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type CheckoutSessionUncheckedUpdateManyInput = {
@@ -503,10 +539,12 @@ export type CheckoutSessionUncheckedUpdateManyInput = {
   subscriptionPda?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userWallet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type CheckoutSessionListRelationFilter = {
@@ -533,10 +571,12 @@ export type CheckoutSessionCountOrderByAggregateInput = {
   subscriptionPda?: Prisma.SortOrder
   userWallet?: Prisma.SortOrder
   signature?: Prisma.SortOrder
+  failureReason?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrder
 }
 
 export type CheckoutSessionMaxOrderByAggregateInput = {
@@ -553,9 +593,11 @@ export type CheckoutSessionMaxOrderByAggregateInput = {
   subscriptionPda?: Prisma.SortOrder
   userWallet?: Prisma.SortOrder
   signature?: Prisma.SortOrder
+  failureReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrder
 }
 
 export type CheckoutSessionMinOrderByAggregateInput = {
@@ -572,9 +614,11 @@ export type CheckoutSessionMinOrderByAggregateInput = {
   subscriptionPda?: Prisma.SortOrder
   userWallet?: Prisma.SortOrder
   signature?: Prisma.SortOrder
+  failureReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrder
 }
 
 export type CheckoutSessionCreateNestedManyWithoutMerchantInput = {
@@ -673,10 +717,12 @@ export type CheckoutSessionCreateWithoutMerchantInput = {
   subscriptionPda?: string | null
   userWallet?: string | null
   signature?: string | null
+  failureReason?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   expiresAt: Date | string
   completedAt?: Date | string | null
+  verifiedAt?: Date | string | null
   plan: Prisma.MerchantPlanCreateNestedOneWithoutCheckoutSessionsInput
 }
 
@@ -693,10 +739,12 @@ export type CheckoutSessionUncheckedCreateWithoutMerchantInput = {
   subscriptionPda?: string | null
   userWallet?: string | null
   signature?: string | null
+  failureReason?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   expiresAt: Date | string
   completedAt?: Date | string | null
+  verifiedAt?: Date | string | null
 }
 
 export type CheckoutSessionCreateOrConnectWithoutMerchantInput = {
@@ -742,10 +790,12 @@ export type CheckoutSessionScalarWhereInput = {
   subscriptionPda?: Prisma.StringNullableFilter<"CheckoutSession"> | string | null
   userWallet?: Prisma.StringNullableFilter<"CheckoutSession"> | string | null
   signature?: Prisma.StringNullableFilter<"CheckoutSession"> | string | null
+  failureReason?: Prisma.StringNullableFilter<"CheckoutSession"> | string | null
   metadata?: Prisma.JsonNullableFilter<"CheckoutSession">
   createdAt?: Prisma.DateTimeFilter<"CheckoutSession"> | Date | string
   expiresAt?: Prisma.DateTimeFilter<"CheckoutSession"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"CheckoutSession"> | Date | string | null
+  verifiedAt?: Prisma.DateTimeNullableFilter<"CheckoutSession"> | Date | string | null
 }
 
 export type CheckoutSessionCreateWithoutPlanInput = {
@@ -760,10 +810,12 @@ export type CheckoutSessionCreateWithoutPlanInput = {
   subscriptionPda?: string | null
   userWallet?: string | null
   signature?: string | null
+  failureReason?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   expiresAt: Date | string
   completedAt?: Date | string | null
+  verifiedAt?: Date | string | null
   merchant: Prisma.MerchantCreateNestedOneWithoutCheckoutSessionsInput
 }
 
@@ -780,10 +832,12 @@ export type CheckoutSessionUncheckedCreateWithoutPlanInput = {
   subscriptionPda?: string | null
   userWallet?: string | null
   signature?: string | null
+  failureReason?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   expiresAt: Date | string
   completedAt?: Date | string | null
+  verifiedAt?: Date | string | null
 }
 
 export type CheckoutSessionCreateOrConnectWithoutPlanInput = {
@@ -825,10 +879,12 @@ export type CheckoutSessionCreateManyMerchantInput = {
   subscriptionPda?: string | null
   userWallet?: string | null
   signature?: string | null
+  failureReason?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   expiresAt: Date | string
   completedAt?: Date | string | null
+  verifiedAt?: Date | string | null
 }
 
 export type CheckoutSessionUpdateWithoutMerchantInput = {
@@ -843,10 +899,12 @@ export type CheckoutSessionUpdateWithoutMerchantInput = {
   subscriptionPda?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userWallet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   plan?: Prisma.MerchantPlanUpdateOneRequiredWithoutCheckoutSessionsNestedInput
 }
 
@@ -863,10 +921,12 @@ export type CheckoutSessionUncheckedUpdateWithoutMerchantInput = {
   subscriptionPda?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userWallet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type CheckoutSessionUncheckedUpdateManyWithoutMerchantInput = {
@@ -882,10 +942,12 @@ export type CheckoutSessionUncheckedUpdateManyWithoutMerchantInput = {
   subscriptionPda?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userWallet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type CheckoutSessionCreateManyPlanInput = {
@@ -901,10 +963,12 @@ export type CheckoutSessionCreateManyPlanInput = {
   subscriptionPda?: string | null
   userWallet?: string | null
   signature?: string | null
+  failureReason?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   expiresAt: Date | string
   completedAt?: Date | string | null
+  verifiedAt?: Date | string | null
 }
 
 export type CheckoutSessionUpdateWithoutPlanInput = {
@@ -919,10 +983,12 @@ export type CheckoutSessionUpdateWithoutPlanInput = {
   subscriptionPda?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userWallet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   merchant?: Prisma.MerchantUpdateOneRequiredWithoutCheckoutSessionsNestedInput
 }
 
@@ -939,10 +1005,12 @@ export type CheckoutSessionUncheckedUpdateWithoutPlanInput = {
   subscriptionPda?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userWallet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type CheckoutSessionUncheckedUpdateManyWithoutPlanInput = {
@@ -958,10 +1026,12 @@ export type CheckoutSessionUncheckedUpdateManyWithoutPlanInput = {
   subscriptionPda?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userWallet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -980,10 +1050,12 @@ export type CheckoutSessionSelect<ExtArgs extends runtime.Types.Extensions.Inter
   subscriptionPda?: boolean
   userWallet?: boolean
   signature?: boolean
+  failureReason?: boolean
   metadata?: boolean
   createdAt?: boolean
   expiresAt?: boolean
   completedAt?: boolean
+  verifiedAt?: boolean
   merchant?: boolean | Prisma.MerchantDefaultArgs<ExtArgs>
   plan?: boolean | Prisma.MerchantPlanDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["checkoutSession"]>
@@ -1002,10 +1074,12 @@ export type CheckoutSessionSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   subscriptionPda?: boolean
   userWallet?: boolean
   signature?: boolean
+  failureReason?: boolean
   metadata?: boolean
   createdAt?: boolean
   expiresAt?: boolean
   completedAt?: boolean
+  verifiedAt?: boolean
   merchant?: boolean | Prisma.MerchantDefaultArgs<ExtArgs>
   plan?: boolean | Prisma.MerchantPlanDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["checkoutSession"]>
@@ -1024,10 +1098,12 @@ export type CheckoutSessionSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   subscriptionPda?: boolean
   userWallet?: boolean
   signature?: boolean
+  failureReason?: boolean
   metadata?: boolean
   createdAt?: boolean
   expiresAt?: boolean
   completedAt?: boolean
+  verifiedAt?: boolean
   merchant?: boolean | Prisma.MerchantDefaultArgs<ExtArgs>
   plan?: boolean | Prisma.MerchantPlanDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["checkoutSession"]>
@@ -1046,13 +1122,15 @@ export type CheckoutSessionSelectScalar = {
   subscriptionPda?: boolean
   userWallet?: boolean
   signature?: boolean
+  failureReason?: boolean
   metadata?: boolean
   createdAt?: boolean
   expiresAt?: boolean
   completedAt?: boolean
+  verifiedAt?: boolean
 }
 
-export type CheckoutSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "sessionId" | "merchantWallet" | "planPda" | "planId" | "customerEmail" | "customerId" | "successUrl" | "cancelUrl" | "status" | "subscriptionPda" | "userWallet" | "signature" | "metadata" | "createdAt" | "expiresAt" | "completedAt", ExtArgs["result"]["checkoutSession"]>
+export type CheckoutSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "sessionId" | "merchantWallet" | "planPda" | "planId" | "customerEmail" | "customerId" | "successUrl" | "cancelUrl" | "status" | "subscriptionPda" | "userWallet" | "signature" | "failureReason" | "metadata" | "createdAt" | "expiresAt" | "completedAt" | "verifiedAt", ExtArgs["result"]["checkoutSession"]>
 export type CheckoutSessionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   merchant?: boolean | Prisma.MerchantDefaultArgs<ExtArgs>
   plan?: boolean | Prisma.MerchantPlanDefaultArgs<ExtArgs>
@@ -1086,10 +1164,12 @@ export type $CheckoutSessionPayload<ExtArgs extends runtime.Types.Extensions.Int
     subscriptionPda: string | null
     userWallet: string | null
     signature: string | null
+    failureReason: string | null
     metadata: runtime.JsonValue | null
     createdAt: Date
     expiresAt: Date
     completedAt: Date | null
+    verifiedAt: Date | null
   }, ExtArgs["result"]["checkoutSession"]>
   composites: {}
 }
@@ -1528,10 +1608,12 @@ export interface CheckoutSessionFieldRefs {
   readonly subscriptionPda: Prisma.FieldRef<"CheckoutSession", 'String'>
   readonly userWallet: Prisma.FieldRef<"CheckoutSession", 'String'>
   readonly signature: Prisma.FieldRef<"CheckoutSession", 'String'>
+  readonly failureReason: Prisma.FieldRef<"CheckoutSession", 'String'>
   readonly metadata: Prisma.FieldRef<"CheckoutSession", 'Json'>
   readonly createdAt: Prisma.FieldRef<"CheckoutSession", 'DateTime'>
   readonly expiresAt: Prisma.FieldRef<"CheckoutSession", 'DateTime'>
   readonly completedAt: Prisma.FieldRef<"CheckoutSession", 'DateTime'>
+  readonly verifiedAt: Prisma.FieldRef<"CheckoutSession", 'DateTime'>
 }
     
 

@@ -279,7 +279,6 @@ export class IndexerService implements OnModuleInit {
   ): Promise<void> {
     if (data.name !== 'SubscriptionCreated') return;
 
-    // Check if subscription already exists
     const existingSubscription = await this.prisma.subscription.findUnique({
       where: { subscriptionPda: data.data.subscriptionPda.toString() },
     });
@@ -291,7 +290,6 @@ export class IndexerService implements OnModuleInit {
       return;
     }
 
-    // Get merchant plan (ensure it exists)
     let merchantPlan = await this.prisma.merchantPlan.findFirst({
       where: { planId: data.data.planId },
     });
@@ -314,7 +312,6 @@ export class IndexerService implements OnModuleInit {
       }
     }
 
-    // Verify and link session
     const sessionId = data.data.sessionToken;
     this.logger.log(`🔗 Linking subscription with session: ${sessionId}`);
 
@@ -333,12 +330,21 @@ export class IndexerService implements OnModuleInit {
         return;
       }
 
-      // Validate session context
       if (
         session.merchantWallet !== data.data.merchant.toString() ||
         session.planPda !== merchantPlan.planPda
       ) {
         this.logger.error(`❌ Session ${sessionId} context mismatch`);
+
+        await this.prisma.checkoutSession.update({
+          where: { sessionId },
+          data: {
+            status: 'failed',
+            failureReason: 'Merchant or plan mismatch',
+            verifiedAt: new Date(),
+          },
+        });
+
         return;
       }
 
@@ -349,28 +355,46 @@ export class IndexerService implements OnModuleInit {
         return;
       }
 
-      // Update session to completed
+      // ============================================
+      // SESSION VERIFICATION SUCCESSFUL
+      // ============================================
       await this.prisma.checkoutSession.update({
         where: { sessionId: session.sessionId },
         data: {
           status: 'completed',
           subscriptionPda: data.data.subscriptionPda.toString(),
           userWallet: data.data.user.toString(),
-          completedAt: new Date(),
           signature: signature,
+          verifiedAt: new Date(),
+          failureReason: null,
         },
       });
 
       customerEmail = session.customerEmail;
       customerId = session.customerId;
 
-      this.logger.log(`✅ Session ${sessionId} linked successfully`);
+      this.logger.log(
+        `✅ Session ${sessionId} verified and completed by indexer`,
+      );
     } catch (error) {
       this.logger.error('❌ Error linking session:', error);
+
+      try {
+        await this.prisma.checkoutSession.update({
+          where: { sessionId },
+          data: {
+            status: 'failed',
+            failureReason: `Indexer error: ${error.message}`,
+            verifiedAt: new Date(),
+          },
+        });
+      } catch (updateError) {
+        this.logger.error('Failed to update session status:', updateError);
+      }
+
       return;
     }
 
-    // Create subscription with verified session data
     const subscription = await this.prisma.subscription.create({
       data: {
         subscriptionPda: data.data.subscriptionPda.toString(),
@@ -391,7 +415,6 @@ export class IndexerService implements OnModuleInit {
       },
     });
 
-    // Update counters
     await this.prisma.merchantPlan.update({
       where: { planPda: merchantPlan.planPda },
       data: { totalSubscribers: { increment: 1 } },
@@ -402,7 +425,6 @@ export class IndexerService implements OnModuleInit {
       data: { totalSubscriptions: { increment: 1 } },
     });
 
-    // Record transaction
     await this.recordTransaction({
       signature,
       subscriptionPda: subscription.subscriptionPda,
