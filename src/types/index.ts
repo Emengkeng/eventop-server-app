@@ -126,6 +126,10 @@ export interface YieldClaimedEvent {
   amount: BN;
 }
 
+export interface MerchantPlanRegisteredEvent {
+  planPda: PublicKey;
+}
+
 // ============================================
 // DISCRIMINATED UNION FOR ALL EVENTS
 // ============================================
@@ -138,7 +142,8 @@ export type ProgramEvent =
   | { name: 'SubscriptionCreated'; data: SubscriptionCreatedEvent }
   | { name: 'PaymentExecuted'; data: PaymentExecutedEvent }
   | { name: 'SubscriptionCancelled'; data: SubscriptionCancelledEvent }
-  | { name: 'YieldClaimed'; data: YieldClaimedEvent };
+  | { name: 'YieldClaimed'; data: YieldClaimedEvent }
+  | { name: 'MerchantPlanRegistered'; data: MerchantPlanRegisteredEvent };
 
 // ============================================
 // DATABASE ENTITY TYPES
