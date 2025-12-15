@@ -13,6 +13,7 @@ import {
   PaymentExecutedEvent,
   SubscriptionCancelledEvent,
   YieldClaimedEvent,
+  MerchantPlanRegisteredEvent,
 } from '../types';
 
 @Injectable()
@@ -107,6 +108,11 @@ export class EventParserService {
             name: 'YieldClaimed',
             data: this.parseYieldClaimed(event.data),
           };
+        case 'merchantPlanRegistered':
+          return {
+            name: 'MerchantPlanRegistered',
+            data: this.parseMerchantPlanRegistered(event.data),
+          };
 
         default:
           console.warn(`Unknown event type: ${event.name}`);
@@ -194,6 +200,12 @@ export class EventParserService {
       walletPda: new PublicKey(data.walletPda),
       user: new PublicKey(data.user),
       amount: new BN(data.amount),
+    };
+  }
+
+  private parseMerchantPlanRegistered(data: any): MerchantPlanRegisteredEvent {
+    return {
+      planPda: new PublicKey(data.planPda),
     };
   }
 }

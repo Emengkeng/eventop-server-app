@@ -666,6 +666,36 @@ export type SubscriptionProtocol = {
           };
         },
         {
+          name: 'sessionTokenTracker';
+          writable: true;
+          pda: {
+            seeds: [
+              {
+                kind: 'const';
+                value: [
+                  115,
+                  101,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110,
+                  95,
+                  116,
+                  111,
+                  107,
+                  101,
+                  110,
+                ];
+              },
+              {
+                kind: 'arg';
+                path: 'sessionToken';
+              },
+            ];
+          };
+        },
+        {
           name: 'subscriptionWallet';
           writable: true;
           pda: {
@@ -727,7 +757,12 @@ export type SubscriptionProtocol = {
           address: '11111111111111111111111111111111';
         },
       ];
-      args: [];
+      args: [
+        {
+          name: 'sessionToken';
+          type: 'string';
+        },
+      ];
     },
     {
       name: 'updateProtocolFee';
@@ -861,6 +896,10 @@ export type SubscriptionProtocol = {
       discriminator: [207, 91, 250, 28, 152, 179, 215, 209];
     },
     {
+      name: 'sessionTokenTracker';
+      discriminator: [24, 255, 212, 49, 240, 180, 89, 97];
+    },
+    {
       name: 'subscriptionState';
       discriminator: [35, 41, 45, 165, 253, 34, 95, 225];
     },
@@ -870,6 +909,10 @@ export type SubscriptionProtocol = {
     },
   ];
   events: [
+    {
+      name: 'merchantPlanRegistered';
+      discriminator: [82, 211, 85, 158, 114, 80, 148, 147];
+    },
     {
       name: 'paymentExecuted';
       discriminator: [153, 165, 141, 18, 246, 20, 204, 227];
@@ -1047,6 +1090,21 @@ export type SubscriptionProtocol = {
       name: 'invalidTreasuryAccount';
       msg: 'Invalid treasury account';
     },
+    {
+      code: 6027;
+      name: 'sessionTokenTooLong';
+      msg: 'Session token exceeds maximum length (64 characters)';
+    },
+    {
+      code: 6028;
+      name: 'sessionTokenRequired';
+      msg: 'Session token is required';
+    },
+    {
+      code: 6029;
+      name: 'sessionTokenAlreadyUsed';
+      msg: 'Session token already used';
+    },
   ];
   types: [
     {
@@ -1089,6 +1147,18 @@ export type SubscriptionProtocol = {
           {
             name: 'bump';
             type: 'u8';
+          },
+        ];
+      };
+    },
+    {
+      name: 'merchantPlanRegistered';
+      type: {
+        kind: 'struct';
+        fields: [
+          {
+            name: 'planPda';
+            type: 'pubkey';
           },
         ];
       };
@@ -1194,6 +1264,38 @@ export type SubscriptionProtocol = {
       };
     },
     {
+      name: 'sessionTokenTracker';
+      type: {
+        kind: 'struct';
+        fields: [
+          {
+            name: 'sessionToken';
+            type: 'string';
+          },
+          {
+            name: 'user';
+            type: 'pubkey';
+          },
+          {
+            name: 'subscription';
+            type: 'pubkey';
+          },
+          {
+            name: 'timestamp';
+            type: 'i64';
+          },
+          {
+            name: 'isUsed';
+            type: 'bool';
+          },
+          {
+            name: 'bump';
+            type: 'u8';
+          },
+        ];
+      };
+    },
+    {
       name: 'subscriptionCancelled';
       type: {
         kind: 'struct';
@@ -1244,6 +1346,10 @@ export type SubscriptionProtocol = {
           },
           {
             name: 'planId';
+            type: 'string';
+          },
+          {
+            name: 'sessionToken';
             type: 'string';
           },
         ];
@@ -1297,6 +1403,10 @@ export type SubscriptionProtocol = {
           {
             name: 'isActive';
             type: 'bool';
+          },
+          {
+            name: 'sessionToken';
+            type: 'string';
           },
           {
             name: 'bump';

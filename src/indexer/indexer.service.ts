@@ -182,6 +182,9 @@ export class IndexerService implements OnModuleInit {
       case 'YieldClaimed':
         await this.handleYieldClaimed(event, signature, slot);
         break;
+      case 'MerchantPlanRegistered':
+        await this.handleMerchantPlanRegistered(event, signature, slot);
+        break;
       default:
         this.logger.warn(`Unhandled event type`);
     }
@@ -673,6 +676,15 @@ export class IndexerService implements OnModuleInit {
       toWallet: data.data.user.toString(),
       slot,
     });
+  }
+
+  private async handleMerchantPlanRegistered(
+    data: ProgramEvent,
+    signature: string,
+    slot: number,
+  ): Promise<void> {
+    if (data.name !== 'MerchantPlanRegistered') return;
+    await this.syncMerchantPlans();
   }
 
   @Cron(CronExpression.EVERY_HOUR)
