@@ -12,9 +12,13 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadService } from './upload.service';
 import { PrivyAuthGuard } from '../auth/privy-auth.guard';
+import { RateLimitGuard } from '../common/rate-limit/rate-limit.guard';
+import { RateLimitType } from '../common/rate-limit/rate-limit.config';
+import { RateLimit } from '../common/rate-limit/rate-limit.decorator';
 
 @Controller('upload')
-@UseGuards(PrivyAuthGuard)
+@UseGuards(PrivyAuthGuard, RateLimitGuard)
+@RateLimit(RateLimitType.STRICT)
 export class UploadController {
   constructor(private uploadService: UploadService) {}
 

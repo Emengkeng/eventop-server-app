@@ -8,7 +8,6 @@ export class UploadService {
   private utapi: UTApi;
 
   constructor(private prisma: PrismaService) {
-    // Initialize UTApi with token from environment
     this.utapi = new UTApi({
       token: process.env.UPLOADTHING_TOKEN,
     });
