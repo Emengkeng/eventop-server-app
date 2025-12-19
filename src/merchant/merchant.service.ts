@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import * as crypto from 'crypto';
 import { Prisma } from '../generated/client';
@@ -197,5 +197,52 @@ export class MerchantService {
     });
 
     return { webhookSecret };
+  }
+
+  async getPublicInfo(walletAddress: string) {
+    const merchant = await this.prisma.merchant.findUnique({
+      where: { walletAddress },
+      select: {
+        walletAddress: true,
+        companyName: true,
+        logoUrl: true,
+      },
+    });
+
+    if (!merchant) {
+      throw new NotFoundException('Merchant not found');
+    }
+
+    return {
+      walletAddress: merchant.walletAddress,
+      companyName: merchant.companyName || 'Unknown Merchant',
+      logoUrl: merchant.logoUrl,
+    };
+  }
+
+  async getBatchPublicInfo(walletAddresses: string[]) {
+    if (!walletAddresses || walletAddresses.length === 0) {
+      return [];
+    }
+
+    // Limit batch size to prevent abuse
+    if (walletAddresses.length > 50) {
+      throw new BadRequestException('Maximum 50 wallet addresses allowed');
+    }
+
+    const merchants = await this.prisma.merchant.findMany({
+      where: { walletAddress: { in: walletAddresses } },
+      select: {
+        walletAddress: true,
+        companyName: true,
+        logoUrl: true,
+      },
+    });
+
+    return merchants.map((m) => ({
+      walletAddress: m.walletAddress,
+      companyName: m.companyName || 'Unknown Merchant',
+      logoUrl: m.logoUrl,
+    }));
   }
 }
