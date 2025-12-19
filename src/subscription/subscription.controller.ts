@@ -7,7 +7,7 @@ import { RateLimitGuard } from '../common/rate-limit/rate-limit.guard';
 // import { User } from '../auth/user.decorator';
 
 @Controller('subscriptions')
-@UseGuards(PrivyAuthGuard, RateLimitGuard)
+// @UseGuards(PrivyAuthGuard, RateLimitGuard)
 @RateLimit(RateLimitType.GENERAL)
 export class SubscriptionController {
   constructor(private subscriptionService: SubscriptionService) {}
