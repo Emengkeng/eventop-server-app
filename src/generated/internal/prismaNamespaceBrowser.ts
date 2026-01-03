@@ -157,8 +157,7 @@ export const SubscriptionWalletScalarFieldEnum = {
   ownerWallet: 'ownerWallet',
   mint: 'mint',
   isYieldEnabled: 'isYieldEnabled',
-  yieldStrategy: 'yieldStrategy',
-  yieldVault: 'yieldVault',
+  yieldShares: 'yieldShares',
   totalSubscriptions: 'totalSubscriptions',
   totalSpent: 'totalSpent',
   createdAt: 'createdAt'

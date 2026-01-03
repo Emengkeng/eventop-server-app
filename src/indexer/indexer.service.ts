@@ -223,23 +223,6 @@ export class IndexerService implements OnModuleInit {
     );
   }
 
-  private async handleYieldEnabled(data: ProgramEvent): Promise<void> {
-    if (data.name !== 'YieldEnabled') return;
-
-    await this.prisma.subscriptionWallet.update({
-      where: { walletPda: data.data.walletPda.toString() },
-      data: {
-        isYieldEnabled: true,
-        yieldStrategy: data.data.strategy,
-        yieldVault: data.data.vault.toString(),
-      },
-    });
-
-    this.logger.log(
-      ` Yield enabled for wallet: ${data.data.walletPda.toString()}`,
-    );
-  }
-
   private async handleWalletDeposit(
     data: ProgramEvent,
     signature: string,
@@ -583,8 +566,6 @@ export class IndexerService implements OnModuleInit {
       where: { walletPda: data.data.walletPda.toString() },
       data: {
         isYieldEnabled: true,
-        yieldStrategy: data.data.strategy,
-        yieldVault: data.data.vault.toString(),
       },
     });
 
@@ -604,7 +585,7 @@ export class IndexerService implements OnModuleInit {
       where: { walletPda: data.data.walletPda.toString() },
       data: {
         isYieldEnabled: false,
-        yieldStrategy: null,
+        yieldShares: '0',
       },
     });
 
@@ -619,6 +600,13 @@ export class IndexerService implements OnModuleInit {
     slot: number,
   ): Promise<void> {
     if (data.name !== 'YieldDeposit') return;
+
+    await this.prisma.subscriptionWallet.update({
+      where: { walletPda: data.data.walletPda.toString() },
+      data: {
+        yieldShares: data.data.sharesIssued.toString(),
+      },
+    });
 
     // Record transaction
     await this.recordTransaction({
@@ -641,6 +629,24 @@ export class IndexerService implements OnModuleInit {
   ): Promise<void> {
     if (data.name !== 'YieldWithdrawal') return;
 
+    // Get current shares and subtract
+    const wallet = await this.prisma.subscriptionWallet.findUnique({
+      where: { walletPda: data.data.walletPda.toString() },
+    });
+
+    if (wallet) {
+      const currentShares = BigInt(wallet.yieldShares);
+      const sharesRedeemed = BigInt(data.data.sharesRedeemed.toString());
+      const newShares = (currentShares - sharesRedeemed).toString();
+
+      await this.prisma.subscriptionWallet.update({
+        where: { walletPda: data.data.walletPda.toString() },
+        data: {
+          yieldShares: newShares,
+        },
+      });
+    }
+
     await this.recordTransaction({
       signature,
       subscriptionPda: '',
@@ -651,7 +657,9 @@ export class IndexerService implements OnModuleInit {
       slot,
     });
 
-    this.logger.log(`Yield withdrawal: ${data.data.usdcReceived.toString()}`);
+    this.logger.log(
+      ` Yield withdrawal: ${data.data.usdcReceived.toString()}`,
+    );
   }
 
   private async recordTransaction(data: TransactionRecordData): Promise<void> {
@@ -848,15 +856,13 @@ export class IndexerService implements OnModuleInit {
           ownerWallet: account.owner.toString(),
           mint: account.mint.toString(),
           isYieldEnabled: account.isYieldEnabled,
-          yieldStrategy: account.yieldStrategy,
-          yieldVault: account.yieldVault.toString(),
+          yieldShares: account.yieldShares.toString(),
           totalSubscriptions: account.totalSubscriptions,
           totalSpent: account.totalSpent.toString(),
         },
         update: {
           isYieldEnabled: account.isYieldEnabled,
-          yieldStrategy: account.yieldStrategy,
-          yieldVault: account.yieldVault.toString(),
+          yieldShares: account.yieldShares.toString(),
           totalSubscriptions: account.totalSubscriptions,
           totalSpent: account.totalSpent.toString(),
         },

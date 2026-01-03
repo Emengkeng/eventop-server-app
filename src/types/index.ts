@@ -338,8 +338,7 @@ export function subscriptionWalletToEntity(
     ownerWallet: account.owner.toString(),
     mint: account.mint.toString(),
     isYieldEnabled: account.isYieldEnabled,
-    yieldStrategy: account.yieldStrategy,
-    yieldVault: account.yieldVault.toString(),
+    yieldShares: account.yieldShares.toString(),
     totalSubscriptions: account.totalSubscriptions,
     totalSpent: account.totalSpent.toString(),
   };
