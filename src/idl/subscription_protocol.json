@@ -10,7 +10,7 @@
     {
       "name": "cancel_subscription_wallet",
       "docs": [
-        "Cancel subscription (no refund needed, funds stay in wallet)"
+        "Cancel subscription"
       ],
       "discriminator": [
         87,
@@ -78,88 +78,6 @@
           "relations": [
             "subscription_state"
           ]
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "claim_yield_rewards",
-      "docs": [
-        "Claim accumulated yield rewards"
-      ],
-      "discriminator": [
-        101,
-        232,
-        57,
-        18,
-        202,
-        32,
-        111,
-        9
-      ],
-      "accounts": [
-        {
-          "name": "subscription_wallet",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  115,
-                  117,
-                  98,
-                  115,
-                  99,
-                  114,
-                  105,
-                  112,
-                  116,
-                  105,
-                  111,
-                  110,
-                  95,
-                  119,
-                  97,
-                  108,
-                  108,
-                  101,
-                  116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "subscription_wallet.owner",
-                "account": "SubscriptionWallet"
-              },
-              {
-                "kind": "account",
-                "path": "subscription_wallet.mint",
-                "account": "SubscriptionWallet"
-              }
-            ]
-          }
-        },
-        {
-          "name": "owner",
-          "writable": true,
-          "signer": true,
-          "relations": [
-            "subscription_wallet"
-          ]
-        },
-        {
-          "name": "user_token_account",
-          "writable": true
-        },
-        {
-          "name": "wallet_token_account"
-        },
-        {
-          "name": "yield_vault_account"
-        },
-        {
-          "name": "token_program",
-          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
         }
       ],
       "args": []
@@ -239,10 +157,6 @@
         {
           "name": "system_program",
           "address": "11111111111111111111111111111111"
-        },
-        {
-          "name": "rent",
-          "address": "SysvarRent111111111111111111111111111111111"
         }
       ],
       "args": []
@@ -318,7 +232,122 @@
           "writable": true
         },
         {
-          "name": "yield_vault_account"
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "deposit_to_yield",
+      "docs": [
+        "Deposit more funds to yield vault (add to existing position)"
+      ],
+      "discriminator": [
+        30,
+        86,
+        121,
+        108,
+        211,
+        165,
+        8,
+        10
+      ],
+      "accounts": [
+        {
+          "name": "subscription_wallet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  117,
+                  98,
+                  115,
+                  99,
+                  114,
+                  105,
+                  112,
+                  116,
+                  105,
+                  111,
+                  110,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subscription_wallet.owner",
+                "account": "SubscriptionWallet"
+              },
+              {
+                "kind": "account",
+                "path": "subscription_wallet.mint",
+                "account": "SubscriptionWallet"
+              }
+            ]
+          }
+        },
+        {
+          "name": "yield_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  121,
+                  105,
+                  101,
+                  108,
+                  100,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subscription_wallet.mint",
+                "account": "SubscriptionWallet"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "subscription_wallet"
+          ]
+        },
+        {
+          "name": "wallet_token_account",
+          "writable": true
+        },
+        {
+          "name": "vault_buffer",
+          "writable": true
+        },
+        {
+          "name": "jupiter_lending"
         },
         {
           "name": "token_program",
@@ -333,9 +362,122 @@
       ]
     },
     {
+      "name": "disable_yield",
+      "docs": [
+        "Disable yield - redeems all shares back to user's wallet"
+      ],
+      "discriminator": [
+        167,
+        105,
+        31,
+        148,
+        14,
+        178,
+        166,
+        189
+      ],
+      "accounts": [
+        {
+          "name": "subscription_wallet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  117,
+                  98,
+                  115,
+                  99,
+                  114,
+                  105,
+                  112,
+                  116,
+                  105,
+                  111,
+                  110,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subscription_wallet.owner",
+                "account": "SubscriptionWallet"
+              },
+              {
+                "kind": "account",
+                "path": "subscription_wallet.mint",
+                "account": "SubscriptionWallet"
+              }
+            ]
+          }
+        },
+        {
+          "name": "yield_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  121,
+                  105,
+                  101,
+                  108,
+                  100,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subscription_wallet.mint",
+                "account": "SubscriptionWallet"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "subscription_wallet"
+          ]
+        },
+        {
+          "name": "wallet_token_account",
+          "writable": true
+        },
+        {
+          "name": "vault_buffer",
+          "writable": true
+        },
+        {
+          "name": "jupiter_lending"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "enable_yield",
       "docs": [
-        "Enable yield earning on idle funds in Subscription Wallet"
+        "Enable yield earning - moves funds to pooled vault"
       ],
       "discriminator": [
         196,
@@ -391,31 +533,69 @@
           }
         },
         {
+          "name": "yield_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  121,
+                  105,
+                  101,
+                  108,
+                  100,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subscription_wallet.mint",
+                "account": "SubscriptionWallet"
+              }
+            ]
+          }
+        },
+        {
           "name": "owner",
+          "writable": true,
           "signer": true,
           "relations": [
             "subscription_wallet"
           ]
         },
         {
-          "name": "yield_vault"
+          "name": "wallet_token_account",
+          "writable": true
+        },
+        {
+          "name": "vault_buffer",
+          "writable": true
+        },
+        {
+          "name": "jupiter_lending"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
         }
       ],
       "args": [
         {
-          "name": "strategy",
-          "type": {
-            "defined": {
-              "name": "YieldStrategy"
-            }
-          }
+          "name": "amount",
+          "type": "u64"
         }
       ]
     },
     {
       "name": "execute_payment_from_wallet",
       "docs": [
-        "Execute payment from Subscription Wallet"
+        "Execute payment - with automatic yield redemption if needed"
       ],
       "discriminator": [
         65,
@@ -553,6 +733,45 @@
           "writable": true
         },
         {
+          "name": "yield_vault",
+          "writable": true,
+          "optional": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  121,
+                  105,
+                  101,
+                  108,
+                  100,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subscription_wallet.mint",
+                "account": "SubscriptionWallet"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault_buffer",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "jupiter_lending",
+          "optional": true
+        },
+        {
           "name": "token_program",
           "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
         }
@@ -622,6 +841,209 @@
           "type": "u16"
         }
       ]
+    },
+    {
+      "name": "initialize_yield_vault",
+      "docs": [
+        "Initialize the global yield vault (one-time setup)"
+      ],
+      "discriminator": [
+        117,
+        33,
+        120,
+        230,
+        252,
+        0,
+        222,
+        91
+      ],
+      "accounts": [
+        {
+          "name": "yield_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  121,
+                  105,
+                  101,
+                  108,
+                  100,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "usdc_buffer",
+          "docs": [
+            "USDC buffer token account (owned by yield_vault PDA)"
+          ]
+        },
+        {
+          "name": "jupiter_ftoken_account",
+          "docs": [
+            "Jupiter Lend fToken account (owned by yield_vault PDA)"
+          ]
+        },
+        {
+          "name": "jupiter_lending",
+          "docs": [
+            "Jupiter Lend lending account"
+          ]
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "target_buffer_bps",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "rebalance_vault",
+      "docs": [
+        "Protocol-level rebalancing: Move funds between buffer and Juplend"
+      ],
+      "discriminator": [
+        222,
+        228,
+        121,
+        242,
+        30,
+        212,
+        201,
+        145
+      ],
+      "accounts": [
+        {
+          "name": "yield_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  121,
+                  105,
+                  101,
+                  108,
+                  100,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "yield_vault.mint",
+                "account": "YieldVault"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "signer": true,
+          "relations": [
+            "yield_vault"
+          ]
+        },
+        {
+          "name": "vault_buffer",
+          "writable": true
+        },
+        {
+          "name": "jupiter_ftoken_account",
+          "writable": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "f_token_mint"
+        },
+        {
+          "name": "lending_admin"
+        },
+        {
+          "name": "lending",
+          "writable": true
+        },
+        {
+          "name": "supply_token_reserves_liquidity",
+          "writable": true
+        },
+        {
+          "name": "lending_supply_position_on_liquidity",
+          "writable": true
+        },
+        {
+          "name": "rate_model"
+        },
+        {
+          "name": "jupiter_vault",
+          "writable": true
+        },
+        {
+          "name": "claim_account",
+          "writable": true
+        },
+        {
+          "name": "liquidity",
+          "writable": true
+        },
+        {
+          "name": "liquidity_program",
+          "writable": true
+        },
+        {
+          "name": "rewards_rate_model"
+        },
+        {
+          "name": "lending_program"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
     },
     {
       "name": "register_merchant",
@@ -710,9 +1132,87 @@
       ]
     },
     {
+      "name": "set_emergency_mode",
+      "docs": [
+        "Emergency mode: Disable yield operations protocol-wide"
+      ],
+      "discriminator": [
+        79,
+        138,
+        190,
+        94,
+        0,
+        162,
+        205,
+        253
+      ],
+      "accounts": [
+        {
+          "name": "yield_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  121,
+                  105,
+                  101,
+                  108,
+                  100,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "yield_vault.mint",
+                "account": "YieldVault"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "signer": true,
+          "relations": [
+            "yield_vault"
+          ]
+        },
+        {
+          "name": "vault_buffer",
+          "writable": true
+        },
+        {
+          "name": "jupiter_ftoken_account",
+          "writable": true
+        },
+        {
+          "name": "f_token_mint"
+        },
+        {
+          "name": "jupiter_lending"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "enabled",
+          "type": "bool"
+        }
+      ]
+    },
+    {
       "name": "subscribe_with_wallet",
       "docs": [
-        "Subscribe using Subscription Wallet (New approach!)"
+        "Subscribe using Subscription Wallet"
       ],
       "discriminator": [
         8,
@@ -847,9 +1347,6 @@
         },
         {
           "name": "wallet_token_account"
-        },
-        {
-          "name": "wallet_yield_vault"
         },
         {
           "name": "system_program",
@@ -996,7 +1493,122 @@
           "writable": true
         },
         {
-          "name": "yield_vault_account"
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "withdraw_from_yield",
+      "docs": [
+        "Withdraw from yield position (partial or full)"
+      ],
+      "discriminator": [
+        143,
+        188,
+        122,
+        175,
+        53,
+        205,
+        204,
+        15
+      ],
+      "accounts": [
+        {
+          "name": "subscription_wallet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  117,
+                  98,
+                  115,
+                  99,
+                  114,
+                  105,
+                  112,
+                  116,
+                  105,
+                  111,
+                  110,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subscription_wallet.owner",
+                "account": "SubscriptionWallet"
+              },
+              {
+                "kind": "account",
+                "path": "subscription_wallet.mint",
+                "account": "SubscriptionWallet"
+              }
+            ]
+          }
+        },
+        {
+          "name": "yield_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  121,
+                  105,
+                  101,
+                  108,
+                  100,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subscription_wallet.mint",
+                "account": "SubscriptionWallet"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "subscription_wallet"
+          ]
+        },
+        {
+          "name": "wallet_token_account",
+          "writable": true
+        },
+        {
+          "name": "vault_buffer",
+          "writable": true
+        },
+        {
+          "name": "jupiter_lending"
         },
         {
           "name": "token_program",
@@ -1005,7 +1617,7 @@
       ],
       "args": [
         {
-          "name": "amount",
+          "name": "shares_to_redeem",
           "type": "u64"
         }
       ]
@@ -1076,9 +1688,35 @@
         38,
         118
       ]
+    },
+    {
+      "name": "YieldVault",
+      "discriminator": [
+        17,
+        229,
+        96,
+        254,
+        254,
+        179,
+        195,
+        163
+      ]
     }
   ],
   "events": [
+    {
+      "name": "EmergencyModeChanged",
+      "discriminator": [
+        20,
+        161,
+        39,
+        32,
+        151,
+        62,
+        192,
+        67
+      ]
+    },
     {
       "name": "MerchantPlanRegistered",
       "discriminator": [
@@ -1171,6 +1809,19 @@
       ]
     },
     {
+      "name": "VaultRebalanced",
+      "discriminator": [
+        117,
+        48,
+        126,
+        17,
+        29,
+        0,
+        200,
+        28
+      ]
+    },
+    {
       "name": "WalletDeposit",
       "discriminator": [
         196,
@@ -1197,16 +1848,29 @@
       ]
     },
     {
-      "name": "YieldClaimed",
+      "name": "YieldDeposit",
       "discriminator": [
-        177,
-        201,
-        94,
-        68,
-        19,
-        200,
-        227,
-        27
+        12,
+        231,
+        107,
+        169,
+        165,
+        249,
+        85,
+        129
+      ]
+    },
+    {
+      "name": "YieldDisabled",
+      "discriminator": [
+        108,
+        111,
+        46,
+        130,
+        60,
+        75,
+        91,
+        149
       ]
     },
     {
@@ -1220,6 +1884,32 @@
         113,
         52,
         41
+      ]
+    },
+    {
+      "name": "YieldVaultInitialized",
+      "discriminator": [
+        243,
+        230,
+        63,
+        223,
+        0,
+        8,
+        98,
+        26
+      ]
+    },
+    {
+      "name": "YieldWithdrawal",
+      "discriminator": [
+        44,
+        216,
+        238,
+        136,
+        233,
+        133,
+        161,
+        60
       ]
     }
   ],
@@ -1251,23 +1941,23 @@
     },
     {
       "code": 6005,
+      "name": "InvalidAmount",
+      "msg": " Amount must be greater than zero"
+    },
+    {
+      "code": 6006,
       "name": "InvalidInterval",
       "msg": "Payment interval must be greater than zero"
     },
     {
-      "code": 6006,
+      "code": 6007,
       "name": "PlanInactive",
       "msg": "Merchant plan is not active"
     },
     {
-      "code": 6007,
+      "code": 6008,
       "name": "InvalidMerchantPlan",
       "msg": "Invalid merchant plan reference"
-    },
-    {
-      "code": 6008,
-      "name": "UnauthorizedCaller",
-      "msg": "Caller is not authorized to execute payment"
     },
     {
       "code": 6009,
@@ -1291,91 +1981,142 @@
     },
     {
       "code": 6013,
-      "name": "InsufficientAvailableBalance",
-      "msg": "Insufficient available balance in wallet"
+      "name": "InvalidCollateralAccount",
+      "msg": "Invalid collateral account"
     },
     {
       "code": 6014,
+      "name": "InvalidJupiterLendAccount",
+      "msg": "Invalid Jupiter Lend account"
+    },
+    {
+      "code": 6015,
       "name": "InsufficientWalletBalance",
       "msg": "Insufficient wallet balance for subscription"
     },
     {
-      "code": 6015,
-      "name": "InvalidSubscriptionWallet",
-      "msg": "Invalid subscription wallet reference"
-    },
-    {
       "code": 6016,
-      "name": "YieldAlreadyEnabled",
-      "msg": "Yield is already enabled"
+      "name": "InsufficientCollateral",
+      "msg": "Insufficient collateral deposited"
     },
     {
       "code": 6017,
-      "name": "YieldNotEnabled",
-      "msg": "Yield is not enabled"
-    },
-    {
-      "code": 6018,
-      "name": "InvalidYieldStrategy",
-      "msg": "Invalid yield strategy"
-    },
-    {
-      "code": 6019,
-      "name": "NoYieldToClaim",
-      "msg": "No yield rewards to claim"
-    },
-    {
-      "code": 6020,
       "name": "InsufficientFunds",
       "msg": "Insufficient funds in wallet"
     },
     {
-      "code": 6021,
+      "code": 6018,
       "name": "InvalidMerchantAccount",
       "msg": "Invalid merchant token account"
     },
     {
-      "code": 6022,
+      "code": 6019,
       "name": "MathOverflow",
       "msg": "Math operation overflow"
     },
     {
-      "code": 6023,
-      "name": "MerchantMismatch",
-      "msg": "Merchant mismatch: subscription merchant does not match merchant plan"
-    },
-    {
-      "code": 6024,
+      "code": 6020,
       "name": "FeeTooHigh",
       "msg": "Protocol fee exceeds maximum allowed (10%)"
     },
     {
-      "code": 6025,
+      "code": 6021,
       "name": "UnauthorizedProtocolUpdate",
       "msg": "Unauthorized protocol configuration update"
     },
     {
-      "code": 6026,
+      "code": 6022,
       "name": "InvalidTreasuryAccount",
       "msg": "Invalid treasury account"
     },
     {
-      "code": 6027,
+      "code": 6023,
+      "name": "InvalidShareAmount",
+      "msg": "Invalid share amount"
+    },
+    {
+      "code": 6024,
       "name": "SessionTokenTooLong",
       "msg": "Session token exceeds maximum length (64 characters)"
     },
     {
-      "code": 6028,
+      "code": 6025,
       "name": "SessionTokenRequired",
       "msg": "Session token is required"
     },
     {
-      "code": 6029,
+      "code": 6026,
       "name": "SessionTokenAlreadyUsed",
       "msg": "Session token already used"
+    },
+    {
+      "code": 6027,
+      "name": "YieldAlreadyEnabled",
+      "msg": "Yield is already enabled"
+    },
+    {
+      "code": 6028,
+      "name": "YieldNotEnabled",
+      "msg": "Yield is not enabled"
+    },
+    {
+      "code": 6029,
+      "name": "InvalidBufferRatio",
+      "msg": "Invalid buffer ratio (must be <= 50%)"
+    },
+    {
+      "code": 6030,
+      "name": "YieldAmountTooSmall",
+      "msg": "Yield amount too small after buffer calculation"
+    },
+    {
+      "code": 6031,
+      "name": "NoSharesToRedeem",
+      "msg": "No shares to redeem"
+    },
+    {
+      "code": 6032,
+      "name": "InsufficientShares",
+      "msg": "Insufficient shares"
+    },
+    {
+      "code": 6033,
+      "name": "EmergencyModeEnabled",
+      "msg": "Emergency mode is enabled"
+    },
+    {
+      "code": 6034,
+      "name": "InsufficientAvailableBalance",
+      "msg": "Insufficient available balance in wallet"
+    },
+    {
+      "code": 6035,
+      "name": "JupiterLendDepositFailed",
+      "msg": "Jupiter Lend deposit failed"
+    },
+    {
+      "code": 6036,
+      "name": "JupiterLendWithdrawFailed",
+      "msg": "Jupiter Lend withdraw failed"
     }
   ],
   "types": [
+    {
+      "name": "EmergencyModeChanged",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "enabled",
+            "type": "bool"
+          },
+          {
+            "name": "frozen_rate",
+            "type": "u64"
+          }
+        ]
+      }
+    },
     {
       "name": "MerchantPlan",
       "type": {
@@ -1702,28 +2443,20 @@
             "type": "pubkey"
           },
           {
-            "name": "yield_vault",
-            "type": "pubkey"
-          },
-          {
-            "name": "yield_strategy",
-            "type": {
-              "defined": {
-                "name": "YieldStrategy"
-              }
-            }
-          },
-          {
-            "name": "is_yield_enabled",
-            "type": "bool"
-          },
-          {
             "name": "total_subscriptions",
             "type": "u32"
           },
           {
             "name": "total_spent",
             "type": "u64"
+          },
+          {
+            "name": "yield_shares",
+            "type": "u64"
+          },
+          {
+            "name": "is_yield_enabled",
+            "type": "bool"
           },
           {
             "name": "bump",
@@ -1753,6 +2486,22 @@
       }
     },
     {
+      "name": "VaultRebalanced",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "action",
+            "type": "string"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
       "name": "WalletDeposit",
       "type": {
         "kind": "struct",
@@ -1768,10 +2517,6 @@
           {
             "name": "amount",
             "type": "u64"
-          },
-          {
-            "name": "deposited_to_yield",
-            "type": "bool"
           }
         ]
       }
@@ -1797,7 +2542,7 @@
       }
     },
     {
-      "name": "YieldClaimed",
+      "name": "YieldDeposit",
       "type": {
         "kind": "struct",
         "fields": [
@@ -1806,11 +2551,31 @@
             "type": "pubkey"
           },
           {
-            "name": "user",
+            "name": "shares_issued",
+            "type": "u64"
+          },
+          {
+            "name": "usdc_amount",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "YieldDisabled",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "wallet_pda",
             "type": "pubkey"
           },
           {
-            "name": "amount",
+            "name": "shares_redeemed",
+            "type": "u64"
+          },
+          {
+            "name": "usdc_received",
             "type": "u64"
           }
         ]
@@ -1826,35 +2591,108 @@
             "type": "pubkey"
           },
           {
-            "name": "strategy",
-            "type": "string"
+            "name": "shares_issued",
+            "type": "u64"
           },
           {
-            "name": "vault",
-            "type": "pubkey"
+            "name": "usdc_amount",
+            "type": "u64"
+          },
+          {
+            "name": "buffer_amount",
+            "type": "u64"
           }
         ]
       }
     },
     {
-      "name": "YieldStrategy",
+      "name": "YieldVault",
       "type": {
-        "kind": "enum",
-        "variants": [
+        "kind": "struct",
+        "fields": [
           {
-            "name": "None"
+            "name": "authority",
+            "type": "pubkey"
           },
           {
-            "name": "MarginfiLend"
+            "name": "mint",
+            "type": "pubkey"
           },
           {
-            "name": "KaminoLend"
+            "name": "usdc_buffer",
+            "type": "pubkey"
           },
           {
-            "name": "SolendPool"
+            "name": "jupiter_ftoken_account",
+            "type": "pubkey"
           },
           {
-            "name": "DriftDeposit"
+            "name": "jupiter_lending",
+            "type": "pubkey"
+          },
+          {
+            "name": "total_shares_issued",
+            "type": "u64"
+          },
+          {
+            "name": "total_usdc_deposited",
+            "type": "u64"
+          },
+          {
+            "name": "target_buffer_bps",
+            "type": "u16"
+          },
+          {
+            "name": "emergency_mode",
+            "type": "bool"
+          },
+          {
+            "name": "emergency_exchange_rate",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "YieldVaultInitialized",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "vault",
+            "type": "pubkey"
+          },
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "target_buffer_bps",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "YieldWithdrawal",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "wallet_pda",
+            "type": "pubkey"
+          },
+          {
+            "name": "shares_redeemed",
+            "type": "u64"
+          },
+          {
+            "name": "usdc_received",
+            "type": "u64"
           }
         ]
       }

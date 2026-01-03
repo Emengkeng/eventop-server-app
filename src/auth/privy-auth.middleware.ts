@@ -57,12 +57,12 @@ export class PrivyAuthMiddleware implements NestMiddleware {
         expiration: verifiedClaims.expiration,
       };
 
-      this.logger.log(`✅ Authenticated user: ${verifiedClaims.userId}`);
+      this.logger.log(`    Authenticated user: ${verifiedClaims.userId}`);
       next();
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : 'Authentication failed';
-      this.logger.error(`❌ Auth failed: ${errorMessage}`);
+      this.logger.error(`   Auth failed: ${errorMessage}`);
 
       throw new UnauthorizedException(
         'Invalid or expired authentication token',

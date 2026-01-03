@@ -243,7 +243,7 @@ export class SolanaPaymentService {
 
       const subscriptionPubkey = new PublicKey(subscriptionPda);
 
-      // ✅ CORRECT: Use program.account to fetch
+      //     CORRECT: Use program.account to fetch
       const subscriptionAccount =
         await this.program.account.subscriptionState.fetch(subscriptionPubkey);
 
@@ -291,7 +291,7 @@ export class SolanaPaymentService {
 
       const subscriptionPubkey = new PublicKey(subscriptionPda);
 
-      // ✅ CORRECT: Use program.account to fetch
+      //     CORRECT: Use program.account to fetch
       const account =
         await this.program.account.subscriptionState.fetch(subscriptionPubkey);
 
@@ -326,7 +326,7 @@ export class SolanaPaymentService {
 
       const walletPubkey = new PublicKey(walletPda);
 
-      // ✅ CORRECT: Use program.account to fetch wallet data
+      //     CORRECT: Use program.account to fetch wallet data
       const wallet =
         await this.program.account.subscriptionWallet.fetch(walletPubkey);
 
@@ -362,7 +362,7 @@ export class SolanaPaymentService {
 
       const planPubkey = new PublicKey(merchantPlanPda);
 
-      // ✅ CORRECT: Use program.account to fetch merchant plan data
+      //     CORRECT: Use program.account to fetch merchant plan data
       const plan = await this.program.account.merchantPlan.fetch(planPubkey);
 
       return {

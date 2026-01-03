@@ -345,7 +345,7 @@ export class IndexerService implements OnModuleInit {
 
       if (session.status === 'completed') {
         this.logger.warn(
-          `⚠️ Session ${sessionId} already completed. Possible duplicate.`,
+          `  Session ${sessionId} already completed. Possible duplicate.`,
         );
         return;
       }
@@ -897,7 +897,7 @@ export class IndexerService implements OnModuleInit {
 
         if (!session) {
           this.logger.warn(
-            `⚠️ Session ${account.sessionToken} not found for subscription ${pubkey.toString()}, skipping`,
+            `  Session ${account.sessionToken} not found for subscription ${pubkey.toString()}, skipping`,
           );
           skippedCount++;
           continue;
@@ -910,7 +910,7 @@ export class IndexerService implements OnModuleInit {
 
         if (!merchantPlan) {
           this.logger.warn(
-            `⚠️ Merchant plan ${account.merchantPlan.toString()} not found, skipping`,
+            `  Merchant plan ${account.merchantPlan.toString()} not found, skipping`,
           );
           skippedCount++;
           continue;
@@ -973,12 +973,12 @@ export class IndexerService implements OnModuleInit {
     if (state) {
       this.lastProcessedSlot = Number(state.lastProcessedSlot);
       this.logger.log(
-        `📍 Loaded last processed slot: ${this.lastProcessedSlot}`,
+        `     Loaded last processed slot: ${this.lastProcessedSlot}`,
       );
     } else {
       this.lastProcessedSlot = await connection.getSlot('confirmed');
       this.logger.log(
-        `📍 First run - starting from current slot: ${this.lastProcessedSlot}`,
+        `     First run - starting from current slot: ${this.lastProcessedSlot}`,
       );
       await this.saveLastProcessedSlot();
     }

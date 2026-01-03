@@ -41,18 +41,18 @@ export class SolanaService implements OnModuleInit {
       commitment: 'confirmed',
     });
 
-    this.logger.log('✅ Solana connection established');
-    this.logger.log(`📍 RPC URL: ${rpcUrl}`);
-    this.logger.log(`📍 Program ID: ${this.programId.toString()}`);
+    this.logger.log('    Solana connection established');
+    this.logger.log(`     RPC URL: ${rpcUrl}`);
+    this.logger.log(`     Program ID: ${this.programId.toString()}`);
   }
 
   async onModuleInit() {
     try {
       await this.loadProgram();
       this.isInitialized = true;
-      this.logger.log('✅ SolanaService fully initialized');
+      this.logger.log('    SolanaService fully initialized');
     } catch (error) {
-      this.logger.error('❌ Failed to initialize SolanaService:', error);
+      this.logger.error('   Failed to initialize SolanaService:', error);
     }
   }
 
@@ -61,10 +61,10 @@ export class SolanaService implements OnModuleInit {
       const idl = await Program.fetchIdl(this.programId, this.provider);
       if (idl) {
         this.program = new Program(idl, this.provider);
-        this.logger.log('✅ Program loaded with IDL');
+        this.logger.log('    Program loaded with IDL');
       } else {
         this.logger.warn(
-          '⚠️  Program IDL not loaded. Add your IDL to enable typed accounts.',
+          '   Program IDL not loaded. Add your IDL to enable typed accounts.',
         );
       }
     } catch (error) {
@@ -99,11 +99,11 @@ export class SolanaService implements OnModuleInit {
   async waitUntilReady(maxAttempts = 10): Promise<void> {
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
       if (this.isReady()) {
-        this.logger.log('✅ SolanaService is ready');
+        this.logger.log('    SolanaService is ready');
         return;
       }
       this.logger.warn(
-        `⏳ Waiting for SolanaService... (${attempt}/${maxAttempts})`,
+        ` Waiting for SolanaService... (${attempt}/${maxAttempts})`,
       );
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
