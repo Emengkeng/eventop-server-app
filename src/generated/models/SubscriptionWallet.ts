@@ -39,8 +39,7 @@ export type SubscriptionWalletMinAggregateOutputType = {
   ownerWallet: string | null
   mint: string | null
   isYieldEnabled: boolean | null
-  yieldStrategy: string | null
-  yieldVault: string | null
+  yieldShares: string | null
   totalSubscriptions: number | null
   totalSpent: string | null
   createdAt: Date | null
@@ -51,8 +50,7 @@ export type SubscriptionWalletMaxAggregateOutputType = {
   ownerWallet: string | null
   mint: string | null
   isYieldEnabled: boolean | null
-  yieldStrategy: string | null
-  yieldVault: string | null
+  yieldShares: string | null
   totalSubscriptions: number | null
   totalSpent: string | null
   createdAt: Date | null
@@ -63,8 +61,7 @@ export type SubscriptionWalletCountAggregateOutputType = {
   ownerWallet: number
   mint: number
   isYieldEnabled: number
-  yieldStrategy: number
-  yieldVault: number
+  yieldShares: number
   totalSubscriptions: number
   totalSpent: number
   createdAt: number
@@ -85,8 +82,7 @@ export type SubscriptionWalletMinAggregateInputType = {
   ownerWallet?: true
   mint?: true
   isYieldEnabled?: true
-  yieldStrategy?: true
-  yieldVault?: true
+  yieldShares?: true
   totalSubscriptions?: true
   totalSpent?: true
   createdAt?: true
@@ -97,8 +93,7 @@ export type SubscriptionWalletMaxAggregateInputType = {
   ownerWallet?: true
   mint?: true
   isYieldEnabled?: true
-  yieldStrategy?: true
-  yieldVault?: true
+  yieldShares?: true
   totalSubscriptions?: true
   totalSpent?: true
   createdAt?: true
@@ -109,8 +104,7 @@ export type SubscriptionWalletCountAggregateInputType = {
   ownerWallet?: true
   mint?: true
   isYieldEnabled?: true
-  yieldStrategy?: true
-  yieldVault?: true
+  yieldShares?: true
   totalSubscriptions?: true
   totalSpent?: true
   createdAt?: true
@@ -208,8 +202,7 @@ export type SubscriptionWalletGroupByOutputType = {
   ownerWallet: string
   mint: string
   isYieldEnabled: boolean
-  yieldStrategy: string | null
-  yieldVault: string | null
+  yieldShares: string
   totalSubscriptions: number
   totalSpent: string
   createdAt: Date
@@ -243,8 +236,7 @@ export type SubscriptionWalletWhereInput = {
   ownerWallet?: Prisma.StringFilter<"SubscriptionWallet"> | string
   mint?: Prisma.StringFilter<"SubscriptionWallet"> | string
   isYieldEnabled?: Prisma.BoolFilter<"SubscriptionWallet"> | boolean
-  yieldStrategy?: Prisma.StringNullableFilter<"SubscriptionWallet"> | string | null
-  yieldVault?: Prisma.StringNullableFilter<"SubscriptionWallet"> | string | null
+  yieldShares?: Prisma.StringFilter<"SubscriptionWallet"> | string
   totalSubscriptions?: Prisma.IntFilter<"SubscriptionWallet"> | number
   totalSpent?: Prisma.StringFilter<"SubscriptionWallet"> | string
   createdAt?: Prisma.DateTimeFilter<"SubscriptionWallet"> | Date | string
@@ -255,8 +247,7 @@ export type SubscriptionWalletOrderByWithRelationInput = {
   ownerWallet?: Prisma.SortOrder
   mint?: Prisma.SortOrder
   isYieldEnabled?: Prisma.SortOrder
-  yieldStrategy?: Prisma.SortOrderInput | Prisma.SortOrder
-  yieldVault?: Prisma.SortOrderInput | Prisma.SortOrder
+  yieldShares?: Prisma.SortOrder
   totalSubscriptions?: Prisma.SortOrder
   totalSpent?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -270,8 +261,7 @@ export type SubscriptionWalletWhereUniqueInput = Prisma.AtLeast<{
   ownerWallet?: Prisma.StringFilter<"SubscriptionWallet"> | string
   mint?: Prisma.StringFilter<"SubscriptionWallet"> | string
   isYieldEnabled?: Prisma.BoolFilter<"SubscriptionWallet"> | boolean
-  yieldStrategy?: Prisma.StringNullableFilter<"SubscriptionWallet"> | string | null
-  yieldVault?: Prisma.StringNullableFilter<"SubscriptionWallet"> | string | null
+  yieldShares?: Prisma.StringFilter<"SubscriptionWallet"> | string
   totalSubscriptions?: Prisma.IntFilter<"SubscriptionWallet"> | number
   totalSpent?: Prisma.StringFilter<"SubscriptionWallet"> | string
   createdAt?: Prisma.DateTimeFilter<"SubscriptionWallet"> | Date | string
@@ -282,8 +272,7 @@ export type SubscriptionWalletOrderByWithAggregationInput = {
   ownerWallet?: Prisma.SortOrder
   mint?: Prisma.SortOrder
   isYieldEnabled?: Prisma.SortOrder
-  yieldStrategy?: Prisma.SortOrderInput | Prisma.SortOrder
-  yieldVault?: Prisma.SortOrderInput | Prisma.SortOrder
+  yieldShares?: Prisma.SortOrder
   totalSubscriptions?: Prisma.SortOrder
   totalSpent?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -302,8 +291,7 @@ export type SubscriptionWalletScalarWhereWithAggregatesInput = {
   ownerWallet?: Prisma.StringWithAggregatesFilter<"SubscriptionWallet"> | string
   mint?: Prisma.StringWithAggregatesFilter<"SubscriptionWallet"> | string
   isYieldEnabled?: Prisma.BoolWithAggregatesFilter<"SubscriptionWallet"> | boolean
-  yieldStrategy?: Prisma.StringNullableWithAggregatesFilter<"SubscriptionWallet"> | string | null
-  yieldVault?: Prisma.StringNullableWithAggregatesFilter<"SubscriptionWallet"> | string | null
+  yieldShares?: Prisma.StringWithAggregatesFilter<"SubscriptionWallet"> | string
   totalSubscriptions?: Prisma.IntWithAggregatesFilter<"SubscriptionWallet"> | number
   totalSpent?: Prisma.StringWithAggregatesFilter<"SubscriptionWallet"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"SubscriptionWallet"> | Date | string
@@ -314,8 +302,7 @@ export type SubscriptionWalletCreateInput = {
   ownerWallet: string
   mint: string
   isYieldEnabled?: boolean
-  yieldStrategy?: string | null
-  yieldVault?: string | null
+  yieldShares?: string
   totalSubscriptions?: number
   totalSpent?: string
   createdAt?: Date | string
@@ -326,8 +313,7 @@ export type SubscriptionWalletUncheckedCreateInput = {
   ownerWallet: string
   mint: string
   isYieldEnabled?: boolean
-  yieldStrategy?: string | null
-  yieldVault?: string | null
+  yieldShares?: string
   totalSubscriptions?: number
   totalSpent?: string
   createdAt?: Date | string
@@ -338,8 +324,7 @@ export type SubscriptionWalletUpdateInput = {
   ownerWallet?: Prisma.StringFieldUpdateOperationsInput | string
   mint?: Prisma.StringFieldUpdateOperationsInput | string
   isYieldEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  yieldStrategy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  yieldVault?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  yieldShares?: Prisma.StringFieldUpdateOperationsInput | string
   totalSubscriptions?: Prisma.IntFieldUpdateOperationsInput | number
   totalSpent?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -350,8 +335,7 @@ export type SubscriptionWalletUncheckedUpdateInput = {
   ownerWallet?: Prisma.StringFieldUpdateOperationsInput | string
   mint?: Prisma.StringFieldUpdateOperationsInput | string
   isYieldEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  yieldStrategy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  yieldVault?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  yieldShares?: Prisma.StringFieldUpdateOperationsInput | string
   totalSubscriptions?: Prisma.IntFieldUpdateOperationsInput | number
   totalSpent?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -362,8 +346,7 @@ export type SubscriptionWalletCreateManyInput = {
   ownerWallet: string
   mint: string
   isYieldEnabled?: boolean
-  yieldStrategy?: string | null
-  yieldVault?: string | null
+  yieldShares?: string
   totalSubscriptions?: number
   totalSpent?: string
   createdAt?: Date | string
@@ -374,8 +357,7 @@ export type SubscriptionWalletUpdateManyMutationInput = {
   ownerWallet?: Prisma.StringFieldUpdateOperationsInput | string
   mint?: Prisma.StringFieldUpdateOperationsInput | string
   isYieldEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  yieldStrategy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  yieldVault?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  yieldShares?: Prisma.StringFieldUpdateOperationsInput | string
   totalSubscriptions?: Prisma.IntFieldUpdateOperationsInput | number
   totalSpent?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -386,8 +368,7 @@ export type SubscriptionWalletUncheckedUpdateManyInput = {
   ownerWallet?: Prisma.StringFieldUpdateOperationsInput | string
   mint?: Prisma.StringFieldUpdateOperationsInput | string
   isYieldEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  yieldStrategy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  yieldVault?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  yieldShares?: Prisma.StringFieldUpdateOperationsInput | string
   totalSubscriptions?: Prisma.IntFieldUpdateOperationsInput | number
   totalSpent?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -398,8 +379,7 @@ export type SubscriptionWalletCountOrderByAggregateInput = {
   ownerWallet?: Prisma.SortOrder
   mint?: Prisma.SortOrder
   isYieldEnabled?: Prisma.SortOrder
-  yieldStrategy?: Prisma.SortOrder
-  yieldVault?: Prisma.SortOrder
+  yieldShares?: Prisma.SortOrder
   totalSubscriptions?: Prisma.SortOrder
   totalSpent?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -414,8 +394,7 @@ export type SubscriptionWalletMaxOrderByAggregateInput = {
   ownerWallet?: Prisma.SortOrder
   mint?: Prisma.SortOrder
   isYieldEnabled?: Prisma.SortOrder
-  yieldStrategy?: Prisma.SortOrder
-  yieldVault?: Prisma.SortOrder
+  yieldShares?: Prisma.SortOrder
   totalSubscriptions?: Prisma.SortOrder
   totalSpent?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -426,8 +405,7 @@ export type SubscriptionWalletMinOrderByAggregateInput = {
   ownerWallet?: Prisma.SortOrder
   mint?: Prisma.SortOrder
   isYieldEnabled?: Prisma.SortOrder
-  yieldStrategy?: Prisma.SortOrder
-  yieldVault?: Prisma.SortOrder
+  yieldShares?: Prisma.SortOrder
   totalSubscriptions?: Prisma.SortOrder
   totalSpent?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -444,8 +422,7 @@ export type SubscriptionWalletSelect<ExtArgs extends runtime.Types.Extensions.In
   ownerWallet?: boolean
   mint?: boolean
   isYieldEnabled?: boolean
-  yieldStrategy?: boolean
-  yieldVault?: boolean
+  yieldShares?: boolean
   totalSubscriptions?: boolean
   totalSpent?: boolean
   createdAt?: boolean
@@ -456,8 +433,7 @@ export type SubscriptionWalletSelectCreateManyAndReturn<ExtArgs extends runtime.
   ownerWallet?: boolean
   mint?: boolean
   isYieldEnabled?: boolean
-  yieldStrategy?: boolean
-  yieldVault?: boolean
+  yieldShares?: boolean
   totalSubscriptions?: boolean
   totalSpent?: boolean
   createdAt?: boolean
@@ -468,8 +444,7 @@ export type SubscriptionWalletSelectUpdateManyAndReturn<ExtArgs extends runtime.
   ownerWallet?: boolean
   mint?: boolean
   isYieldEnabled?: boolean
-  yieldStrategy?: boolean
-  yieldVault?: boolean
+  yieldShares?: boolean
   totalSubscriptions?: boolean
   totalSpent?: boolean
   createdAt?: boolean
@@ -480,14 +455,13 @@ export type SubscriptionWalletSelectScalar = {
   ownerWallet?: boolean
   mint?: boolean
   isYieldEnabled?: boolean
-  yieldStrategy?: boolean
-  yieldVault?: boolean
+  yieldShares?: boolean
   totalSubscriptions?: boolean
   totalSpent?: boolean
   createdAt?: boolean
 }
 
-export type SubscriptionWalletOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"walletPda" | "ownerWallet" | "mint" | "isYieldEnabled" | "yieldStrategy" | "yieldVault" | "totalSubscriptions" | "totalSpent" | "createdAt", ExtArgs["result"]["subscriptionWallet"]>
+export type SubscriptionWalletOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"walletPda" | "ownerWallet" | "mint" | "isYieldEnabled" | "yieldShares" | "totalSubscriptions" | "totalSpent" | "createdAt", ExtArgs["result"]["subscriptionWallet"]>
 
 export type $SubscriptionWalletPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "SubscriptionWallet"
@@ -497,8 +471,7 @@ export type $SubscriptionWalletPayload<ExtArgs extends runtime.Types.Extensions.
     ownerWallet: string
     mint: string
     isYieldEnabled: boolean
-    yieldStrategy: string | null
-    yieldVault: string | null
+    yieldShares: string
     totalSubscriptions: number
     totalSpent: string
     createdAt: Date
@@ -929,8 +902,7 @@ export interface SubscriptionWalletFieldRefs {
   readonly ownerWallet: Prisma.FieldRef<"SubscriptionWallet", 'String'>
   readonly mint: Prisma.FieldRef<"SubscriptionWallet", 'String'>
   readonly isYieldEnabled: Prisma.FieldRef<"SubscriptionWallet", 'Boolean'>
-  readonly yieldStrategy: Prisma.FieldRef<"SubscriptionWallet", 'String'>
-  readonly yieldVault: Prisma.FieldRef<"SubscriptionWallet", 'String'>
+  readonly yieldShares: Prisma.FieldRef<"SubscriptionWallet", 'String'>
   readonly totalSubscriptions: Prisma.FieldRef<"SubscriptionWallet", 'Int'>
   readonly totalSpent: Prisma.FieldRef<"SubscriptionWallet", 'String'>
   readonly createdAt: Prisma.FieldRef<"SubscriptionWallet", 'DateTime'>

@@ -239,7 +239,7 @@ export class CheckoutService {
       });
 
       this.logger.log(
-        `✅ Auto-linked session ${session.sessionId} to subscription ${params.subscriptionPda}`,
+        `    Auto-linked session ${session.sessionId} to subscription ${params.subscriptionPda}`,
       );
 
       return { linked: true, sessionId: session.sessionId };

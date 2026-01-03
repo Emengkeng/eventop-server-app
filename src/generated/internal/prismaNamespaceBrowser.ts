@@ -63,7 +63,9 @@ export const ModelName = {
   WebhookEndpoint: 'WebhookEndpoint',
   ApiKey: 'ApiKey',
   CheckoutSession: 'CheckoutSession',
-  UserIdentity: 'UserIdentity'
+  UserIdentity: 'UserIdentity',
+  YieldHistory: 'YieldHistory',
+  YieldVaultSnapshot: 'YieldVaultSnapshot'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -155,8 +157,7 @@ export const SubscriptionWalletScalarFieldEnum = {
   ownerWallet: 'ownerWallet',
   mint: 'mint',
   isYieldEnabled: 'isYieldEnabled',
-  yieldStrategy: 'yieldStrategy',
-  yieldVault: 'yieldVault',
+  yieldShares: 'yieldShares',
   totalSubscriptions: 'totalSubscriptions',
   totalSpent: 'totalSpent',
   createdAt: 'createdAt'
@@ -300,6 +301,36 @@ export const UserIdentityScalarFieldEnum = {
 } as const
 
 export type UserIdentityScalarFieldEnum = (typeof UserIdentityScalarFieldEnum)[keyof typeof UserIdentityScalarFieldEnum]
+
+
+export const YieldHistoryScalarFieldEnum = {
+  id: 'id',
+  walletPda: 'walletPda',
+  userWallet: 'userWallet',
+  date: 'date',
+  sharesHeld: 'sharesHeld',
+  valueInUsdc: 'valueInUsdc',
+  dailyEarnings: 'dailyEarnings',
+  createdAt: 'createdAt'
+} as const
+
+export type YieldHistoryScalarFieldEnum = (typeof YieldHistoryScalarFieldEnum)[keyof typeof YieldHistoryScalarFieldEnum]
+
+
+export const YieldVaultSnapshotScalarFieldEnum = {
+  id: 'id',
+  vaultPda: 'vaultPda',
+  mint: 'mint',
+  timestamp: 'timestamp',
+  totalShares: 'totalShares',
+  totalValue: 'totalValue',
+  exchangeRate: 'exchangeRate',
+  apy: 'apy',
+  bufferAmount: 'bufferAmount',
+  createdAt: 'createdAt'
+} as const
+
+export type YieldVaultSnapshotScalarFieldEnum = (typeof YieldVaultSnapshotScalarFieldEnum)[keyof typeof YieldVaultSnapshotScalarFieldEnum]
 
 
 export const SortOrder = {

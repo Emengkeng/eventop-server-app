@@ -1,5 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { SolanaService } from '../indexer/solana.service';
+import { PublicKey } from '@solana/web3.js';
 
 @Injectable()
 export class SubscriptionService {

@@ -102,7 +102,7 @@ export class PaymentSchedulerService {
         await new Promise((resolve) => setTimeout(resolve, 100));
       }
 
-      this.logger.log(`✅ Completed: ${succeeded} succeeded, ${failed} failed`);
+      this.logger.log(`    Completed: ${succeeded} succeeded, ${failed} failed`);
     } catch (error) {
       this.logger.error('Error processing payments:', error);
     } finally {
@@ -213,7 +213,7 @@ export class PaymentSchedulerService {
             this.logger.error('Webhook notification failed:', error);
           });
 
-        this.logger.log(`✅ Payment executed: ${result.signature || ''}`);
+        this.logger.log(`    Payment executed: ${result.signature || ''}`);
       } else {
         throw new Error(result.error || 'Payment failed');
       }

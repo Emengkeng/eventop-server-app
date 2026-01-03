@@ -109,7 +109,7 @@ export class WebhookService {
         );
       } else {
         this.logger.warn(
-          `⚠️ Webhook returned ${response.status} for ${merchantWallet}: ${payload.event}`,
+          `  Webhook returned ${response.status} for ${merchantWallet}: ${payload.event}`,
         );
       }
     } catch (error) {
@@ -136,7 +136,7 @@ export class WebhookService {
       });
 
       this.logger.error(
-        `❌ Webhook failed for ${merchantWallet}: ${errorMessage}`,
+        `   Webhook failed for ${merchantWallet}: ${errorMessage}`,
       );
 
       if (webhookLog.retryCount < 3) {

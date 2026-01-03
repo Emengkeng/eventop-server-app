@@ -82,3 +82,13 @@ export type CheckoutSession = Prisma.CheckoutSessionModel
  * 
  */
 export type UserIdentity = Prisma.UserIdentityModel
+/**
+ * Model YieldHistory
+ * 
+ */
+export type YieldHistory = Prisma.YieldHistoryModel
+/**
+ * Model YieldVaultSnapshot
+ * 
+ */
+export type YieldVaultSnapshot = Prisma.YieldVaultSnapshotModel
