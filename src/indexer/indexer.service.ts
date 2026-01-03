@@ -28,7 +28,7 @@ export class IndexerService implements OnModuleInit {
 
     try {
       await this.solanaService.waitUntilReady();
-      this.logger.log('✅ SolanaService is ready');
+      this.logger.log(' SolanaService is ready');
 
       const program = this.solanaService.getProgram();
       if (!program) {
@@ -41,9 +41,9 @@ export class IndexerService implements OnModuleInit {
       await this.syncAllAccounts();
       this.startLogListener();
 
-      this.logger.log('✅ Indexer initialized');
+      this.logger.log(' Indexer initialized');
     } catch (error) {
-      this.logger.error('❌ Failed to initialize indexer:', error);
+      this.logger.error(' Failed to initialize indexer:', error);
       throw error;
     }
   }
@@ -144,7 +144,7 @@ export class IndexerService implements OnModuleInit {
         }
       }
 
-      this.logger.log(`✅ Backfilled ${backfilledCount} transactions`);
+      this.logger.log(` Backfilled ${backfilledCount} transactions`);
     } catch (error) {
       this.logger.error('Error during backfill:', error);
     }
@@ -163,6 +163,15 @@ export class IndexerService implements OnModuleInit {
         break;
       case 'YieldEnabled':
         await this.handleYieldEnabled(event);
+        break;
+      case 'YieldDisabled':
+        await this.handleYieldDisabled(event, signature, slot);
+        break;
+      case 'YieldDeposit':
+        await this.handleYieldDeposit(event, signature, slot);
+        break;
+      case 'YieldWithdrawal':
+        await this.handleYieldWithdrawal(event, signature, slot);
         break;
       case 'WalletDeposit':
         await this.handleWalletDeposit(event, signature, slot);
@@ -210,7 +219,7 @@ export class IndexerService implements OnModuleInit {
     });
 
     this.logger.log(
-      `✅ Subscription wallet created: ${data.data.walletPda.toString()}`,
+      ` Subscription wallet created: ${data.data.walletPda.toString()}`,
     );
   }
 
@@ -227,7 +236,7 @@ export class IndexerService implements OnModuleInit {
     });
 
     this.logger.log(
-      `✅ Yield enabled for wallet: ${data.data.walletPda.toString()}`,
+      ` Yield enabled for wallet: ${data.data.walletPda.toString()}`,
     );
   }
 
@@ -249,7 +258,7 @@ export class IndexerService implements OnModuleInit {
     });
 
     this.logger.log(
-      `✅ Wallet deposit: ${data.data.amount.toString()} to ${data.data.walletPda.toString()}`,
+      ` Wallet deposit: ${data.data.amount.toString()} to ${data.data.walletPda.toString()}`,
     );
   }
 
@@ -271,7 +280,7 @@ export class IndexerService implements OnModuleInit {
     });
 
     this.logger.log(
-      `✅ Wallet withdrawal: ${data.data.amount.toString()} from ${data.data.walletPda.toString()}`,
+      ` Wallet withdrawal: ${data.data.amount.toString()} from ${data.data.walletPda.toString()}`,
     );
   }
 
@@ -288,7 +297,7 @@ export class IndexerService implements OnModuleInit {
 
     if (existingSubscription) {
       this.logger.log(
-        `⏩ Subscription already exists: ${existingSubscription.subscriptionPda}`,
+        ` Subscription already exists: ${existingSubscription.subscriptionPda}`,
       );
       return;
     }
@@ -309,7 +318,7 @@ export class IndexerService implements OnModuleInit {
 
       if (!merchantPlan) {
         this.logger.error(
-          `❌ Merchant plan ${data.data.planId} still not found after sync`,
+          ` Merchant plan ${data.data.planId} still not found after sync`,
         );
         return;
       }
@@ -328,7 +337,7 @@ export class IndexerService implements OnModuleInit {
 
       if (!session) {
         this.logger.error(
-          `❌ Session ${sessionId} not found. Cannot create subscription.`,
+          ` Session ${sessionId} not found. Cannot create subscription.`,
         );
         return;
       }
@@ -337,7 +346,7 @@ export class IndexerService implements OnModuleInit {
         session.merchantWallet !== data.data.merchant.toString() ||
         session.planPda !== merchantPlan.planPda
       ) {
-        this.logger.error(`❌ Session ${sessionId} context mismatch`);
+        this.logger.error(` Session ${sessionId} context mismatch`);
 
         await this.prisma.checkoutSession.update({
           where: { sessionId },
@@ -377,10 +386,10 @@ export class IndexerService implements OnModuleInit {
       customerId = session.customerId;
 
       this.logger.log(
-        `✅ Session ${sessionId} verified and completed by indexer`,
+        ` Session ${sessionId} verified and completed by indexer`,
       );
     } catch (error) {
-      this.logger.error('❌ Error linking session:', error);
+      this.logger.error(' Error linking session:', error);
 
       try {
         await this.prisma.checkoutSession.update({
@@ -412,7 +421,7 @@ export class IndexerService implements OnModuleInit {
         totalPaid: '0',
         paymentCount: 0,
         isActive: true,
-        customerEmail: customerEmail!,
+        customerEmail: customerEmail,
         customerId: customerId,
         sessionToken: sessionId,
       },
@@ -438,7 +447,7 @@ export class IndexerService implements OnModuleInit {
       slot,
     });
 
-    this.logger.log(`✅ Subscription created: ${subscription.subscriptionPda}`);
+    this.logger.log(` Subscription created: ${subscription.subscriptionPda}`);
 
     // Trigger webhook
     try {
@@ -447,7 +456,7 @@ export class IndexerService implements OnModuleInit {
         sessionId: sessionId,
         subscriptionId: subscription.subscriptionPda,
         customer: {
-          email: customerEmail!,
+          email: customerEmail,
           customerId: customerId || undefined,
           walletAddress: subscription.userWallet,
         },
@@ -542,9 +551,7 @@ export class IndexerService implements OnModuleInit {
       slot,
     });
 
-    this.logger.log(
-      `✅ Payment #${data.data.paymentNumber} executed: ${amount}`,
-    );
+    this.logger.log(` Payment #${data.data.paymentNumber} executed: ${amount}`);
 
     try {
       const nextPaymentDate = new Date(
@@ -567,6 +574,84 @@ export class IndexerService implements OnModuleInit {
     } catch (error) {
       this.logger.error('Failed to trigger payment webhook:', error);
     }
+  }
+
+  private async handleYieldEnabled(data: ProgramEvent): Promise<void> {
+    if (data.name !== 'YieldEnabled') return;
+
+    await this.prisma.subscriptionWallet.update({
+      where: { walletPda: data.data.walletPda.toString() },
+      data: {
+        isYieldEnabled: true,
+        yieldStrategy: data.data.strategy,
+        yieldVault: data.data.vault.toString(),
+      },
+    });
+
+    this.logger.log(
+      `Yield enabled for wallet: ${data.data.walletPda.toString()}`,
+    );
+  }
+
+  private async handleYieldDisabled(
+    data: ProgramEvent,
+    signature: string,
+    slot: number,
+  ): Promise<void> {
+    if (data.name !== 'YieldDisabled') return;
+
+    await this.prisma.subscriptionWallet.update({
+      where: { walletPda: data.data.walletPda.toString() },
+      data: {
+        isYieldEnabled: false,
+        yieldStrategy: null,
+      },
+    });
+
+    this.logger.log(
+      `Yield disabled for wallet: ${data.data.walletPda.toString()}`,
+    );
+  }
+
+  private async handleYieldDeposit(
+    data: ProgramEvent,
+    signature: string,
+    slot: number,
+  ): Promise<void> {
+    if (data.name !== 'YieldDeposit') return;
+
+    // Record transaction
+    await this.recordTransaction({
+      signature,
+      subscriptionPda: '',
+      type: TransactionType.YieldDeposit,
+      amount: data.data.usdcAmount.toString(),
+      fromWallet: data.data.walletPda.toString(),
+      toWallet: data.data.vaultPda.toString(),
+      slot,
+    });
+
+    this.logger.log(` Yield deposit: ${data.data.usdcAmount.toString()}`);
+  }
+
+  private async handleYieldWithdrawal(
+    data: ProgramEvent,
+    signature: string,
+    slot: number,
+  ): Promise<void> {
+    if (data.name !== 'YieldWithdrawal') return;
+
+    await this.recordTransaction({
+      signature,
+      subscriptionPda: '',
+      type: TransactionType.YieldWithdrawal,
+      amount: data.data.usdcReceived.toString(),
+      fromWallet: data.data.vaultPda.toString(),
+      toWallet: data.data.walletPda.toString(),
+      slot,
+    });
+
+    this.logger.log(`Yield withdrawal: ${data.data.usdcReceived.toString()}`);
   }
 
   private async recordTransaction(data: TransactionRecordData): Promise<void> {
@@ -635,9 +720,7 @@ export class IndexerService implements OnModuleInit {
       slot,
     });
 
-    this.logger.log(
-      `✅ Subscription cancelled: ${subscription.subscriptionPda}`,
-    );
+    this.logger.log(` Subscription cancelled: ${subscription.subscriptionPda}`);
 
     // Trigger webhook
     try {
@@ -664,7 +747,7 @@ export class IndexerService implements OnModuleInit {
     if (data.name !== 'YieldClaimed') return;
 
     this.logger.log(
-      `✅ Yield claimed: ${data.data.amount.toString()} from ${data.data.walletPda.toString()}`,
+      ` Yield claimed: ${data.data.amount.toString()} from ${data.data.walletPda.toString()}`,
     );
 
     await this.recordTransaction({
@@ -703,7 +786,7 @@ export class IndexerService implements OnModuleInit {
       await this.syncSubscriptions();
       await this.updateLastSyncTime();
 
-      this.logger.log('✅ Account sync completed');
+      this.logger.log(' Account sync completed');
     } catch (error) {
       this.logger.error('Error during sync:', error);
     } finally {
@@ -749,7 +832,7 @@ export class IndexerService implements OnModuleInit {
       });
     }
 
-    this.logger.log(`✅ Synced ${plans.length} merchant plans`);
+    this.logger.log(` Synced ${plans.length} merchant plans`);
   }
 
   private async syncSubscriptionWallets(): Promise<void> {
@@ -780,7 +863,7 @@ export class IndexerService implements OnModuleInit {
       });
     }
 
-    this.logger.log(`✅ Synced ${wallets.length} subscription wallets`);
+    this.logger.log(` Synced ${wallets.length} subscription wallets`);
   }
 
   private async syncSubscriptions(): Promise<void> {
@@ -794,7 +877,7 @@ export class IndexerService implements OnModuleInit {
       // CRITICAL FIX: Skip subscriptions without session tokens (legacy)
       if (!account.sessionToken || account.sessionToken.trim() === '') {
         this.logger.log(
-          `⏩ Skipping legacy subscription (no session): ${pubkey.toString()}`,
+          ` Skipping legacy subscription (no session): ${pubkey.toString()}`,
         );
         skippedCount++;
         continue;
@@ -866,7 +949,7 @@ export class IndexerService implements OnModuleInit {
     }
 
     this.logger.log(
-      `✅ Synced ${syncedCount} subscriptions (skipped ${skippedCount} legacy/invalid)`,
+      ` Synced ${syncedCount} subscriptions (skipped ${skippedCount} legacy/invalid)`,
     );
   }
 

@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { SubscriptionService } from './subscription.service';
 import { PrivyAuthGuard } from '../auth/privy-auth.guard';
 import { RateLimitType } from '../common/rate-limit/rate-limit.config';
@@ -7,7 +7,7 @@ import { RateLimitGuard } from '../common/rate-limit/rate-limit.guard';
 // import { User } from '../auth/user.decorator';
 
 @Controller('subscriptions')
-// @UseGuards(PrivyAuthGuard, RateLimitGuard)
+@UseGuards(PrivyAuthGuard, RateLimitGuard)
 @RateLimit(RateLimitType.GENERAL)
 export class SubscriptionController {
   constructor(private subscriptionService: SubscriptionService) {}
@@ -40,5 +40,35 @@ export class SubscriptionController {
   @Get('user/:wallet/upcoming')
   async getUpcomingPayments(@Param('wallet') wallet: string) {
     return this.subscriptionService.getUpcomingPayments(wallet);
+  }
+
+  @Get('yield/vault/:mint')
+  async getYieldVault(@Param('mint') mint: string) {
+    return this.subscriptionService.getYieldVault(mint);
+  }
+
+  @Get('yield/user/:walletPda')
+  async getUserYieldData(@Param('walletPda') walletPda: string) {
+    return this.subscriptionService.getUserYieldData(walletPda);
+  }
+
+  @Get('yield/apy')
+  async getYieldAPY() {
+    return this.subscriptionService.getYieldAPY();
+  }
+
+  @Get('yield/user/:walletPda/history')
+  async getEarningsHistory(
+    @Param('walletPda') walletPda: string,
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+    @Query('period') period?: 'daily' | 'weekly' | 'monthly',
+  ) {
+    return this.subscriptionService.getEarningsHistory(
+      walletPda,
+      startDate,
+      endDate,
+      period,
+    );
   }
 }

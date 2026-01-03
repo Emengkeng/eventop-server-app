@@ -270,3 +270,36 @@ model UserIdentity {
   @@index([email])
   @@map("user_identities")
 }
+
+model YieldHistory {
+  id              String   @id @default(uuid())
+  walletPda       String   @map("wallet_pda")
+  userWallet      String   @map("user_wallet")
+  date            DateTime @db.Date
+  sharesHeld      String   @map("shares_held") // BigInt as string
+  valueInUsdc     String   @map("value_in_usdc") // Decimal as string
+  dailyEarnings   String   @map("daily_earnings") // Decimal as string
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@unique([walletPda, date])
+  @@index([walletPda])
+  @@index([date(sort: Desc)])
+  @@map("yield_history")
+}
+
+model YieldVaultSnapshot {
+  id            String   @id @default(uuid())
+  vaultPda      String   @map("vault_pda")
+  mint          String
+  timestamp     DateTime
+  totalShares   String   @map("total_shares") // BigInt as string
+  totalValue    String   @map("total_value") // Decimal as string
+  exchangeRate  String   @map("exchange_rate") // Decimal as string
+  apy           String   // Decimal as string
+  bufferAmount  String   @map("buffer_amount") // Decimal as string
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@index([timestamp(sort: Desc)])
+  @@index([vaultPda])
+  @@map("yield_vault_snapshots")
+}

@@ -14,6 +14,12 @@ import {
   SubscriptionCancelledEvent,
   YieldClaimedEvent,
   MerchantPlanRegisteredEvent,
+  EmergencyModeChangedEvent,
+  VaultRebalancedEvent,
+  YieldDepositEvent,
+  YieldDisabledEvent,
+  YieldVaultInitializedEvent,
+  YieldWithdrawalEvent,
 } from '../types';
 
 @Injectable()
@@ -71,6 +77,40 @@ export class EventParserService {
           return {
             name: 'YieldEnabled',
             data: this.parseYieldEnabled(event.data),
+          };
+        case 'yieldDisabled':
+          return {
+            name: 'YieldDisabled',
+            data: this.parseYieldDisabled(event.data),
+          };
+        case 'yieldDeposit':
+          return {
+            name: 'YieldDeposit',
+            data: this.parseYieldDeposit(event.data),
+          };
+
+        case 'yieldWithdrawal':
+          return {
+            name: 'YieldWithdrawal',
+            data: this.parseYieldWithdrawal(event.data),
+          };
+
+        case 'yieldVaultInitialized':
+          return {
+            name: 'YieldVaultInitialized',
+            data: this.parseYieldVaultInitialized(event.data),
+          };
+
+        case 'vaultRebalanced':
+          return {
+            name: 'VaultRebalanced',
+            data: this.parseVaultRebalanced(event.data),
+          };
+
+        case 'emergencyModeChanged':
+          return {
+            name: 'EmergencyModeChanged',
+            data: this.parseEmergencyModeChanged(event.data),
           };
 
         case 'walletDeposit':
@@ -206,6 +246,52 @@ export class EventParserService {
   private parseMerchantPlanRegistered(data: any): MerchantPlanRegisteredEvent {
     return {
       planPda: new PublicKey(data.planPda),
+    };
+  }
+
+  private parseYieldDisabled(data: any): YieldDisabledEvent {
+    return {
+      walletPda: new PublicKey(data.walletPda),
+      sharesRedeemed: new BN(data.sharesRedeemed),
+      usdcReceived: new BN(data.usdcReceived),
+    };
+  }
+
+  private parseYieldDeposit(data: any): YieldDepositEvent {
+    return {
+      walletPda: new PublicKey(data.walletPda),
+      sharesIssued: new BN(data.sharesIssued),
+      usdcAmount: new BN(data.usdcAmount),
+    };
+  }
+
+  private parseYieldWithdrawal(data: any): YieldWithdrawalEvent {
+    return {
+      walletPda: new PublicKey(data.walletPda),
+      sharesRedeemed: new BN(data.sharesRedeemed),
+      usdcReceived: new BN(data.usdcReceived),
+    };
+  }
+
+  private parseYieldVaultInitialized(data: any): YieldVaultInitializedEvent {
+    return {
+      vault: new PublicKey(data.vault),
+      authority: new PublicKey(data.authority),
+      targetBufferBps: data.targetBufferBps,
+    };
+  }
+
+  private parseVaultRebalanced(data: any): VaultRebalancedEvent {
+    return {
+      action: data.action,
+      amount: new BN(data.amount),
+    };
+  }
+
+  private parseEmergencyModeChanged(data: any): EmergencyModeChangedEvent {
+    return {
+      enabled: data.enabled,
+      frozenRate: new BN(data.frozenRate),
     };
   }
 }

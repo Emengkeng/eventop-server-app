@@ -19,6 +19,8 @@ export enum TransactionType {
   Cancel = 'cancel',
   Deposit = 'deposit',
   Withdrawal = 'withdrawal',
+  YieldDeposit = 'yield_deposit',
+  YieldWithdrawal = 'yield_withdrawal',
 }
 
 // ============================================
@@ -29,8 +31,7 @@ export interface SubscriptionWallet {
   owner: PublicKey;
   mainTokenAccount: PublicKey;
   mint: PublicKey;
-  yieldVault: PublicKey;
-  yieldStrategy: YieldStrategy;
+  yieldShares: BN;
   isYieldEnabled: boolean;
   totalSubscriptions: number;
   totalSpent: BN;
@@ -62,6 +63,20 @@ export interface SubscriptionState {
   paymentCount: number;
   isActive: boolean;
   sessionToken: string;
+  bump: number;
+}
+
+export interface YieldVault {
+  authority: PublicKey;
+  mint: PublicKey;
+  usdcBuffer: PublicKey;
+  jupiterFtokenAccount: PublicKey;
+  jupiterLending: PublicKey;
+  totalSharesIssued: BN;
+  totalUsdcDeposited: BN;
+  targetBufferBps: number;
+  emergencyMode: boolean;
+  emergencyExchangeRate: BN;
   bump: number;
 }
 
@@ -130,6 +145,40 @@ export interface MerchantPlanRegisteredEvent {
   planPda: PublicKey;
 }
 
+export interface YieldDisabledEvent {
+  walletPda: PublicKey;
+  sharesRedeemed: BN;
+  usdcReceived: BN;
+}
+
+export interface YieldDepositEvent {
+  walletPda: PublicKey;
+  sharesIssued: BN;
+  usdcAmount: BN;
+}
+
+export interface YieldWithdrawalEvent {
+  walletPda: PublicKey;
+  sharesRedeemed: BN;
+  usdcReceived: BN;
+}
+
+export interface YieldVaultInitializedEvent {
+  vault: PublicKey;
+  authority: PublicKey;
+  targetBufferBps: number;
+}
+
+export interface VaultRebalancedEvent {
+  action: string;
+  amount: BN;
+}
+
+export interface EmergencyModeChangedEvent {
+  enabled: boolean;
+  frozenRate: BN;
+}
+
 // ============================================
 // DISCRIMINATED UNION FOR ALL EVENTS
 // ============================================
@@ -137,13 +186,19 @@ export interface MerchantPlanRegisteredEvent {
 export type ProgramEvent =
   | { name: 'SubscriptionWalletCreated'; data: SubscriptionWalletCreatedEvent }
   | { name: 'YieldEnabled'; data: YieldEnabledEvent }
+  | { name: 'YieldDisabled'; data: YieldDisabledEvent }
+  | { name: 'YieldDeposit'; data: YieldDepositEvent }
+  | { name: 'YieldWithdrawal'; data: YieldWithdrawalEvent }
   | { name: 'WalletDeposit'; data: WalletDepositEvent }
   | { name: 'WalletWithdrawal'; data: WalletWithdrawalEvent }
   | { name: 'SubscriptionCreated'; data: SubscriptionCreatedEvent }
   | { name: 'PaymentExecuted'; data: PaymentExecutedEvent }
   | { name: 'SubscriptionCancelled'; data: SubscriptionCancelledEvent }
   | { name: 'YieldClaimed'; data: YieldClaimedEvent }
-  | { name: 'MerchantPlanRegistered'; data: MerchantPlanRegisteredEvent };
+  | { name: 'MerchantPlanRegistered'; data: MerchantPlanRegisteredEvent }
+  | { name: 'YieldVaultInitialized'; data: YieldVaultInitializedEvent }
+  | { name: 'VaultRebalanced'; data: VaultRebalancedEvent }
+  | { name: 'EmergencyModeChanged'; data: EmergencyModeChangedEvent };
 
 // ============================================
 // DATABASE ENTITY TYPES
@@ -240,6 +295,7 @@ export const ACCOUNT_DISCRIMINATORS = {
   MerchantPlan: Buffer.from([186, 54, 183, 129, 39, 81, 74, 89]),
   SubscriptionState: Buffer.from([35, 41, 45, 165, 253, 34, 95, 225]),
   SubscriptionWallet: Buffer.from([255, 81, 65, 25, 250, 57, 38, 118]),
+  YieldVault: Buffer.from([17, 229, 96, 254, 254, 179, 195, 163]),
 };
 
 // ============================================

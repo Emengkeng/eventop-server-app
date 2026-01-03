@@ -396,7 +396,9 @@ export const ModelName = {
   WebhookEndpoint: 'WebhookEndpoint',
   ApiKey: 'ApiKey',
   CheckoutSession: 'CheckoutSession',
-  UserIdentity: 'UserIdentity'
+  UserIdentity: 'UserIdentity',
+  YieldHistory: 'YieldHistory',
+  YieldVaultSnapshot: 'YieldVaultSnapshot'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -412,7 +414,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "indexerState" | "merchant" | "merchantPlan" | "subscription" | "subscriptionWallet" | "transaction" | "scheduledPayment" | "userProfile" | "webhookLog" | "webhookEndpoint" | "apiKey" | "checkoutSession" | "userIdentity"
+    modelProps: "indexerState" | "merchant" | "merchantPlan" | "subscription" | "subscriptionWallet" | "transaction" | "scheduledPayment" | "userProfile" | "webhookLog" | "webhookEndpoint" | "apiKey" | "checkoutSession" | "userIdentity" | "yieldHistory" | "yieldVaultSnapshot"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1378,6 +1380,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    YieldHistory: {
+      payload: Prisma.$YieldHistoryPayload<ExtArgs>
+      fields: Prisma.YieldHistoryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.YieldHistoryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YieldHistoryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.YieldHistoryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YieldHistoryPayload>
+        }
+        findFirst: {
+          args: Prisma.YieldHistoryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YieldHistoryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.YieldHistoryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YieldHistoryPayload>
+        }
+        findMany: {
+          args: Prisma.YieldHistoryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YieldHistoryPayload>[]
+        }
+        create: {
+          args: Prisma.YieldHistoryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YieldHistoryPayload>
+        }
+        createMany: {
+          args: Prisma.YieldHistoryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.YieldHistoryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YieldHistoryPayload>[]
+        }
+        delete: {
+          args: Prisma.YieldHistoryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YieldHistoryPayload>
+        }
+        update: {
+          args: Prisma.YieldHistoryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YieldHistoryPayload>
+        }
+        deleteMany: {
+          args: Prisma.YieldHistoryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.YieldHistoryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.YieldHistoryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YieldHistoryPayload>[]
+        }
+        upsert: {
+          args: Prisma.YieldHistoryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YieldHistoryPayload>
+        }
+        aggregate: {
+          args: Prisma.YieldHistoryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateYieldHistory>
+        }
+        groupBy: {
+          args: Prisma.YieldHistoryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YieldHistoryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.YieldHistoryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YieldHistoryCountAggregateOutputType> | number
+        }
+      }
+    }
+    YieldVaultSnapshot: {
+      payload: Prisma.$YieldVaultSnapshotPayload<ExtArgs>
+      fields: Prisma.YieldVaultSnapshotFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.YieldVaultSnapshotFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YieldVaultSnapshotPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.YieldVaultSnapshotFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YieldVaultSnapshotPayload>
+        }
+        findFirst: {
+          args: Prisma.YieldVaultSnapshotFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YieldVaultSnapshotPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.YieldVaultSnapshotFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YieldVaultSnapshotPayload>
+        }
+        findMany: {
+          args: Prisma.YieldVaultSnapshotFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YieldVaultSnapshotPayload>[]
+        }
+        create: {
+          args: Prisma.YieldVaultSnapshotCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YieldVaultSnapshotPayload>
+        }
+        createMany: {
+          args: Prisma.YieldVaultSnapshotCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.YieldVaultSnapshotCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YieldVaultSnapshotPayload>[]
+        }
+        delete: {
+          args: Prisma.YieldVaultSnapshotDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YieldVaultSnapshotPayload>
+        }
+        update: {
+          args: Prisma.YieldVaultSnapshotUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YieldVaultSnapshotPayload>
+        }
+        deleteMany: {
+          args: Prisma.YieldVaultSnapshotDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.YieldVaultSnapshotUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.YieldVaultSnapshotUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YieldVaultSnapshotPayload>[]
+        }
+        upsert: {
+          args: Prisma.YieldVaultSnapshotUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YieldVaultSnapshotPayload>
+        }
+        aggregate: {
+          args: Prisma.YieldVaultSnapshotAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateYieldVaultSnapshot>
+        }
+        groupBy: {
+          args: Prisma.YieldVaultSnapshotGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YieldVaultSnapshotGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.YieldVaultSnapshotCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YieldVaultSnapshotCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1637,6 +1787,36 @@ export const UserIdentityScalarFieldEnum = {
 export type UserIdentityScalarFieldEnum = (typeof UserIdentityScalarFieldEnum)[keyof typeof UserIdentityScalarFieldEnum]
 
 
+export const YieldHistoryScalarFieldEnum = {
+  id: 'id',
+  walletPda: 'walletPda',
+  userWallet: 'userWallet',
+  date: 'date',
+  sharesHeld: 'sharesHeld',
+  valueInUsdc: 'valueInUsdc',
+  dailyEarnings: 'dailyEarnings',
+  createdAt: 'createdAt'
+} as const
+
+export type YieldHistoryScalarFieldEnum = (typeof YieldHistoryScalarFieldEnum)[keyof typeof YieldHistoryScalarFieldEnum]
+
+
+export const YieldVaultSnapshotScalarFieldEnum = {
+  id: 'id',
+  vaultPda: 'vaultPda',
+  mint: 'mint',
+  timestamp: 'timestamp',
+  totalShares: 'totalShares',
+  totalValue: 'totalValue',
+  exchangeRate: 'exchangeRate',
+  apy: 'apy',
+  bufferAmount: 'bufferAmount',
+  createdAt: 'createdAt'
+} as const
+
+export type YieldVaultSnapshotScalarFieldEnum = (typeof YieldVaultSnapshotScalarFieldEnum)[keyof typeof YieldVaultSnapshotScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1889,6 +2069,8 @@ export type GlobalOmitConfig = {
   apiKey?: Prisma.ApiKeyOmit
   checkoutSession?: Prisma.CheckoutSessionOmit
   userIdentity?: Prisma.UserIdentityOmit
+  yieldHistory?: Prisma.YieldHistoryOmit
+  yieldVaultSnapshot?: Prisma.YieldVaultSnapshotOmit
 }
 
 /* Types for Logging */

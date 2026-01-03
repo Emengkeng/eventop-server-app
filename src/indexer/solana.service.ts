@@ -242,12 +242,9 @@ export class SolanaService implements OnModuleInit {
     const mint = new PublicKey(data.slice(offset, offset + 32));
     offset += 32;
 
-    const yieldVault = new PublicKey(data.slice(offset, offset + 32));
-    offset += 32;
-
-    const yieldStrategyByte = data.readUInt8(offset);
-    offset += 1;
-    const yieldStrategy = this.decodeYieldStrategy(yieldStrategyByte);
+    // CHANGED: Now it's yieldShares (u64) instead of yieldVault (Pubkey)
+    const yieldShares = new BN(data.slice(offset, offset + 8), 'le');
+    offset += 8;
 
     const isYieldEnabled = data.readUInt8(offset) === 1;
     offset += 1;
@@ -264,8 +261,7 @@ export class SolanaService implements OnModuleInit {
       owner,
       mainTokenAccount,
       mint,
-      yieldVault,
-      yieldStrategy,
+      yieldShares,
       isYieldEnabled,
       totalSubscriptions,
       totalSpent,
