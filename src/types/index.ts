@@ -242,8 +242,7 @@ export interface SubscriptionWalletEntity {
   ownerWallet: string;
   mint: string;
   isYieldEnabled: boolean;
-  yieldStrategy?: string;
-  yieldVault?: string;
+  yieldShares: string;
   totalSubscriptions: number;
   totalSpent: string;
   createdAt?: Date;
