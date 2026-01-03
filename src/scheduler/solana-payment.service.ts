@@ -143,18 +143,20 @@ export class SolanaPaymentService {
         protocolConfig.treasury,
       );
 
-      // Build transaction
+      // Build transaction - UPDATED ACCOUNTS
       const tx = await this.program.methods
         .executePaymentFromWallet()
         .accounts({
-          //subscriptionState: subscriptionPubkey,
-          //subscriptionWallet: walletPubkey,
+          // subscriptionState: subscriptionPubkey,
+          // subscriptionWallet: walletPubkey,
           merchantPlan: merchantPlanPda,
-          //protocolConfig: protocolConfigPda,
+          // protocolConfig: protocolConfigPda,
           walletTokenAccount: walletTokenAccount,
           merchantTokenAccount: merchantTokenAccount,
           protocolTreasury: protocolTreasuryTokenAccount,
-          // tokenProgram is auto-resolved by Anchor
+          // yieldVault: null,
+          vaultBuffer: null,
+          jupiterLending: null,
         })
         .transaction();
 

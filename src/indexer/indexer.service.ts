@@ -7,6 +7,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { WebhookService } from '../webhook/webhook.service';
 import { CheckoutService } from '../checkout/checkout.service';
 import { ProgramEvent, TransactionRecordData, TransactionType } from '../types';
+import { program } from '@coral-xyz/anchor/dist/cjs/native/system';
+import { PublicKey } from '@solana/web3.js';
 
 @Injectable()
 export class IndexerService implements OnModuleInit {
@@ -608,14 +610,13 @@ export class IndexerService implements OnModuleInit {
       },
     });
 
-    // Record transaction
     await this.recordTransaction({
       signature,
       subscriptionPda: '',
       type: TransactionType.YieldDeposit,
       amount: data.data.usdcAmount.toString(),
       fromWallet: data.data.walletPda.toString(),
-      toWallet: data.data.vaultPda.toString(),
+      toWallet: await this.getVaultPda(data.data.walletPda.toString()),
       slot,
     });
 
@@ -652,14 +653,12 @@ export class IndexerService implements OnModuleInit {
       subscriptionPda: '',
       type: TransactionType.YieldWithdrawal,
       amount: data.data.usdcReceived.toString(),
-      fromWallet: data.data.vaultPda.toString(),
+      fromWallet: await this.getVaultPda(data.data.walletPda.toString()),
       toWallet: data.data.walletPda.toString(),
       slot,
     });
 
-    this.logger.log(
-      ` Yield withdrawal: ${data.data.usdcReceived.toString()}`,
-    );
+    this.logger.log(` Yield withdrawal: ${data.data.usdcReceived.toString()}`);
   }
 
   private async recordTransaction(data: TransactionRecordData): Promise<void> {
@@ -1004,5 +1003,17 @@ export class IndexerService implements OnModuleInit {
       where: { key: this.INDEXER_STATE_KEY },
       data: { lastSyncTime: new Date() },
     });
+  }
+
+  private async getVaultPda(walletPda: string): Promise<string> {
+    const walletPubkey = new PublicKey(walletPda);
+    const walletData =
+      await program.account.subscriptionWallet.fetch(walletPubkey);
+
+    const [vaultPDA] = PublicKey.findProgramAddressSync(
+      [Buffer.from('yield_vault'), walletData.mint.toBuffer()],
+      this.solanaService.getProgramId(),
+    );
+    return vaultPDA.toString();
   }
 }
