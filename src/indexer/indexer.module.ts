@@ -5,7 +5,7 @@ import { SolanaService } from './solana.service';
 import { WebhookService } from '../webhook/webhook.service';
 import { CheckoutService } from '../checkout/checkout.service';
 import { HttpModule } from '@nestjs/axios';
-import { YieldSnapshotService } from './yield-snapshot.service';
+import { SolanaPaymentService } from '../scheduler/solana-payment.service';
 
 @Module({
   imports: [HttpModule],
@@ -15,7 +15,7 @@ import { YieldSnapshotService } from './yield-snapshot.service';
     SolanaService,
     WebhookService,
     CheckoutService,
-    YieldSnapshotService,
+    SolanaPaymentService,
   ],
   exports: [IndexerService, SolanaService],
 })

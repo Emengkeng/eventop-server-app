@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { PrismaService } from '../prisma/prisma.service';
-import { SolanaService } from './solana.service';
 import { PublicKey } from '@solana/web3.js';
+import { SolanaPaymentService } from './solana-payment.service';
 
 @Injectable()
 export class YieldSnapshotService {
@@ -10,7 +10,7 @@ export class YieldSnapshotService {
 
   constructor(
     private prisma: PrismaService,
-    private solanaService: SolanaService,
+    private solanaService: SolanaPaymentService,
   ) {}
 
   /**

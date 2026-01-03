@@ -4,13 +4,17 @@ import { PrivyAuthGuard } from '../auth/privy-auth.guard';
 import { RateLimitType } from '../common/rate-limit/rate-limit.config';
 import { RateLimit } from '../common/rate-limit/rate-limit.decorator';
 import { RateLimitGuard } from '../common/rate-limit/rate-limit.guard';
+import { SolanaPaymentService } from '../scheduler/solana-payment.service';
 // import { User } from '../auth/user.decorator';
 
 @Controller('subscriptions')
 @UseGuards(PrivyAuthGuard, RateLimitGuard)
 @RateLimit(RateLimitType.GENERAL)
 export class SubscriptionController {
-  constructor(private subscriptionService: SubscriptionService) {}
+  constructor(
+    private subscriptionService: SubscriptionService,
+    private solanaPaymentService: SolanaPaymentService,
+  ) {}
 
   @Get('user/:wallet')
   async getUserSubscriptions(@Param('wallet') wallet: string) {
@@ -44,17 +48,17 @@ export class SubscriptionController {
 
   @Get('yield/vault/:mint')
   async getYieldVault(@Param('mint') mint: string) {
-    return this.subscriptionService.getYieldVault(mint);
+    return this.solanaPaymentService.getYieldVault(mint);
   }
 
   @Get('yield/user/:walletPda')
   async getUserYieldData(@Param('walletPda') walletPda: string) {
-    return this.subscriptionService.getUserYieldData(walletPda);
+    return this.solanaPaymentService.getUserYieldData(walletPda);
   }
 
   @Get('yield/apy')
   async getYieldAPY() {
-    return this.subscriptionService.getYieldAPY();
+    return this.solanaPaymentService.getYieldAPY();
   }
 
   @Get('yield/user/:walletPda/history')
@@ -64,7 +68,7 @@ export class SubscriptionController {
     @Query('endDate') endDate?: string,
     @Query('period') period?: 'daily' | 'weekly' | 'monthly',
   ) {
-    return this.subscriptionService.getEarningsHistory(
+    return this.solanaPaymentService.getEarningsHistory(
       walletPda,
       startDate,
       endDate,
