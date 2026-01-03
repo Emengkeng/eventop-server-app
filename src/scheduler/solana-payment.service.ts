@@ -26,7 +26,7 @@ export class SolanaPaymentService {
   private program: Program<SubscriptionProtocol> | null = null;
   private payerKeypair: Keypair;
   private readonly USDC_MINT = new PublicKey(
-    'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+    '4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU',
   );
   private readonly PROGRAM_ID = new PublicKey(
     'GPVtSfXPiy8y4SkJrMC3VFyKUmGVhMrRbAp2NhiW1Ds2',
